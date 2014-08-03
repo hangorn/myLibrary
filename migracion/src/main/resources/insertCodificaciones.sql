@@ -1,0 +1,15 @@
+INSERT INTO tipos (descripcion) VALUES ('NE NOVELA EN ESPAÑOL');
+INSERT INTO tipos (descripcion) VALUES ('NX NOVELA EXTRANJERA');
+INSERT INTO tipos (descripcion) VALUES ('POESIA');
+INSERT INTO tipos (descripcion) VALUES ('SALAMANCA');
+INSERT INTO tipos (descripcion) VALUES ('TURISMO, VIAJES, CIUDADES');
+INSERT INTO tipos (descripcion) VALUES ('GEOGRAFIA, NATURALEZA, METEOROLOGIA');
+INSERT INTO tipos (descripcion) VALUES ('HISTORIA');
+INSERT INTO tipos (descripcion) VALUES ('ARTE, MUSICA, CINE');
+INSERT INTO tipos (descripcion) VALUES ('DICCIONARIOS, ANUARIOS, GUIAS, ATLAS');
+INSERT INTO tipos (descripcion) VALUES ('CIENCIA, INFORMATICA');
+INSERT INTO tipos (descripcion) VALUES ('GASTRONOMIA');
+INSERT INTO tipos (descripcion) VALUES ('LABORES');
+INSERT INTO tipos (descripcion) VALUES ('VARIOS');
+INSERT INTO tipos (descripcion) VALUES ('COMIC');
+INSERT INTO tipos (descripcion) VALUES ('RUSIA');

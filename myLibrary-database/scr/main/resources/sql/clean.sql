@@ -1,0 +1,9 @@
+DROP TABLE libros_autores;
+DROP TABLE libros_traductores;
+DROP TABLE libros;
+DROP TABLE ubicaciones;
+DROP TABLE tipos;
+DROP TABLE traductores;
+DROP TABLE autores;
+DROP TABLE colecciones;
+DROP TABLE editoriales;
