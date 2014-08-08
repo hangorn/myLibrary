@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{title}">MyLibrary - Titulo estatico</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+	charset="UTF-8"
+/>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../css/stylesheet.css" th:href="@{#{css.file}}"
+/>
+</head>
+<body>
+	<div th:replace="__${menuTemplate}__"></div>
+	<div th:replace="__${mainTemplate}__"></div>
+	<div th:replace="__${footerTemplate}__"></div>
+</body>
+</html>

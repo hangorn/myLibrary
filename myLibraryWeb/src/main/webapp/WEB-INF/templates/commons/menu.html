@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<div class="menu" th:fragment="menu">
+	<header>
+		<nav>
+			<ul>
+				<li th:each="item,itemStat : ${menuItems}"><a
+					th:href="@{${item.link}}"
+				>
+						<div class="menuitem">
+							<img th:alt-title="${item.text}" th:src="${item.img}" /> <span
+								th:text="${item.text}"
+							></span>
+						</div>
+				</a></li>
+			</ul>
+		</nav>
+	</header>
+</div>
+</html>

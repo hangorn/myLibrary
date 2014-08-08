@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: #fff690;
+	margin: 0px;
+}
+
+/************************************
+ Personalizacion del menu
+ ************************************/
+.menu {
+	border-bottom: 3px double black;
+	width: 100%;
+	height: 120px;
+	background-color: #ffce0d;
+	position: fixed;
+}
+
+.menu ul {
+	margin: 0 0 0 20px;
+	padding: 0;
+}
+
+.menu li {
+	float: left;
+	display: inline;
+	list-style: none outside none;
+	margin: 10px 10px;
+}
+
+.menuitem {
+	border: 5px double black;
+	font-variant: small-caps;
+	font-weight: normal;
+	width: 86px;
+	padding: 3px 10px;
+	text-align: center;
+	color: black;
+	background-color: #fff690;
+	-webkit-transition: width 1s; /* Safari */
+	transition: width 1s;
+}
+
+.menuitem:hover {
+	width: 106px;
+	background-color: #f0e787;
+}
+
+/************************************
+ Personalizacion del pie
+ ************************************/
+.footer {
+	width: 100%;
+	position: fixed;
+	text-align: right;
+	bottom: 0px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.footer span {
+	margin-right: 5px;
+}
