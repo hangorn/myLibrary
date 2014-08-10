@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 03-ago-2014 18:08:09 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="es.magDevs.myLibrary.model.beans.Libro" table="libros">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" not-null="true" sql-type="INTEGER" unique="true" />
+			<generator class="identity" />
+		</id>
+		<property generated="never" lazy="false" name="titulo"
+			type="java.lang.String">
+			<column name="titulo" />
+		</property>
+		<property generated="never" lazy="false" name="isbn"
+			type="java.lang.String">
+			<column name="isbn" />
+		</property>
+		<property generated="never" lazy="false" name="annoCompra"
+			type="java.lang.Integer">
+			<column name="anno_compra" />
+		</property>
+		<property generated="never" lazy="false" name="annoPublicacion"
+			type="java.lang.Integer">
+			<column name="anno_publicacion" />
+		</property>
+		<property generated="never" lazy="false" name="annoCopyright"
+			type="java.lang.Integer">
+			<column name="anno_copyright" />
+		</property>
+		<property generated="never" lazy="false" name="numEdicion"
+			type="java.lang.Integer">
+			<column name="num_edicion" />
+		</property>
+		<property generated="never" lazy="false" name="numPaginas"
+			type="java.lang.Integer">
+			<column name="num_paginas" />
+		</property>
+		<property generated="never" lazy="false" name="tomo"
+			type="java.lang.Integer">
+			<column name="tomo" />
+		</property>
+		<property generated="never" lazy="false" name="precio"
+			type="java.lang.Float">
+			<column name="precio" />
+		</property>
+		<property generated="never" lazy="false" name="notas"
+			type="java.lang.String">
+			<column name="notas" />
+		</property>
+
+		<many-to-one class="es.magDevs.myLibrary.model.beans.Tipo"
+			lazy="false" name="tipo" fetch="join">
+			<column name="tipo" />
+		</many-to-one>
+		<many-to-one class="es.magDevs.myLibrary.model.beans.Editorial"
+			lazy="false" name="editorial" fetch="join">
+			<column name="editorial" />
+		</many-to-one>
+		<many-to-one class="es.magDevs.myLibrary.model.beans.Coleccion"
+			lazy="false" name="coleccion" fetch="join">
+			<column name="coleccion" />
+		</many-to-one>
+		<many-to-one class="es.magDevs.myLibrary.model.beans.Ubicacion"
+			lazy="false" name="ubicacion" fetch="join">
+			<column name="ubicacion" />
+		</many-to-one>
+
+		<set name="autores" table="libros_autores" lazy="false">
+			<key>
+				<column name="libro" />
+			</key>
+			<many-to-many column="autor"
+				class="es.magDevs.myLibrary.model.beans.Autor" />
+		</set>
+		<set name="traductores" table="libros_traductores" lazy="false">
+			<key>
+				<column name="libro" />
+			</key>
+			<many-to-many column="traductor"
+				class="es.magDevs.myLibrary.model.beans.Traductor" />
+		</set>
+	</class>
+</hibernate-mapping>

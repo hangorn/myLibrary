@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="hibernate.connection.driver_class">org.gjt.mm.mysql.Driver</property>
+  <property name="hibernate.connection.password">923120419</property>
+  <property name="hibernate.connection.url">jdbc:mysql://192.168.1.123:3306/mylibrary</property>
+  <property name="hibernate.connection.username">user</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+  <property name="hibernate.show_sql">true</property>
+  <property name="hibernate.c3p0.max_size">10</property>
+  <property name="hibernate.c3p0.min_size">1</property>
+  <property name="hibernate.c3p0.max_statements">20</property>
+  <property name="hibernate.c3p0.timeout">500</property>
+  <property name="hibernate.current_session_context_class">thread</property>
+  
+  <mapping resource="hibernate/mappings/Libro.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Autor.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Editorial.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Coleccion.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Tipo.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Ubicacion.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Traductor.hbm.xml"/>
+ </session-factory>
+</hibernate-configuration>
