@@ -39,7 +39,6 @@ public class HibTipoDao implements TipoDao {
 	}
 
 	public List<Tipo> getTipos(Tipo filter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

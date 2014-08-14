@@ -12,20 +12,6 @@ import es.magDevs.myLibrary.model.beans.Libro;
  */
 public interface LibroDao {
 	/**
-	 * Obtiene una lista de todos los libros
-	 * 
-	 * @return
-	 */
-	public List<Libro> getLibros();
-
-	/**
-	 * Obtiene una lista de todos los libros con los filtros especificados
-	 * 
-	 * @return
-	 */
-	public List<Libro> getLibros(Libro filter);
-
-	/**
 	 * * Obtiene una lista de los libros paginada con la opiones indicadas
 	 * 
 	 * @param page
@@ -37,17 +23,42 @@ public interface LibroDao {
 	public List<Libro> getLibrosWithPag(int page, int pageSize);
 
 	/**
+	 * Obtiene una lista de los libros, filtrados por los criterios indicados y
+	 * paginada
+	 * 
+	 * @param filter
+	 *            criterios de busqueda
+	 * @param page
+	 *            nuemro de pagina
+	 * @param pageSize
+	 *            tamaño de pagina
+	 * @return
+	 */
+	public List<Libro> getLibrosWithPag(Libro filter, int page,
+			int pageSize);
+
+	/**
 	 * Obtiene el libro referencia por el id indicado
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public Libro getLibro(int id);
-	
+
 	/**
 	 * Obtiene el numero total de libros
+	 * 
 	 * @return
 	 */
 	public int getCountLibros();
+
+	/**
+	 * Obtiene el numero total de libros filtrados por los criterios indicados
+	 * 
+	 * @param filter
+	 *            criterios de busqueda
+	 * @return
+	 */
+	public int getCountLibros(Libro filter);
 
 }

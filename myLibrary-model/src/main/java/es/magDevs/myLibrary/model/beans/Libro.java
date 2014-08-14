@@ -75,6 +75,17 @@ public class Libro extends Bean {
 			this.autores.addAll(bean.getAutores());
 		}
 	}
+	
+	public Libro(Integer id, String titulo, String editorial, String tipo, String ubicacion, Integer tomo) {
+		super();
+		setId(id);
+		setTitulo(titulo);
+		setEditorial(new Editorial(null, editorial, null));
+		setTipo(new Tipo(null, tipo));
+		setUbicacion(new Ubicacion(null, ubicacion, null));
+		setTomo(tomo);
+		setAutores(new HashSet<Autor>());
+	}
 
 	public String getTitulo() {
 		return titulo;

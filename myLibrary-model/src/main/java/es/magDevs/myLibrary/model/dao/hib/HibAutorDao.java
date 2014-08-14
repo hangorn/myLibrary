@@ -42,7 +42,6 @@ public class HibAutorDao implements AutorDao {
 	}
 
 	public List<Autor> getAutores(Autor filter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

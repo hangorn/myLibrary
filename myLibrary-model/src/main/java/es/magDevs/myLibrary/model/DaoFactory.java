@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
+import es.magDevs.myLibrary.model.dao.UbicacionDao;
 import es.magDevs.myLibrary.model.dao.hib.HibAutorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibLibroDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTipoDao;
+import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
 
 /**
  * Factoria para instanciar los DAOs
@@ -118,6 +120,20 @@ public class DaoFactory {
 	public static LibroDao getLibroDao() {
 		if (dataAccessType == HIBERNATE) {
 			return new HibLibroDao(sessionFactory);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de las
+	 * ubicaciones
+	 * 
+	 * @return
+	 */
+	public static UbicacionDao getUbicacionDao() {
+		if (dataAccessType == HIBERNATE) {
+			return new HibUbicacionDao(sessionFactory);
 		} else {
 			return null;
 		}

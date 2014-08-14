@@ -4,8 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import es.magDevs.myLibrary.model.beans.Autor;
+import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
+import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
 
@@ -22,21 +25,17 @@ public class test {
 //		System.out.println(s1);
 //		System.out.println(s2);
 		
-		TipoDao a = DaoFactory.getTipoDao();
+		LibroDao a = DaoFactory.getLibroDao();
 		
+		Libro f = new Libro();
+		f.setAutores(new HashSet<Autor>());
+		f.getAutores().add(new Autor(null, "a", null, null, null, null, null, null));
+//		f.setAnnoCompra(annoCompra);
 		
+		List<Libro> l = a.getLibrosWithPag(f, 0,30);
+//		System.out.println(a.getCountLibros(f));
 		
-		Tipo mitipo = new Tipo(32, "este es mi segundo tipo modificado");
-		a.update(mitipo);
-		System.out.println(mitipo);
-		
-		
-		List<Tipo> l = a.getTipos();
-//		System.out.println(l);
-		
-		for (Tipo autor : l) {
-			System.out.println(autor);
-		}
+		System.out.println(l);
 		
 	}
 	
