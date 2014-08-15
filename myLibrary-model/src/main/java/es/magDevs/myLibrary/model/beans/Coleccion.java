@@ -1,7 +1,5 @@
 package es.magDevs.myLibrary.model.beans;
 
-import java.util.Set;
-
 /**
  * Bean con los datos de colecciones
  * 
@@ -12,6 +10,7 @@ import java.util.Set;
 public class Coleccion extends Bean {
 	private String nombre;
 	private Editorial editorial;
+
 	public Coleccion() {
 		super();
 	}

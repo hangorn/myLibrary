@@ -1,7 +1,5 @@
 package es.magDevs.myLibrary.model.beans;
 
-import java.util.Set;
-
 @SuppressWarnings("serial")
 public class Editorial extends Bean {
 	private String nombre;

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-<div class="menu" th:fragment="menu">
+<div class="menu" th:fragment="menu(selected)">
 	<header>
 		<nav>
 			<ul>
 				<li th:each="item,itemStat : ${menuItems}"><a
 					th:href="@{${item.link}}"
 				>
-						<div class="menuitem">
-							<img th:alt-title="${item.text}" th:src="${item.img}" /> <span
+						<div th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})">
+							<img th:alt-title="${item.text}" th:src="@{${item.img}}" /> <span
 								th:text="${item.text}"
 							></span>
 						</div>
@@ -17,4 +17,4 @@
 		</nav>
 	</header>
 </div>
-</html>
+</html>d

@@ -11,6 +11,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 import es.magDevs.myLibrary.model.beans.Autor;
@@ -59,35 +60,8 @@ public class HibLibroDao implements LibroDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Libro> getLibrosWithPag(int page, int pageSize) {
-		Session s = getSession();
-		s.beginTransaction();
-		// Obtenemos los datos necesarios de los libros
-		Query query = s
-				.createQuery("SELECT new Libro(l.id, l.titulo,"
-						+ " l.editorial.nombre, l.tipo.descripcion,"
-						+ " l.ubicacion.codigo, l.tomo) FROM Libro l order by l.id desc");
-		query.setMaxResults(pageSize);
-		query.setFirstResult(page * pageSize);
-		List<Libro> l = query.list();
-		// Obtenemos los autores de cada libro
-		for (Libro libro : l) {
-			Query queryAutores = s
-					.createSQLQuery("SELECT a.id, a.nombre, a.apellidos"
-							+ " FROM autores a JOIN libros_autores la ON"
-							+ " a.id=la.autor where la.libro=" + libro.getId());
-			List<Object[]> autoresData = queryAutores.list();
-			Set<Autor> autores = new HashSet<Autor>();
-			for (Object[] autorData : autoresData) {
-				autores.add(new Autor((Integer) autorData[0],
-						(String) autorData[1], (String) autorData[2], null,
-						null, null, null, null));
-			}
-			libro.setAutores(autores);
-		}
-		s.getTransaction().commit();
-		return l;
+		return getLibrosWithPag(null, page, pageSize);
 	}
 
 	/**
@@ -95,9 +69,6 @@ public class HibLibroDao implements LibroDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Libro> getLibrosWithPag(Libro filter, int page, int pageSize) {
-		if (filter == null) {
-			return getLibrosWithPag(page, pageSize);
-		}
 		Session s = getSession();
 		s.beginTransaction();
 		// Obtenemos el filtro
@@ -105,6 +76,12 @@ public class HibLibroDao implements LibroDao {
 		// Fijamos las opciones de paginacion
 		query.setMaxResults(pageSize);
 		query.setFirstResult(page * pageSize);
+		// Ordenamos por titulo de libro
+		if (filter != null) {
+			query.addOrder(Property.forName("titulo").asc());
+		} else {
+			query.addOrder(Property.forName("id").desc());
+		}
 		// Fijamos los datos que queremos obtener
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
@@ -177,6 +154,9 @@ public class HibLibroDao implements LibroDao {
 
 	private Criteria getFilters(Session session, Libro filter) {
 		Criteria c = session.createCriteria(Libro.class);
+		if (filter == null) {
+			return c;
+		}
 		Criteria authorsFilter = null;
 
 		// Recorremos todos los posibles criterios para filtrar:
@@ -187,26 +167,30 @@ public class HibLibroDao implements LibroDao {
 		// Editorial
 		if (filter.getEditorial() != null
 				&& !StringUtils.isBlank(filter.getEditorial().getNombre())) {
-			c.add(Restrictions.like("editorial.nombre", "%"
-					+ filter.getEditorial().getNombre() + "%"));
+			c.createCriteria("editorial").add(
+					Restrictions.like("nombre", "%"
+							+ filter.getEditorial().getNombre() + "%"));
 		}
 		// Ubicacion
 		if (filter.getUbicacion() != null
 				&& !StringUtils.isBlank(filter.getUbicacion().getCodigo())) {
-			c.add(Restrictions.eq("ubicacion.codigo", filter.getUbicacion()
-					.getCodigo()));
+			c.createCriteria("ubicacion").add(
+					Restrictions
+							.eq("codigo", filter.getUbicacion().getCodigo()));
 		}
 		// Coleccion
 		if (filter.getColeccion() != null
 				&& !StringUtils.isBlank(filter.getColeccion().getNombre())) {
-			c.add(Restrictions.like("coleccion.nombre", "%"
-					+ filter.getColeccion().getNombre() + "%"));
+			c.createCriteria("coleccion").add(
+					Restrictions.like("nombre", "%"
+							+ filter.getColeccion().getNombre() + "%"));
 		}
 		// Tipo
 		if (filter.getTipo() != null
 				&& !StringUtils.isBlank(filter.getTipo().getDescripcion())) {
-			c.add(Restrictions.eq("tipo.descripcion", filter.getTipo()
-					.getDescripcion()));
+			c.createCriteria("tipo").add(
+					Restrictions.eq("descripcion", filter.getTipo()
+							.getDescripcion()));
 		}
 		// Notas
 		if (!StringUtils.isBlank(filter.getNotas())) {

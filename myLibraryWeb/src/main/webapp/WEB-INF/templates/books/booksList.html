@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<div class="booksList" th:fragment="booksList">
+	<div th:replace="/books/booksMenu :: booksMenu"></div>
+	<div class="dataTable"
+		th:if="(${booksData} != null AND !${#lists.isEmpty(booksData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{books.table.head.title}"></th>
+					<th th:text="#{books.table.head.author}"></th>
+					<th th:text="#{books.table.head.publisher}"></th>
+					<th th:text="#{books.table.head.type}"></th>
+					<th th:text="#{books.table.head.place}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bookData,dataStat : ${booksData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td
+						th:text="((${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
+						th:title="${bookData.titulo}"
+					></td>
+					<td
+						th:if="(${bookData.autores} != null AND !${#lists.isEmpty(bookData.autores)})"
+						th:text="${#strings.setJoin(bookData.autores,', ')}"
+						th:title="${#strings.setJoin(bookData.autores,', ')}"
+					></td>
+					<td
+						th:if="(${bookData.autores} == null OR ${#lists.isEmpty(bookData.autores)})"
+						th:text="#{authors.anonymous}" th:title="#{authors.anonymous}"
+					></td>
+					<td
+						th:text="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
+						th:title="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
+					></td>
+					<td
+						th:text="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
+						th:title="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
+					></td>
+					<td
+						th:text="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
+						th:title="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${booksData} == null OR ${#lists.isEmpty(booksData)})"
+		th:text="#{books.table.empty}"
+	></div>
+	<div th:if="(${booksData} != null AND !${#lists.isEmpty(booksData)})">
+		<div th:replace="/books/booksMenu :: booksMenu"></div>
+	</div>
+	<div th:replace="/books/booksSearch :: booksSearch"></div>
+</div>
+</html>

@@ -3,6 +3,10 @@
 body {
 	background-color: #fff690;
 	margin: 0px;
+	font-family: Helvetica;
+	font-size: 15px;
+	min-height: 100%;
+	position: relative;
 }
 
 /************************************
@@ -12,7 +16,18 @@ body {
 	border-bottom: 3px double black;
 	width: 100%;
 	height: 120px;
-	background-color: #ffce0d;
+	background: #ffce0d;
+	background: -moz-linear-gradient(top, #ffce0d 0%, #ffffff 50%, #c97eba 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffce0d),
+		color-stop(50%, #ffffff), color-stop(100%, #c97eba));
+	/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top 0%, #ffce0d 0%, #ffffff 50%, #c97eba 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffce0d 0%, #ffffff 50%, #c97eba 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffce0d 0%, #ffffff 50%, #c97eba 100%);
+	/* IE10+ */
 	position: fixed;
 }
 
@@ -41,6 +56,19 @@ body {
 	transition: width 1s;
 }
 
+.menuitemselected {
+	border: 5px double #b80b0b;
+	font-variant: small-caps;
+	font-weight: normal;
+	width: 86px;
+	padding: 3px 10px;
+	text-align: center;
+	color: #b80b0b;
+	background-color: #fff690;
+	-webkit-transition: width 1s; /* Safari */
+	transition: width 1s;
+}
+
 .menuitem:hover {
 	width: 106px;
 	background-color: #f0e787;
@@ -50,14 +78,201 @@ body {
  Personalizacion del pie
  ************************************/
 .footer {
-	width: 100%;
-	position: fixed;
 	text-align: right;
-	bottom: 0px;
-	margin-right: auto;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	margin-right: 40px;
 	margin-left: auto;
+	z-index: -5000;
 }
 
 .footer span {
 	margin-right: 5px;
+}
+
+/************************************
+ Cuerpo general
+ ************************************/
+.main {
+	margin-top: 123px;
+	display: inline-block;
+	width: 100%;
+	margin-bottom: 80px;
+}
+
+/************************************
+ Submenu general
+ ************************************/
+.subMenu {
+	display: inline-block;
+	width: 99%;
+	text-align: center;
+	border: 5px ridge #ffea02;
+	background-color: #fff6a2;
+	height: 63px;
+}
+
+.crudmenu {
+	float: left;
+	margin-left: 30px;
+}
+
+.pagmenu {
+	display: inline-block;
+	text-align: center;
+}
+
+.subMenu li {
+	float: left;
+	display: inline;
+	list-style: none outside none;
+	margin: 0 3px;
+}
+
+.crudmenu li {
+	margin: 0 8px;
+}
+
+.crudmenu a:hover {
+	cursor: pointer;
+}
+
+.submenuitem {
+	line-height: 32px;
+	font-weight: bold;
+}
+
+/************************************
+ Tabla de datos general
+ ************************************/
+.dataTable {
+	text-align: left;
+	display: inline-block;
+	margin: 10px 20px;
+	height: 100%;
+	width: 94%;
+	background-color: #d0c8e9;
+	border: 5px ridge;
+	padding: 5px;
+}
+
+.dataTable table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dataTable table,th,td {
+	border: 2px solid #59367c;
+}
+
+.dataTable td {
+	padding: 2px 10px;
+}
+
+.dataTable th {
+	padding: 2px 10px;
+	background-color: #69507c;
+	font-variant: small-caps;
+	font-size: 18px;
+	letter-spacing: 3px;
+	color: #ffce0d;
+}
+
+.dataTable tbody tr:nth-child(even) {
+	background-color: white;
+}
+
+.dataTable tbody tr:hover {
+	background-color: #a5c8e1;
+	cursor: pointer;
+}
+
+.selectedRow {
+	background-color: #447598 !important;
+	color: red;
+}
+
+/************************************
+ Submenu de busqueda
+ ************************************/
+.searchContainer {
+	background-color: #d0c8e9;
+	position: fixed;
+	top: 120px;
+	padding-left: 2px;
+	border-left: 2px solid #59367c;
+	border-top: 2px solid #59367c;
+	border-bottom: 2px solid #59367c;
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+	height: 420px;
+	width: 25px;
+	right: 0;
+	overflow: hidden;
+	border-left: 2px solid #59367c;
+}
+
+.searchContainer:hover {
+	width: 400px;
+	height: 440px;
+	padding: 20px;
+	padding-right: 0;
+}
+
+.searchIcon {
+	width: 20px;
+	margin-top: 30px;
+	float: left;
+}
+
+.searchIcon img {
+	float: left;
+	margin: 40px 2px;
+}
+
+.search {
+	background-color: #fff690;
+	border-bottom-left-radius: 15px;
+	border-left: 2px solid #59367c;
+	border-top: 2px solid #59367c;
+	border-bottom: 2px solid #59367c;
+	border-top-left-radius: 15px;
+	font-weight: bold;
+	float: right;
+	overflow: auto;
+}
+
+.searchField {
+	margin: 5px;
+	margin-right: 2px;
+}
+
+.searchField label {
+	float: left;
+	width: 130px;
+	text-align: right;
+	margin-right: 15px;
+}
+
+.searchField input,.searchField select {
+	width: 200px;
+}
+
+.searchSubmit button {
+	height: 32px;
+	line-height: 22px;
+}
+
+.searchSubmit label {
+	text-align: center;
+}
+
+.searchReset {
+	position: absolute;
+	bottom: 20px;
+	left: 70px;
+}
+.searchReset:hover {
+	cursor: pointer;
 }

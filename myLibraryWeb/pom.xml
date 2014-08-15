@@ -141,5 +141,10 @@
 			<version>1.7.7</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>es.magDevs.myLibrary</groupId>
+			<artifactId>myLibrary-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

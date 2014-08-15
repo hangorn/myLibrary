@@ -11,7 +11,7 @@ import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
-
+@SuppressWarnings({ "unused" })
 public class test {
 	
 	public static void main(String[] args) {
@@ -28,9 +28,9 @@ public class test {
 		LibroDao a = DaoFactory.getLibroDao();
 		
 		Libro f = new Libro();
-		f.setAutores(new HashSet<Autor>());
-		f.getAutores().add(new Autor(null, "a", null, null, null, null, null, null));
-//		f.setAnnoCompra(annoCompra);
+//		f.setAutores(new HashSet<Autor>());
+//		f.getAutores().add(new Autor(null, "a", null, null, null, null, null, null));
+		f.setTipo(new Tipo(null, "poesia"));
 		
 		List<Libro> l = a.getLibrosWithPag(f, 0,30);
 //		System.out.println(a.getCountLibros(f));

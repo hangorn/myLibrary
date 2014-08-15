@@ -1,8 +1,5 @@
 package es.magDevs.myLibrary.model.beans;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Bean de los datos de los autores
  * 
@@ -19,6 +16,7 @@ public class Autor extends Bean {
 	private Integer annoNacimiento;
 	private Integer annoFallecimiento;
 	private String notas;
+
 	public Autor() {
 	}
 
@@ -34,7 +32,7 @@ public class Autor extends Bean {
 		this.annoFallecimiento = annoFallecimiento;
 		this.notas = notas;
 	}
-	
+
 	public Autor(Autor bean) {
 		super(bean.getId());
 		this.nombre = bean.getNombre();
@@ -104,12 +102,12 @@ public class Autor extends Bean {
 
 	public String toString() {
 		String string = "";
-		if(getNombre() != null && !getNombre().equals("")) {
+		if (getNombre() != null && !getNombre().equals("")) {
 			string = getNombre() + " ";
 		}
 		return string + getApellidos();
 	}
-	
+
 	public Autor clone() {
 		return new Autor(this);
 	}

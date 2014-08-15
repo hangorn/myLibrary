@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<div class="searchContainer" th:fragment="booksSearch">
+	<div class="searchIcon">
+		<img th:alt-title="#{menu.search.icon}"
+			th:src="@{img/searchmenu/search.png}"
+		/> <img th:alt-title="#{menu.search.icon}"
+			th:src="@{img/searchmenu/arrows.png}"
+		/>
+	</div>
+	<div class="search">
+		<form th:action="@{/books}" th:object="${filter}" method="post">
+			<div class="searchField">
+				<label for="titulo" th:text="#{books.field.title}"></label> <input
+					type="text" th:field="*{titulo}" th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="autor.nombre" th:text="#{authors.field.name}"></label> <input
+					type="text" th:field="*{autor.nombre}" th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="autor.apellidos" th:text="#{authors.field.surname}"></label>
+				<input type="text" th:field="*{autor.apellidos}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="editorial.nombre" th:text="#{publishers.field.name}"></label>
+				<input type="text" th:field="*{editorial.nombre}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="ubicacion.codigo" th:text="#{places.field.code}"></label>
+				<select th:field="*{ubicacion.codigo}" th:errorclass="fieldError">
+					<option th:text="#{places.search.combo}" value=""></option>
+					<option th:each="dataPlace : ${dataPlaces}" th:value="${dataPlace}"
+						th:text="${dataPlace}"
+						th:selected="*{ubicacion.codigo} == ${dataPlace}"
+					></option>
+				</select>
+			</div>
+			<div class="searchField">
+				<label for="coleccion.nombre" th:text="#{collections.field.name}"></label>
+				<input type="text" th:field="*{coleccion.nombre}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="tipo.descripcion" th:text="#{types.field.description}"></label>
+				<select th:field="*{tipo.descripcion}" th:errorclass="fieldError">
+					<option th:text="#{types.search.combo}" value=""></option>
+					<option th:each="dataType : ${dataTypes}" th:value="${dataType}"
+						th:text="${dataType}"
+						th:selected="*{tipo.descripcion} == ${dataType}"
+					></option>
+				</select>
+			</div>
+			<div class="searchField">
+				<label for="notas" th:text="#{books.field.notes}"></label> <input
+					type="text" th:field="*{notas}" th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="isbn" th:text="#{books.field.isbn}"></label> <input
+					type="text" th:field="*{isbn}" th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="annoCompra" th:text="#{books.field.purchaseYear}"></label>
+				<input type="number" th:field="*{annoCompra}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="numPaginas" th:text="#{books.field.pagNumber}"></label>
+				<input type="number" th:field="*{numPaginas}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="autor.pais" th:text="#{authors.field.country}"></label>
+				<input type="text" th:field="*{autor.pais}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="autor.annoNacimiento"
+					th:text="#{authors.field.birthyear}"
+				></label> <input type="number" th:field="*{autor.annoNacimiento}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchReset">
+					<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
+						th:src="@{img/searchmenu/reset.png}"
+					/>
+			</div>
+			<div class="searchField searchSubmit">
+				<button type="submit" name="search">
+					<img th:alt-title="#{menu.search.icon}"
+						th:src="@{img/searchmenu/submit.png}"
+					/> <label th:text="#{menu.search.search}"></label>
+				</button>
+			</div>
+
+		</form>
+	</div>
+</div>
+</html>
