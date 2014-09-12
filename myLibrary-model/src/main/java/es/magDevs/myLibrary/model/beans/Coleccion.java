@@ -13,6 +13,7 @@ public class Coleccion extends Bean {
 
 	public Coleccion() {
 		super();
+		this.editorial = new Editorial();
 	}
 
 	public Coleccion(Integer id, String nombre, Editorial editorial) {

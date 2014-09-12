@@ -5,28 +5,28 @@
 		<form th:action="@{/books}" method="post" id="crudForm">
 			<nav>
 				<ul>
-					<li><a onclick="submit('crudForm','create',index)">
+					<li><a onclick="submit('crudForm','create',index,'')">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.create}"
 									th:src="@{img/crudmenu/create.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a onclick="submit('crudForm','delete',index)">
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{books.menu.delete.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.delete}"
 									th:src="@{img/crudmenu/delete.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a onclick="submit('crudForm','update',index)">
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{books.menu.update.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.update}"
 									th:src="@{img/crudmenu/update.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a onclick="submit('crudForm','read',index)">
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{books.menu.read.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.read}"
 									th:src="@{img/crudmenu/read.png}"

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<div th:fragment="translatorsRead">
+	<div class="crudFormContainer">
+		<div class="crudForm">
+			<form th:action="@{/translators}" th:object="${translatorData}" method="post">
+				<div th:replace="/translators/translatorsForm :: translatorsForm(false)"></div>
+	
+				<div class="crudButtons">
+					<button th:title="#{translators.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
+						<img th:alt-title="#{translators.crud.closeRead}"
+							th:src="@{img/searchmenu/reset.png}"
+						/> <label th:text="#{close}"></label>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

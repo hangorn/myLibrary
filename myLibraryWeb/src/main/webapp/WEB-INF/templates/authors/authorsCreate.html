@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<div th:fragment="authorsCreate">
+	<div class="crudFormContainer">
+		<div class="crudForm">
+			<form th:action="@{/authors}" th:object="${authorData}" method="post">
+				<div th:replace="/authors/authorsForm :: authorsForm(true)"></div>
+	
+				<div class="crudButtons">
+					<button th:title="#{authors.crud.acceptCreation}" type="submit" name="acceptCreation">
+						<img th:alt-title="#{authors.crud.acceptCreation}"
+							th:src="@{img/crudmenu/create.png}"
+						/> <label th:text="#{add}"></label>
+					</button>
+					<button th:title="#{authors.crud.cancelCreation}" type="submit" formnovalidate="formnovalidate" name="">
+						<img th:alt-title="#{authors.crud.cancelCreation}"
+							th:src="@{img/searchmenu/reset.png}"
+						/> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

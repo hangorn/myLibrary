@@ -32,7 +32,13 @@ public class test {
 //		f.getAutores().add(new Autor(null, "a", null, null, null, null, null, null));
 		f.setTipo(new Tipo(null, "poesia"));
 		
-		List<Libro> l = a.getLibrosWithPag(f, 0,30);
+		List<Libro> l = null;
+		try {
+			l = a.getLibrosWithPag(f, 0,30);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		System.out.println(a.getCountLibros(f));
 		
 		System.out.println(l);

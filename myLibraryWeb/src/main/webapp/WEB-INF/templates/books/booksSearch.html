@@ -36,9 +36,9 @@
 				<label for="ubicacion.codigo" th:text="#{places.field.code}"></label>
 				<select th:field="*{ubicacion.codigo}" th:errorclass="fieldError">
 					<option th:text="#{places.search.combo}" value=""></option>
-					<option th:each="dataPlace : ${dataPlaces}" th:value="${dataPlace}"
-						th:text="${dataPlace}"
-						th:selected="*{ubicacion.codigo} == ${dataPlace}"
+					<option th:each="dataPlace : ${dataPlaces}" th:value="${dataPlace.codigo}"
+						th:text="${dataPlace.codigo}"
+						th:selected="*{ubicacion.codigo} == ${dataPlace.codigo}"
 					></option>
 				</select>
 			</div>
@@ -52,9 +52,9 @@
 				<label for="tipo.descripcion" th:text="#{types.field.description}"></label>
 				<select th:field="*{tipo.descripcion}" th:errorclass="fieldError">
 					<option th:text="#{types.search.combo}" value=""></option>
-					<option th:each="dataType : ${dataTypes}" th:value="${dataType}"
-						th:text="${dataType}"
-						th:selected="*{tipo.descripcion} == ${dataType}"
+					<option th:each="dataType : ${dataTypes}" th:value="${dataType.descripcion}"
+						th:text="${dataType.descripcion}"
+						th:selected="*{tipo.descripcion} == ${dataType.descripcion}"
 					></option>
 				</select>
 			</div>
@@ -87,16 +87,16 @@
 				/>
 			</div>
 			<div class="searchField">
-				<label for="autor.annoNacimiento"
+				<label class="numberLabel" for="autor.annoNacimiento"
 					th:text="#{authors.field.birthyear}"
-				></label> <input type="number" th:field="*{autor.annoNacimiento}"
-					th:errorclass="fieldError"
+				></label> <input class="numberInput" type="number"
+					th:field="*{autor.annoNacimiento}" th:errorclass="fieldError"
 				/>
 			</div>
 			<div class="searchReset">
-					<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
-						th:src="@{img/searchmenu/reset.png}"
-					/>
+				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
+					th:src="@{img/searchmenu/reset.png}"
+				/>
 			</div>
 			<div class="searchField searchSubmit">
 				<button type="submit" name="search">

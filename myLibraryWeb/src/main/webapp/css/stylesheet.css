@@ -1,5 +1,8 @@
 @CHARSET "UTF-8";
 
+/************************************
+ Estilos generales
+ ************************************/
 body {
 	background-color: #fff690;
 	margin: 0px;
@@ -7,6 +10,15 @@ body {
 	font-size: 15px;
 	min-height: 100%;
 	position: relative;
+}
+
+button {
+	cursor: pointer;
+}
+
+:disabled {
+	background-color: rgba(255, 249, 180, 1);
+	color: #000;
 }
 
 /************************************
@@ -134,7 +146,7 @@ body {
 	margin: 0 8px;
 }
 
-.crudmenu a:hover {
+.crudmenu a {
 	cursor: pointer;
 }
 
@@ -259,6 +271,18 @@ body {
 	width: 200px;
 }
 
+.numberLabel {
+	width: 180px !important;
+}
+
+.numberInput {
+	width: 150px !important;
+}
+
+.searchSubmit {
+	float: right;
+}
+
 .searchSubmit button {
 	height: 32px;
 	line-height: 22px;
@@ -269,10 +293,216 @@ body {
 }
 
 .searchReset {
-	position: absolute;
-	bottom: 20px;
-	left: 70px;
-}
-.searchReset:hover {
+	float: left;
+	margin-left: 10px;
 	cursor: pointer;
+}
+
+/************************************
+ Formularios CRUD
+ ************************************/
+.crudFormContainer {
+	text-align: left;
+	display: inline-block;
+	margin: 10px 20px;
+	height: 100%;
+	width: 94%;
+	background-color: #d0c8e9;
+	border: 5px ridge;
+}
+
+.crudForm {
+	border: 2px solid #59367c;
+	margin: 10px;
+	padding: 10px;
+}
+
+.crudButtons {
+	border: 2px solid #59367c;
+	border-top: 0;
+	text-align: center;
+	border-bottom-left-radius: 40px;
+	border-bottom-right-radius: 40px;
+	padding-bottom: 10px;
+}
+
+.crudButtons button {
+	padding: 5px;
+}
+
+.crudButtons label {
+	margin-left: 15px;
+	float: right;
+	height: 32px;
+	line-height: 32px;
+}
+
+.booksForm {
+	text-align: center;
+	border-top-left-radius: 40px;
+	border-top-right-radius: 40px;
+	padding-bottom: 10px;
+	margin-bottom: 15px;
+	background-color: #fff690;
+	padding: 10px;
+	border-bottom: 2px solid #59367c;
+}
+
+.formField {
+	margin: 2px;
+	border: 1px solid #59367c;
+	border-radius: 5px;
+	display: inline-block;
+	padding: 2px;
+	padding-left: 0;
+}
+
+.searchFormField {
+	width: 400px;
+}
+
+.bigSearchFormField {
+	width: 600px !important;
+}
+
+.bigSearchFormField select {
+	width: 450px !important;
+}
+
+.formField label {
+	float: left;
+	margin-left: 5px;
+	margin-right: 15px;
+	margin-top: 3px;
+	margin-bottom: 1px;
+}
+
+.numberFormField {
+	width: 60px !important;
+}
+
+.bigTextFormField {
+	width: 400px !important;
+	resize: both;
+	overflow: auto;
+}
+
+.formField input,.formField select {
+	float: right;
+	width: 200px;
+}
+
+.addQuitButton {
+	margin-top: 6px;
+	margin-left: 6px;
+	float: left;
+	padding: 0;
+	margin-left: 6px;
+	float: left;
+}
+
+.addQuitButton img {
+	margin-top: 4px;
+}
+
+.fieldError {
+	border: 1px solid red;
+}
+
+/************************************
+ Formularios para añadir dentro
+ de formularios CRUD
+ ************************************/
+.background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3000;
+	width: 100%;
+	height: 100%;
+	/*Creamos un fondo semitransparente gracias al canal alfa de RGBA*/
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dataFormContainer {
+	position: absolute;
+	top: 10%;
+	width: 60%;
+	height: 60%;
+	margin: 0 20%;
+	z-index: 5000;
+	padding: 20px;
+	opacity: 1;
+	background-color: #d0c8e9;
+	border-radius: 20px;
+	border: 4px double #59367c;
+	overflow: auto;
+}
+
+.dataForm {
+	padding: 20px;
+	border-radius: 20px;
+	border: 2px solid #59367c;
+	text-align: center;
+	background-color: #fff690;
+}
+
+.dataFormButtons {
+	margin: 20px;
+	border-radius: 20px;
+	border: 2px solid #59367c;
+	border-top: 0;
+	background-color: #d0c8e9;
+}
+
+.dataFormField label {
+	margin-right: 10px;
+	width: 40%;
+	text-align: right;
+	float: left;
+}
+
+.closeButton {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+
+/************************************
+ CSS responsive
+ ************************************/
+@media only screen and (max-width: 972px) {
+	.menu {
+		height: 250px;
+		position: relative;
+	}
+	.main {
+		margin-top: 3px;
+	}
+	.searchContainer {
+		position: relative;
+		height: 440px;
+		width: auto;
+		padding: 20px;
+		padding-right: 0;
+	}
+	.searchContainer:hover {
+		width: auto;
+		height: 440px;
+		padding: 20px;
+		padding-right: 0;
+	}
+}
+
+@media only screen and (max-width: 564px) {
+	.menu {
+		height: 375px;
+	}
+}
+
+@media only screen and (max-width: 428px) {
+	.menu {
+		height: 500px;
+	}
 }

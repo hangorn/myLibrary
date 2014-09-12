@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<div class="translatorsFormContainer" th:fragment="translatorsForm(editable)">
+
+	<!-- formulario para los datos de los traductores -->
+	<div class="booksForm">
+		<!-- nombre -->
+		<div class="formField">
+			<label for="nombre" th:text="#{translators.field.name}"></label> <input
+				required="required" th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField"
+				th:disabled="!${editable}" type="text" th:field="*{nombre}"
+				th:errorclass="fieldError " th:title="${editable}?'':*{nombre}"
+			/>
+		</div>
+		<!--  lista de libros -->
+		<div th:if="!${editable}" class="formField bigSearchFormField">
+			<label for="translatorsBooks" th:text="#{translators.crud.translatorsBooks}"></label>
+			<select id="translatorsBooks" size="6" multiple="multiple"
+				disabled="disabled"
+			>
+				<option th:each="book : ${translatorBooks}" th:text="${book.titulo}"
+					th:title="${book.titulo}"
+				></option>
+			</select>
+		</div>
+	</div>
+</div>
+</html>

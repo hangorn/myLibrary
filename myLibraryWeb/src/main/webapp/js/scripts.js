@@ -13,7 +13,27 @@ function setSelected(domElement) {
 }
 
 // submit the specified form with the params
-function submit(formID, paramName, paramValue) {
+function submit(formID, paramName, paramValue, msg) {
+	//Si no tenemos un mensaje que mostrar no comprobamos si el indice es valido
+	if(msg && msg != '') {
+		if(index < 0) {
+			alert(msg);
+			return;
+		}
+	}
+	//Si se trata de una eliminacion pedimos confirmacion antes de proceder
+	if(paramName == "delete") {
+		if(confirm(deleteConfirmMessage)) {
+			var form = document.getElementById(formID);
+			var hidden = document.createElement("input");
+			hidden.type = "hidden";
+			hidden.name = paramName;
+			hidden.value = paramValue;
+			form.appendChild(hidden);
+			form.submit();
+		}
+		return;
+	}
 	var form = document.getElementById(formID);
 	var hidden = document.createElement("input");
 	hidden.type = "hidden";
@@ -23,6 +43,8 @@ function submit(formID, paramName, paramValue) {
 	form.submit();
 }
 
+// Vacia todos los campos de busqueda (todos los tags INPUT o SELECT que esten
+// dentro de un contenedor de clase "searchField")
 function clearSearch() {
 	// Primero buscamos todos los contenedores del formulario de busqueda
 	var rows = document.getElementsByClassName("searchField");
@@ -41,3 +63,5 @@ function clearSearch() {
 		}
 	}
 }
+
+

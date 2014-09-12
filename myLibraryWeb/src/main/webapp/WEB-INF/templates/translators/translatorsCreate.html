@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<div th:fragment="translatorsCreate">
+	<div class="crudFormContainer">
+		<div class="crudForm">
+			<form th:action="@{/translators}" th:object="${translatorData}" method="post">
+				<div th:replace="/translators/translatorsForm :: translatorsForm(true)"></div>
+	
+				<div class="crudButtons">
+					<button th:title="#{translators.crud.acceptCreation}" type="submit" name="acceptCreation">
+						<img th:alt-title="#{translators.crud.acceptCreation}"
+							th:src="@{img/crudmenu/create.png}"
+						/> <label th:text="#{add}"></label>
+					</button>
+					<button th:title="#{translators.crud.cancelCreation}" type="submit" formnovalidate="formnovalidate" name="">
+						<img th:alt-title="#{translators.crud.cancelCreation}"
+							th:src="@{img/searchmenu/reset.png}"
+						/> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

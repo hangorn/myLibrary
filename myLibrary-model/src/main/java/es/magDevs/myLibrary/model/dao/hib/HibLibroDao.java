@@ -27,131 +27,162 @@ import es.magDevs.myLibrary.model.dao.LibroDao;
  * @author javi
  * 
  */
-public class HibLibroDao implements LibroDao {
-
-	private SessionFactory sessionFactory;
-
-	/**
-	 * Obtiene la sesion actual para realizar operaciones contra el origen de
-	 * datos
-	 * 
-	 * @return
-	 */
-	private Session getSession() {
-		return sessionFactory.getCurrentSession();
-	}
+public class HibLibroDao extends HibAbstractDao implements LibroDao {
 
 	public HibLibroDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
 	 */
-	public Libro getLibro(int id) {
-		Session s = getSession();
-		s.beginTransaction();
-		Libro libro = (Libro) s.createQuery("FROM Libro WHERE id=" + id)
-				.uniqueResult();
-		s.getTransaction().commit();
-		return libro;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<Libro> getLibrosWithPag(int page, int pageSize) {
+	public List<Libro> getLibrosWithPag(int page, int pageSize)
+			throws Exception {
 		return getLibrosWithPag(null, page, pageSize);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Libro> getLibrosWithPag(Libro filter, int page, int pageSize) {
-		Session s = getSession();
-		s.beginTransaction();
-		// Obtenemos el filtro
-		Criteria query = getFilters(s, filter);
-		// Fijamos las opciones de paginacion
-		query.setMaxResults(pageSize);
-		query.setFirstResult(page * pageSize);
-		// Ordenamos por titulo de libro
-		if (filter != null) {
-			query.addOrder(Property.forName("titulo").asc());
-		} else {
-			query.addOrder(Property.forName("id").desc());
-		}
-		// Fijamos los datos que queremos obtener
-		query.setProjection(Projections.projectionList()
-				.add(Projections.property("id"))
-				.add(Projections.property("titulo"))
-				.add(Projections.property("editorial"))
-				.add(Projections.property("tipo"))
-				.add(Projections.property("ubicacion"))
-				.add(Projections.property("tomo")));
-		List<Object[]> l = query.list();
-		List<Libro> books = new ArrayList<Libro>();
-		// Recorremos los datos obtenidos para convertirlos en objetos de la
-		// clase Libro y obtener los autores correspondientes
-		for (Object[] objects : l) {
-			// Creamos el objeto Libro con los datos obtenidos
-			Libro book = new Libro();
-			book.setId((Integer) objects[0]);
-			book.setTitulo((String) objects[1]);
-			book.setEditorial((Editorial) objects[2]);
-			book.setTipo((Tipo) objects[3]);
-			book.setUbicacion((Ubicacion) objects[4]);
-			book.setTomo((Integer) objects[5]);
-			// Obtenemos los autores asociados
-			Query queryAutores = s
-					.createSQLQuery("SELECT a.id, a.nombre, a.apellidos"
-							+ " FROM autores a JOIN libros_autores la ON"
-							+ " a.id=la.autor where la.libro=" + book.getId());
-			List<Object[]> autoresData = queryAutores.list();
-			Set<Autor> autores = new HashSet<Autor>();
-			for (Object[] autorData : autoresData) {
-				autores.add(new Autor((Integer) autorData[0],
-						(String) autorData[1], (String) autorData[2], null,
-						null, null, null, null));
+	public List<Libro> getLibrosWithPag(Libro filter, int page, int pageSize)
+			throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			// Obtenemos el filtro
+			Criteria query = getFilters(s, filter);
+			// Fijamos las opciones de paginacion
+			query.setMaxResults(pageSize);
+			query.setFirstResult(page * pageSize);
+			// Ordenamos por titulo de libro
+			if (filter != null) {
+				query.addOrder(Property.forName("titulo").asc());
+			} else {
+				query.addOrder(Property.forName("id").desc());
 			}
-			book.setAutores(autores);
-			books.add(book);
+			// Fijamos los datos que queremos obtener
+			query.setProjection(Projections.projectionList()
+					.add(Projections.property("id"))
+					.add(Projections.property("titulo"))
+					.add(Projections.property("editorial"))
+					.add(Projections.property("tipo"))
+					.add(Projections.property("ubicacion"))
+					.add(Projections.property("tomo")));
+			List<Object[]> l = query.list();
+			List<Libro> books = new ArrayList<Libro>();
+			// Recorremos los datos obtenidos para convertirlos en objetos de la
+			// clase Libro y obtener los autores correspondientes
+			for (Object[] objects : l) {
+				// Creamos el objeto Libro con los datos obtenidos
+				Libro book = new Libro();
+				book.setId((Integer) objects[0]);
+				book.setTitulo((String) objects[1]);
+				book.setEditorial((Editorial) objects[2]);
+				book.setTipo((Tipo) objects[3]);
+				book.setUbicacion((Ubicacion) objects[4]);
+				book.setTomo((Integer) objects[5]);
+				// Obtenemos los autores asociados
+				Query queryAutores = s
+						.createSQLQuery("SELECT a.id, a.nombre, a.apellidos"
+								+ " FROM autores a JOIN libros_autores la ON"
+								+ " a.id=la.autor where la.libro=:id").setParameter("id", book.getId());
+				List<Object[]> autoresData = queryAutores.list();
+				Set<Autor> autores = new HashSet<Autor>();
+				for (Object[] autorData : autoresData) {
+					autores.add(new Autor((Integer) autorData[0],
+							(String) autorData[1], (String) autorData[2], null,
+							null, null, null, null));
+				}
+				book.setAutores(autores);
+				books.add(book);
+			}
+
+			s.getTransaction().commit();
+			return books;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
 		}
-
-		s.getTransaction().commit();
-		return books;
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
 	 */
-	public int getCountLibros() {
-		Session s = getSession();
-		s.beginTransaction();
-		Long count = (Long) s.createQuery("SELECT count(*) FROM Libro")
-				.uniqueResult();
-		s.getTransaction().commit();
-		return count.intValue();
+	public int getCountLibros() throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Long count = (Long) s.createQuery("SELECT count(*) FROM Libro")
+					.uniqueResult();
+			s.getTransaction().commit();
+			return count.intValue();
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
 	 */
-	public int getCountLibros(Libro filter) {
+	public int getCountLibros(Libro filter) throws Exception {
 		if (filter == null) {
 			return getCountLibros();
 		}
-		Session s = getSession();
-		s.beginTransaction();
-		Criteria query = getFilters(s, filter);
-		query.setProjection(Projections.rowCount());
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Criteria query = getFilters(s, filter);
+			query.setProjection(Projections.rowCount());
 
-		Long count = (Long) query.uniqueResult();
-		s.getTransaction().commit();
-		return count.intValue();
+			Long count = (Long) query.uniqueResult();
+			s.getTransaction().commit();
+			return count.intValue();
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @throws Exception 
+	 */
+	public Libro getLibro(int id) throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Libro libro = (Libro) s.createQuery("FROM Libro WHERE id=:id").setParameter("id", id)
+					.uniqueResult();
+			s.getTransaction().commit();
+			return libro;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	/**
+	 * Crea un criterio de busqueda para la sesion indicada, segun los filtros
+	 * suministrados
+	 * 
+	 * @param session
+	 * @param filter
+	 * @return
+	 */
 	private Criteria getFilters(Session session, Libro filter) {
 		Criteria c = session.createCriteria(Libro.class);
 		if (filter == null) {

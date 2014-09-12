@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<div class="placesList" th:fragment="placesList">
+	<div th:replace="/places/placesMenu :: placesMenu"></div>
+	<div class="dataTable"
+		th:if="(${placesData} != null AND !${#lists.isEmpty(placesData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{places.table.head.code}"></th>
+					<th th:text="#{places.table.head.description}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="placeData,dataStat : ${placesData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td th:text="${placeData.codigo}"
+						th:title="${placeData.codigo}"
+					></td>
+					<td th:text="${placeData.descripcion}"
+						th:title="${placeData.descripcion}"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${placesData} == null OR ${#lists.isEmpty(placesData)})"
+		th:text="#{places.table.empty}"
+	></div>
+	<div
+		th:if="(${placesData} != null AND !${#lists.isEmpty(placesData)})"
+	>
+		<div th:replace="/places/placesMenu :: placesMenu"></div>
+	</div>
+	<div th:replace="/places/placesSearch :: placesSearch"></div>
+</div>
+</html>

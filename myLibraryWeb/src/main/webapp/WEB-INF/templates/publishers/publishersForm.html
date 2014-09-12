@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<div class="publishersFormContainer" th:fragment="publishersForm(editable)">
+
+	<!-- formulario para los datos de las editoriales -->
+	<div class="booksForm">
+		<!-- nombre -->
+		<div class="formField">
+			<label for="nombre" th:text="#{publishers.field.name}"></label> <input
+				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField"
+				th:disabled="!${editable}" type="text" th:field="*{nombre}"
+				th:errorclass="fieldError " th:title="${editable}?'':*{nombre}"
+			/>
+		</div>
+		<!-- ciudad -->
+		<div class="formField">
+			<label for="ciudad" th:text="#{publishers.field.city}"></label> <input
+				th:maxlength="#{TEXT_MAX_LENGHT}" th:disabled="!${editable}"
+				type="text" th:field="*{ciudad}" th:errorclass="fieldError "
+				th:title="${editable}?'':*{ciudad}"
+			/>
+		</div>
+		<!--  lista de libros -->
+		<div th:if="!${editable}" class="formField bigSearchFormField">
+			<label for="publishersBooks" th:text="#{publishers.crud.publishersBooks}"></label>
+			<select id="publishersBooks" size="6" multiple="multiple"
+				disabled="disabled"
+			>
+				<option th:each="book : ${publisherBooks}" th:text="${book.titulo}"
+					th:title="${book.titulo}"
+				></option>
+			</select>
+		</div>
+	</div>
+</div>
+</html>

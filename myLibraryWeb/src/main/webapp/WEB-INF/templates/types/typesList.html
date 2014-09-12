@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<div class="typesList" th:fragment="typesList">
+	<div th:replace="/types/typesMenu :: typesMenu"></div>
+	<div class="dataTable"
+		th:if="(${typesData} != null AND !${#lists.isEmpty(typesData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{types.table.head.description}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="typeData,dataStat : ${typesData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td th:text="${typeData.descripcion}"
+						th:title="${typeData.descripcion}"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${typesData} == null OR ${#lists.isEmpty(typesData)})"
+		th:text="#{types.table.empty}"
+	></div>
+	<div
+		th:if="(${typesData} != null AND !${#lists.isEmpty(typesData)})"
+	>
+		<div th:replace="/types/typesMenu :: typesMenu"></div>
+	</div>
+	<div th:replace="/types/typesSearch :: typesSearch"></div>
+</div>
+</html>

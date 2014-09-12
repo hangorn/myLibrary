@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<div class="publishersList" th:fragment="publishersList">
+	<div th:replace="/publishers/publishersMenu :: publishersMenu"></div>
+	<div class="dataTable"
+		th:if="(${publishersData} != null AND !${#lists.isEmpty(publishersData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{publishers.table.head.name}"></th>
+					<th th:text="#{publishers.table.head.city}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="publisherData,dataStat : ${publishersData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td th:text="${publisherData.nombre}"
+						th:title="${publisherData.nombre}"
+					></td>
+					<td th:text="${publisherData.ciudad}"
+						th:title="${publisherData.ciudad}"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${publishersData} == null OR ${#lists.isEmpty(publishersData)})"
+		th:text="#{publishers.table.empty}"
+	></div>
+	<div
+		th:if="(${publishersData} != null AND !${#lists.isEmpty(publishersData)})"
+	>
+		<div th:replace="/publishers/publishersMenu :: publishersMenu"></div>
+	</div>
+	<div th:replace="/publishers/publishersSearch :: publishersSearch"></div>
+</div>
+</html>

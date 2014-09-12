@@ -11,12 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.magDevs.myLibrary.model.dao.AutorDao;
+import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
 import es.magDevs.myLibrary.model.dao.UbicacionDao;
 import es.magDevs.myLibrary.model.dao.hib.HibAutorDao;
+import es.magDevs.myLibrary.model.dao.hib.HibColeccionDao;
+import es.magDevs.myLibrary.model.dao.hib.HibEditorialDao;
 import es.magDevs.myLibrary.model.dao.hib.HibLibroDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTipoDao;
+import es.magDevs.myLibrary.model.dao.hib.HibTraductorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
 
 /**
@@ -134,6 +138,48 @@ public class DaoFactory {
 	public static UbicacionDao getUbicacionDao() {
 		if (dataAccessType == HIBERNATE) {
 			return new HibUbicacionDao(sessionFactory);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de las
+	 * editoriales
+	 * 
+	 * @return
+	 */
+	public static EditorialDao getEditorialDao() {
+		if (dataAccessType == HIBERNATE) {
+			return new HibEditorialDao(sessionFactory);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de las
+	 * colecciones
+	 * 
+	 * @return
+	 */
+	public static HibColeccionDao getColeccionDao() {
+		if (dataAccessType == HIBERNATE) {
+			return new HibColeccionDao(sessionFactory);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de los
+	 * traductores
+	 * 
+	 * @return
+	 */
+	public static HibTraductorDao getTraductorDao() {
+		if (dataAccessType == HIBERNATE) {
+			return new HibTraductorDao(sessionFactory);
 		} else {
 			return null;
 		}

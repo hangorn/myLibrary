@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<div class="searchContainer" th:fragment="collectionsSearch">
+	<div class="searchIcon">
+		<img th:alt-title="#{menu.search.icon}"
+			th:src="@{img/searchmenu/search.png}"
+		/> <img th:alt-title="#{menu.search.icon}"
+			th:src="@{img/searchmenu/arrows.png}"
+		/>
+	</div>
+	<div class="search">
+		<form th:action="@{/collections}" th:object="${filter}" method="post">
+			<div class="searchField">
+				<label for="nombre" th:text="#{collections.field.name}"></label> <input
+					type="text" th:field="*{nombre}" th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchField">
+				<label for="editorial.nombre" th:text="#{publishers.field.name}"></label>
+				<input type="text" th:field="*{editorial.nombre}"
+					th:errorclass="fieldError"
+				/>
+			</div>
+			<div class="searchReset">
+				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
+					th:src="@{img/searchmenu/reset.png}"
+				/>
+			</div>
+			<div class="searchField searchSubmit">
+				<button type="submit" name="search">
+					<img th:alt-title="#{menu.search.icon}"
+						th:src="@{img/searchmenu/submit.png}"
+					/> <label th:text="#{menu.search.search}"></label>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+</html>

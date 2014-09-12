@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<div th:fragment="collectionsUpdate">
+	<div class="crudFormContainer">
+		<div class="crudForm">
+			<form th:action="@{/collections}" th:object="${collectionData}" method="post">
+				<div th:replace="/collections/collectionsForm :: collectionsForm(true)"></div>
+
+				<div class="crudButtons">
+					<button th:title="#{collections.crud.acceptUpdate}" type="submit"
+						name="acceptUpdate"
+					>
+						<img th:alt-title="#{collections.crud.acceptUpdate}"
+							th:src="@{img/crudmenu/create.png}"
+						/> <label th:text="#{modify}"></label>
+					</button>
+					<button th:title="#{collections.crud.cancelUpdate}" type="submit"
+						formnovalidate="formnovalidate" name=""
+					>
+						<img th:alt-title="#{collections.crud.cancelUpdate}"
+							th:src="@{img/searchmenu/reset.png}"
+						/> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

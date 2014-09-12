@@ -60,7 +60,7 @@ public class MainController implements InitializingBean {
 
 	@RequestMapping("/")
 	public String main(Model model) {
-		model.addAllAttributes(FragmentManager.getEmptyBody());
+		model.addAllAttributes(FragmentManager.getEmptyBody(""));
 		return "commons/body";
 	}
 }

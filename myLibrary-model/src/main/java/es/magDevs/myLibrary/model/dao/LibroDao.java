@@ -10,17 +10,18 @@ import es.magDevs.myLibrary.model.beans.Libro;
  * @author javi
  * 
  */
-public interface LibroDao {
+public interface LibroDao extends AbstractDao {
 	/**
-	 * * Obtiene una lista de los libros paginada con la opiones indicadas
+	 * * Obtiene una lista de los libros paginada con las opiones indicadas
 	 * 
 	 * @param page
 	 *            numero de pagina
 	 * @param pageSize
 	 *            tamaño de la pagina
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<Libro> getLibrosWithPag(int page, int pageSize);
+	public List<Libro> getLibrosWithPag(int page, int pageSize) throws Exception;
 
 	/**
 	 * Obtiene una lista de los libros, filtrados por los criterios indicados y
@@ -29,28 +30,21 @@ public interface LibroDao {
 	 * @param filter
 	 *            criterios de busqueda
 	 * @param page
-	 *            nuemro de pagina
+	 *            numero de pagina
 	 * @param pageSize
 	 *            tamaño de pagina
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<Libro> getLibrosWithPag(Libro filter, int page,
-			int pageSize);
-
-	/**
-	 * Obtiene el libro referencia por el id indicado
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Libro getLibro(int id);
+	public List<Libro> getLibrosWithPag(Libro filter, int page, int pageSize) throws Exception;
 
 	/**
 	 * Obtiene el numero total de libros
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int getCountLibros();
+	public int getCountLibros() throws Exception;
 
 	/**
 	 * Obtiene el numero total de libros filtrados por los criterios indicados
@@ -58,7 +52,17 @@ public interface LibroDao {
 	 * @param filter
 	 *            criterios de busqueda
 	 * @return
+	 * @throws Exception 
 	 */
-	public int getCountLibros(Libro filter);
+	public int getCountLibros(Libro filter) throws Exception;
 
+	/**
+	 * Obtiene el libro referencia por el id indicado
+	 * 
+	 * @param id
+	 *            del libro a obtener
+	 * @return todos los datos del libro, incluidos las tablas asociadas
+	 * @throws Exception 
+	 */
+	public Libro getLibro(int id) throws Exception;
 }

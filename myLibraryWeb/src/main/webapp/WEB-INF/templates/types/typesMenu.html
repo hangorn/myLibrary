@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<div class="subMenu" th:fragment="typesMenu">
+	<div class="crudmenu">
+		<form th:action="@{/types}" method="post" id="crudForm">
+			<nav>
+				<ul>
+					<li><a onclick="submit('crudForm','create',index,'')">
+							<div class="submenuitem">
+								<img th:alt-title="#{types.menu.create}"
+									th:src="@{img/crudmenu/create.png}"
+								/>
+							</div>
+					</a></li>
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{types.menu.delete.noIndexMsg}+'&#34;)'">
+							<div class="submenuitem">
+								<img th:alt-title="#{types.menu.delete}"
+									th:src="@{img/crudmenu/delete.png}"
+								/>
+							</div>
+					</a></li>
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{types.menu.update.noIndexMsg}+'&#34;)'">
+							<div class="submenuitem">
+								<img th:alt-title="#{types.menu.update}"
+									th:src="@{img/crudmenu/update.png}"
+								/>
+							</div>
+					</a></li>
+					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{types.menu.read.noIndexMsg}+'&#34;)'">
+							<div class="submenuitem">
+								<img th:alt-title="#{types.menu.read}"
+									th:src="@{img/crudmenu/read.png}"
+								/>
+							</div>
+					</a></li>
+				</ul>
+			</nav>
+		</form>
+	</div>
+
+	<div class="pagmenu"
+		th:if="(${typesData} != null AND !${#lists.isEmpty(typesData)})"
+	>
+		<nav>
+			<ul>
+				<li><a th:href="@{/types(start)}">
+						<div class="submenuitem">
+							<img th:alt-title="#{menu.pag.start}"
+								th:src="@{img/pagmenu/start.png}"
+							/>
+						</div>
+				</a></li>
+				<li><a th:href="@{/types(previous)}">
+						<div class="submenuitem">
+							<img th:alt-title="#{menu.pag.previous}"
+								th:src="@{img/pagmenu/previous.png}"
+							/>
+						</div>
+				</a></li>
+				<li><div class="submenuitem">
+						<span th:text="#{menu.pag.of(${page},${pageCount})}"></span>
+					</div></li>
+				<li><a th:href="@{/types(next)}">
+						<div class="submenuitem">
+							<img th:alt-title="#{menu.pag.next}"
+								th:src="@{img/pagmenu/next.png}"
+							/>
+						</div>
+				</a></li>
+				<li><a th:href="@{/types(end)}">
+						<div class="submenuitem">
+							<img th:alt-title="#{menu.pag.end}"
+								th:src="@{img/pagmenu/end.png}"
+							/>
+						</div>
+				</a></li>
+
+				<li><div class="submenuitem">
+						<form th:action="@{/types}" method="post">
+							<label for="pageSizeSelect" th:text="#{menu.pag.pageSize}"></label>
+							<select id="pageSizeSelect" name="pageSize"
+								onchange="this.form.submit()"
+							>
+								<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}"
+									th:text="${pageSize}"
+									th:selected="${selectedPageSize} == ${pageSize}"
+								></option>
+							</select>
+						</form>
+					</div></li>
+			</ul>
+		</nav>
+	</div>
+
+</div>
+</html>

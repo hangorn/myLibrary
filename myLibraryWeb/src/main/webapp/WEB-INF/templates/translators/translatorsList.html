@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<div class="translatorsList" th:fragment="translatorsList">
+	<div th:replace="/translators/translatorsMenu :: translatorsMenu"></div>
+	<div class="dataTable"
+		th:if="(${translatorsData} != null AND !${#lists.isEmpty(translatorsData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{translators.table.head.name}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="translatorData,dataStat : ${translatorsData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td th:text="${translatorData.nombre}"
+						th:title="${translatorData.nombre}"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${translatorsData} == null OR ${#lists.isEmpty(translatorsData)})"
+		th:text="#{translators.table.empty}"
+	></div>
+	<div
+		th:if="(${translatorsData} != null AND !${#lists.isEmpty(translatorsData)})"
+	>
+		<div th:replace="/translators/translatorsMenu :: translatorsMenu"></div>
+	</div>
+	<div th:replace="/translators/translatorsSearch :: translatorsSearch"></div>
+</div>
+</html>

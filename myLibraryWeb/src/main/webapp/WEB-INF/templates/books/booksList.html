@@ -20,7 +20,7 @@
 					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
 				>
 					<td
-						th:text="((${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
+						th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
 						th:title="${bookData.titulo}"
 					></td>
 					<td

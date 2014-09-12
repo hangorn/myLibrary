@@ -21,6 +21,20 @@
 	href="../../css/stylesheet.css" th:href="@{#{css.file}}"
 />
 <script th:src="@{#{js.file}}" type="text/javascript"></script>
+<script th:if="!${#strings.isEmpty(scriptMessage)}"
+	th:inline="javascript"
+>
+	/*<![CDATA[*/
+		window.onload = function() {
+			alert(/*[[${scriptMessage}]]*/);
+		}
+	/*]]>*/
+</script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+    deleteConfirmMessage = /*[[#{deleteConfirmMessage}]]*/;
+/*]]>*/
+	</script>
 </head>
 <body>
 	<div th:replace="${menuTemplate} :: ${menuFragment} (${menuSelected})"></div>

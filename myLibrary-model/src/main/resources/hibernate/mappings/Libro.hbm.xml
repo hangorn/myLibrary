@@ -50,30 +50,30 @@
 		</property>
 
 		<many-to-one class="es.magDevs.myLibrary.model.beans.Tipo"
-			lazy="false" name="tipo" fetch="join">
+			lazy="false" name="tipo" fetch="join" cascade="none">
 			<column name="tipo" />
 		</many-to-one>
 		<many-to-one class="es.magDevs.myLibrary.model.beans.Editorial"
-			lazy="false" name="editorial" fetch="join">
+			lazy="false" name="editorial" fetch="join" cascade="none">
 			<column name="editorial" />
 		</many-to-one>
 		<many-to-one class="es.magDevs.myLibrary.model.beans.Coleccion"
-			lazy="false" name="coleccion" fetch="join">
+			lazy="false" name="coleccion" fetch="join" cascade="none">
 			<column name="coleccion" />
 		</many-to-one>
 		<many-to-one class="es.magDevs.myLibrary.model.beans.Ubicacion"
-			lazy="false" name="ubicacion" fetch="join">
+			lazy="false" name="ubicacion" fetch="join" cascade="none">
 			<column name="ubicacion" />
 		</many-to-one>
 
-		<set name="autores" table="libros_autores" lazy="false">
+		<set name="autores" table="libros_autores" lazy="false" cascade="none">
 			<key>
 				<column name="libro" />
 			</key>
 			<many-to-many column="autor"
 				class="es.magDevs.myLibrary.model.beans.Autor" />
 		</set>
-		<set name="traductores" table="libros_traductores" lazy="false">
+		<set name="traductores" table="libros_traductores" lazy="false" cascade="none">
 			<key>
 				<column name="libro" />
 			</key>

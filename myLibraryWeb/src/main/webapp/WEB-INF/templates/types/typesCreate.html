@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<div th:fragment="typesCreate">
+	<div class="crudFormContainer">
+		<div class="crudForm">
+			<form th:action="@{/types}" th:object="${typeData}" method="post">
+				<div th:replace="/types/typesForm :: typesForm(true)"></div>
+	
+				<div class="crudButtons">
+					<button th:title="#{types.crud.acceptCreation}" type="submit" name="acceptCreation">
+						<img th:alt-title="#{types.crud.acceptCreation}"
+							th:src="@{img/crudmenu/create.png}"
+						/> <label th:text="#{add}"></label>
+					</button>
+					<button th:title="#{types.crud.cancelCreation}" type="submit" formnovalidate="formnovalidate" name="">
+						<img th:alt-title="#{types.crud.cancelCreation}"
+							th:src="@{img/searchmenu/reset.png}"
+						/> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

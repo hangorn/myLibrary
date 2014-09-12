@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<div class="authorsList" th:fragment="authorsList">
+	<div th:replace="/authors/authorsMenu :: authorsMenu"></div>
+	<div class="dataTable"
+		th:if="(${authorsData} != null AND !${#lists.isEmpty(authorsData)})"
+	>
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{authors.table.head.name}"></th>
+					<th th:text="#{authors.table.head.surname}"></th>
+					<th th:text="#{authors.table.head.country}"></th>
+					<th th:text="#{authors.table.head.birthyear}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="authorData,dataStat : ${authorsData}"
+					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
+				>
+					<td th:text="${authorData.nombre}" th:title="${authorData.nombre}"></td>
+					<td th:text="${authorData.apellidos}"
+						th:title="${authorData.apellidos}"
+					></td>
+					<td th:text="${authorData.pais}"
+						th:title="${authorData.pais}"
+					></td>
+					<td th:text="${authorData.annoNacimiento}"
+						th:title="${authorData.annoNacimiento}"
+					></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable"
+		th:if="(${authorsData} == null OR ${#lists.isEmpty(authorsData)})"
+		th:text="#{authors.table.empty}"
+	></div>
+	<div
+		th:if="(${authorsData} != null AND !${#lists.isEmpty(authorsData)})"
+	>
+		<div th:replace="/authors/authorsMenu :: authorsMenu"></div>
+	</div>
+	<div th:replace="/authors/authorsSearch :: authorsSearch"></div>
+</div>
+</html>
