@@ -642,6 +642,10 @@ public class BooksController {
 					EditorialDao editorialDao = DaoFactory.getEditorialDao();
 					int editorialId = editorialDao.insert(newPublisher);
 					newBook.getEditorial().setId(editorialId);
+					//Si tenemos un nueva coleccion, le asignamos el id de la editorial
+					if (newBook.getColeccion().getId() == -1) {
+						newCollection.getEditorial().setId(editorialId);
+					}
 				} else {
 					msg += messageSource.getMessage(
 							"error.publisher.fieldsNotRight", null, null)

@@ -188,7 +188,7 @@ public class HibColeccionDao extends HibAbstractDao implements ColeccionDao {
 					.createQuery(
 							"FROM Coleccion WHERE nombre LIKE :nombre AND editorial.id = :id")
 					.setParameter("nombre", start + "%")
-					.setParameter("id", idEditorial.toString()).list();
+					.setParameter("id", idEditorial).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

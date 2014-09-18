@@ -153,6 +153,7 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 		Session s = null;
 		try {
 			s = getSession();
+			s.beginTransaction();
 			List<Traductor> l = s
 					.createQuery("FROM Traductor WHERE nombre LIKE :nombre")
 					.setParameter("nombre", start + "%").list();
