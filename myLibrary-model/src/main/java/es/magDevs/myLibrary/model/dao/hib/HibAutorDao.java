@@ -1,7 +1,9 @@
 package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
@@ -11,39 +13,41 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 
 /**
  * Acceso a los datos de autores, usando hibernate
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
+@SuppressWarnings("unchecked")
 public class HibAutorDao extends HibAbstractDao implements AutorDao {
 
 	public HibAutorDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
+		super(sessionFactory, Constants.AUTHORS_TABLE);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Map<String, Boolean> getOrders() {
+		Map<String, Boolean> orders = new LinkedHashMap<String, Boolean>();
+		orders.put("apellidos", true);
+		orders.put("nombre", true);
+		return orders;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	public List<Autor> getAutoresWithPag(int page, int pageSize)
-			throws Exception {
-		return getAutoresWithPag(null, page, pageSize);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Autor> getAutoresWithPag(Autor filter, int page, int pageSize)
+	@Override
+	public List<Autor> getWithPag(Bean filter, int page, int pageSize)
 			throws Exception {
 		Session s = null;
 		try {
@@ -86,71 +90,11 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 		}
 	}
 
-	/**
+	/** 
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	public int getCountAutores() throws Exception {
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Long count = (Long) s.createQuery("SELECT count(*) FROM Autor")
-					.uniqueResult();
-			s.getTransaction().commit();
-			return count.intValue();
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	public int getCountAutores(Autor filter) throws Exception {
-		if (filter == null) {
-			return getCountAutores();
-		}
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Criteria query = getFilters(s, filter);
-			query.setProjection(Projections.rowCount());
-			Long count = (Long) query.uniqueResult();
-			s.getTransaction().commit();
-			return count.intValue();
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	public Autor getAutor(int id) throws Exception {
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Autor autor = (Autor) s.createQuery("FROM Autor WHERE id=:id")
-					.setParameter("id", id).uniqueResult();
-			s.getTransaction().commit();
-			return autor;
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	private Criteria getFilters(Session session, Autor filter) {
+	protected Criteria getFilters(Session session, Bean f) {
+		Autor filter = (Autor)f;
 		Criteria c = session.createCriteria(Autor.class);
 		if (filter == null) {
 			return c;
@@ -192,10 +136,7 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Autor> getAutores(String start) throws Exception {
 		Session s = null;
 		try {
@@ -203,7 +144,7 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			s.beginTransaction();
 			List<Autor> l = s
 					.createQuery(
-							"FROM Autor WHERE nombre LIKE :nombre OR apellidos LIKE :apellidos")
+							"FROM Autor WHERE nombre LIKE :nombre OR apellidos LIKE :apellidos ORDER BY apellidos,nombre")
 					.setParameter("nombre", start+"%")
 					.setParameter("apellidos", start+"%").list();
 			s.getTransaction().commit();
@@ -216,10 +157,7 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Libro> getLibrosAutor(Integer id) throws Exception {
 		Session s = null;
 		try {
@@ -227,7 +165,7 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
 					.createCriteria("autores").add(Restrictions.idEq(id))
-					.list();
+					.addOrder(Property.forName("titulo").asc()).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

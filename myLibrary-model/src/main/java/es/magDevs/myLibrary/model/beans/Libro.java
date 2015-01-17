@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Bean de los datos de los libros
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 @SuppressWarnings("serial")

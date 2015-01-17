@@ -3,7 +3,7 @@ package es.magDevs.myLibrary.model.beans;
 /**
  * Bean de los datos de las ubicaciones
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 @SuppressWarnings("serial")

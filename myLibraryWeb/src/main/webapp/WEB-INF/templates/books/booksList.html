@@ -3,7 +3,7 @@
 <div class="booksList" th:fragment="booksList">
 	<div th:replace="/books/booksMenu :: booksMenu"></div>
 	<div class="dataTable"
-		th:if="(${booksData} != null AND !${#lists.isEmpty(booksData)})"
+		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
 	>
 		<table>
 			<thead>
@@ -16,7 +16,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="bookData,dataStat : ${booksData}"
+				<tr th:each="bookData,dataStat : ${data}"
 					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
 				>
 					<td
@@ -49,10 +49,10 @@
 		</table>
 	</div>
 	<div class="dataTable"
-		th:if="(${booksData} == null OR ${#lists.isEmpty(booksData)})"
+		th:if="(${data} == null OR ${#lists.isEmpty(data)})"
 		th:text="#{books.table.empty}"
 	></div>
-	<div th:if="(${booksData} != null AND !${#lists.isEmpty(booksData)})">
+	<div th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<div th:replace="/books/booksMenu :: booksMenu"></div>
 	</div>
 	<div th:replace="/books/booksSearch :: booksSearch"></div>

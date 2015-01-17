@@ -7,7 +7,9 @@
 				<li th:each="item,itemStat : ${menuItems}"><a
 					th:href="@{${item.link}}"
 				>
-						<div th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})">
+						<div
+							th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})"
+						>
 							<img th:alt-title="${item.text}" th:src="@{${item.img}}" /> <span
 								th:text="${item.text}"
 							></span>
@@ -15,6 +17,17 @@
 				</a></li>
 			</ul>
 		</nav>
+		<div class="rightMenu">
+			<ul class="langList">
+				<li th:each="item,itemStat : ${languages}"><a
+					th:href="@{${currentURL}+'?'+${item.link}}"
+				>
+						<div>
+							<img th:alt-title="${item.text}" th:src="@{${item.img}}" />
+						</div>
+				</a></li>
+			</ul>
+		</div>
 	</header>
 </div>
-</html>d
+</html>

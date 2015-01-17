@@ -1,43 +1,31 @@
 package es.magDevs.myLibrary.web.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.WebApplicationContext;
 
+import es.magDevs.myLibrary.model.Constants.ACTION;
+import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Autor;
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
-import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
-import es.magDevs.myLibrary.model.beans.Ubicacion;
+import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
-import es.magDevs.myLibrary.model.dao.TipoDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
-import es.magDevs.myLibrary.model.dao.UbicacionDao;
-import es.magDevs.myLibrary.web.gui.beans.MenuItem;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
@@ -47,375 +35,76 @@ import es.magDevs.myLibrary.web.gui.utils.PaginationManager;
 /**
  * Controlador para la seccion de libros
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
-@Controller
-@Scope(WebApplicationContext.SCOPE_SESSION)
-public class BooksController {
-	/* *****************************************
-	 * **************** COMUN ******************
-	 * *****************************************
-	 */
-	/**
-	 * Ejecuta las inicializaciones necesarias
-	 */
-	public void afterPropertiesSet() throws Exception {
-		DaoFactory.init();
-	}
+public class BooksController extends AbstractController {
 
-	// Spring Message Source
-	@Autowired
-	private MessageSource messageSource;
+	public BooksController(MessageSource messageSource) {
+		super(messageSource);
+	}
 
 	// LOG
 	private static final Logger log = Logger.getLogger(BooksController.class);
 
-	/**
-	 * Lista con los datos de los elementos del menu
-	 * 
-	 * @return
-	 */
-	@ModelAttribute("menuItems")
-	List<MenuItem> getMenuItems() {
-		List<MenuItem> menuItems = new ArrayList<MenuItem>();
-		// Obtenemos los elementos del menu
-		String[] items = messageSource.getMessage("menu.items", null, null)
-				.split(" ");
-		for (int i = 0; i < items.length; i++) {
-			MenuItem item = new MenuItem();
-			item.setText(messageSource.getMessage("menu." + items[i] + ".text",
-					null, null));
-			item.setImg(messageSource.getMessage("menu." + items[i] + ".img",
-					null, null));
-			item.setLink(messageSource.getMessage("menu." + items[i] + ".link",
-					null, null));
-			menuItems.add(item);
-		}
-		return menuItems;
-	}
-
-	/**
-	 * Lista con los tamaños de paginas disponibles
-	 * 
-	 * @return
-	 */
-	@ModelAttribute("pageSizes")
-	String[] getPageSizes() {
-		// Obtenemos los elementos del menu
-		return messageSource.getMessage("menu.pag.sizes", null, null)
-				.split(" ");
-	}
-
-	/**
-	 * Lista con los datos de las ubicaciones disponibles
-	 * 
-	 * @return
-	 */
-	List<Ubicacion> dataPlaces;
-
-	@ModelAttribute("dataPlaces")
-	List<Ubicacion> getDataPlaces() {
-		try {
-			// Obtenemos los datos de las ubicaciones
-			UbicacionDao dao = DaoFactory.getUbicacionDao();
-			dataPlaces = dao.getUbicaciones();
-		} catch (Exception e) {
-			if (dataTypes == null) {
-				dataTypes = new ArrayList<Tipo>();
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " al cargar las UBICACIONES", e);
-		}
-		return dataPlaces;
-	}
-
-	/**
-	 * Lista con los datos de los tipos disponibles
-	 * 
-	 * @return
-	 */
-	List<Tipo> dataTypes;
-
-	@ModelAttribute("dataTypes")
-	List<Tipo> getDataTypes() {
-		try {
-			// Obtenemos los datos de los tipos
-			TipoDao dao = DaoFactory.getTipoDao();
-			dataTypes = dao.getTipos();
-		} catch (Exception e) {
-			if (dataTypes == null) {
-				dataTypes = new ArrayList<Tipo>();
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " al cargar los TIPOS", e);
-		}
-		return dataTypes;
-	}
-
 	/* *****************************************
-	 * *************** LIBROS ******************
+	 * ********** IMPLEMENTACIONES *************
 	 * *****************************************
 	 */
-	private PaginationManager booksPagManager;
-	private List<Libro> booksData;
-	private BooksFilter booksFilter;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected SECTION getSection() {
+		return SECTION.BOOKS;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected Logger getLog() {
+		return log;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected AbstractDao getDao() {
+		return DaoFactory.getLibroDao();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected Bean getNewFilter() {
+		return new BooksFilter();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected Bean processFilter(Bean filter) {
+		return FilterManager.processBooksFilter((BooksFilter) filter);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected boolean processNewData(Bean newData) {
+		return NewDataManager.processBook((Libro) newData, messageSource);
+	}
+
 	private Editorial newPublisher;
 	private Coleccion newCollection;
 	private Map<Integer, Autor> newAuthors;
 	private Map<Integer, Traductor> newTranslators;
-	private Integer modifiedBookId;
 
-	@RequestMapping(value = "/books")
-	public String books(Model model) {
-		try {
-			// Iniciamos paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			booksPagManager = new PaginationManager(messageSource,
-					dao.getCountLibros());
-			// Buscamos los datos
-			booksData = dao.getLibrosWithPag(booksPagManager.getPage() - 1,
-					booksPagManager.getPageSize());
-			// Reiniciamos el filtro de busqueda
-			booksFilter = null;
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books' para la ruta '/books'",
-					e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "next" })
-	public String booksNext(Model model) {
-		try {
-			// Realizamos la paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource,
-						dao.getCountLibros(booksFilter));
-			}
-			if (booksPagManager.next()) {
-				booksData = dao.getLibrosWithPag(booksFilter,
-						booksPagManager.getPage() - 1,
-						booksPagManager.getPageSize());
-
-			}
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?next'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "previous" })
-	public String booksPrevious(Model model) {
-		try {
-			// Realizamos la paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource,
-						dao.getCountLibros(booksFilter));
-			}
-			if (booksPagManager.previous()) {
-				booksData = dao.getLibrosWithPag(booksFilter,
-						booksPagManager.getPage() - 1,
-						booksPagManager.getPageSize());
-			}
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?previous'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "start" })
-	public String booksStart(Model model) {
-		try {
-			// Realizamos la paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource,
-						dao.getCountLibros(booksFilter));
-			}
-			if (booksPagManager.start()) {
-				booksData = dao.getLibrosWithPag(booksFilter,
-						booksPagManager.getPage() - 1,
-						booksPagManager.getPageSize());
-			}
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?start'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "end" })
-	public String booksEnd(Model model) {
-		try {
-			// Realizamos la paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource,
-						dao.getCountLibros(booksFilter));
-			}
-			if (booksPagManager.end()) {
-				booksData = dao.getLibrosWithPag(booksFilter,
-						booksPagManager.getPage() - 1,
-						booksPagManager.getPageSize());
-			}
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?end'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "pageSize" })
-	public String booksPagesSize(@RequestParam("pageSize") String pageSize,
-			Model model) {
-		try {
-			// Realizamos la paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource,
-						dao.getCountLibros(booksFilter));
-			}
-			if (booksPagManager.setPageSize(pageSize)) {
-				booksData = dao.getLibrosWithPag(booksFilter,
-						booksPagManager.getPage() - 1,
-						booksPagManager.getPageSize());
-				model.addAttribute("selectedPageSize", pageSize);
-			} else {
-				model.addAttribute("selectedPageSize",
-						"" + booksPagManager.getPageSize());
-			}
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?pagSize'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("selectedPageSize", pageSize);
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "search" })
-	public String booksFilter(BooksFilter filter, Model model) {
-		try {
-			// Guardamos el filtro
-			booksFilter = FilterManager.processBooksFilter(filter);
-			// Iniciamos paginacion
-			LibroDao dao = DaoFactory.getLibroDao();
-			booksPagManager = new PaginationManager(messageSource,
-					dao.getCountLibros(booksFilter));
-			booksData = dao.getLibrosWithPag(booksFilter,
-					booksPagManager.getPage() - 1,
-					booksPagManager.getPageSize());
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(""));
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/books?search'", e);
-			// Enlazamos fragmentos de plantillas
-			model.addAllAttributes(FragmentManager.getBooksList(messageSource
-					.getMessage("error", null, null)));
-		}
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "create" })
-	public String booksCreate(@RequestParam("create") Integer index, Model model) {
+	/* *****************************************
+	 * ************** ACCIONES *****************
+	 * *****************************************
+	 */
+	@Override
+	public String create(Integer index, Model model) {
 		Libro bookData = null;
 		// Creamos un hashmap para guardar los autores que se le asignaran al
 		// libro
@@ -435,11 +124,11 @@ public class BooksController {
 		// Mensaje a mostrar en caso de error
 		String msg = "";
 		// Si tenemos un indice valido
-		if (index >= 0 && booksData != null) {
+		if (index >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				LibroDao dao = DaoFactory.getLibroDao();
-				bookData = dao.getLibro(booksData.get(index).getId());
+				bookData = (Libro) getDao().get(
+						((Bean) data.get(index)).getId());
 				// Guardamos los autores que ya tiene asignados el nuevo libro
 				if (bookData.getAutores() != null
 						&& bookData.getAutores().size() > 0) {
@@ -456,14 +145,8 @@ public class BooksController {
 					}
 				}
 			} catch (Exception e) {
-				// Si no conseguimos un libro, creamos uno vacio para que no de
-				// error
-				if (bookData == null) {
-					bookData = new BooksFilter();
-				}
-				log.error("Error en el controlador 'Books'"
-						+ " para la ruta '/books?create'", e);
-				msg = messageSource.getMessage("error", null, null);
+				bookData = new BooksFilter();
+				msg = manageException("create", e);
 			}
 		} else {
 			// Creamos un libro vacio, para que no de fallos al intentar acceder
@@ -472,61 +155,15 @@ public class BooksController {
 		}
 
 		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksCreateForm(msg));
-
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.CREATE,
+				getSection()));
 		// Fijamos variables para la vista
-		model.addAttribute("bookData", bookData);
+		model.addAttribute("elementData", bookData);
 		return "commons/body";
 	}
 
-	@RequestMapping(value = "/books", params = { "delete" })
-	public String booksDelete(@RequestParam("delete") Integer index, Model model) {
-		// Mensaje a mostrar en caso de error
-		String msg = "";
-		LibroDao dao = DaoFactory.getLibroDao();
-
-		try {
-			// Borramos el libro indicado por el indice recibido
-			dao.beginTransaction();
-			dao.delete(booksData.get(index));
-			dao.commitTransaction();
-		} catch (Exception e) {
-			dao.rollbackTransaction();
-			log.error("Error en el controlador 'Books' al borrar un libro: "
-					+ index + " " + booksData.get(index), e);
-			msg = messageSource.getMessage("error.delete", null, null);
-		}
-
-		try {
-			// Iniciamos paginacion
-			booksPagManager = new PaginationManager(messageSource,
-					dao.getCountLibros());
-			// Buscamos los datos
-			booksData = dao.getLibrosWithPag(booksPagManager.getPage() - 1,
-					booksPagManager.getPageSize());
-			// Reiniciamos el filtro de busqueda
-			booksFilter = null;
-		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error("Error en el controlador 'Books'"
-					+ " para la ruta '/delete' al mostrar los datos", e);
-			msg = messageSource.getMessage("error", null, null);
-		}
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksList(msg));
-		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "update" })
-	public String booksUpdate(@RequestParam("update") Integer index, Model model) {
+	@Override
+	public String update(Integer index, Model model) {
 		Libro bookData = null;
 		// Creamos un hashmap para guardar los autores que se le asignaran al
 		// libro
@@ -545,11 +182,11 @@ public class BooksController {
 
 		// Si tenemos un indice valido
 		String msg = "";
-		if (index >= 0 && booksData != null) {
+		if (index >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				LibroDao dao = DaoFactory.getLibroDao();
-				bookData = dao.getLibro(booksData.get(index).getId());
+				bookData = (Libro) getDao().get(
+						((Bean) data.get(index)).getId());
 				// Guardamos los autores que ya tiene asignados el nuevo libro
 				if (bookData.getAutores() != null
 						&& bookData.getAutores().size() > 0) {
@@ -566,69 +203,27 @@ public class BooksController {
 					}
 				}
 			} catch (Exception e) {
-				// Si no conseguimos un libro, creamos uno vacio para que no de
-				// error
-				if (bookData == null) {
-					bookData = new BooksFilter();
-				}
-				log.error("Error en el controlador 'Books'"
-						+ " para la ruta '/books?update'", e);
-				msg = messageSource.getMessage("error", null, null);
+				bookData = new BooksFilter();
+				msg = manageException("update", e);
 			}
 		} else {
 			// Creamos un libro vacio, para que no de fallos al intentar acceder
 			// a algunos campos
 			bookData = new BooksFilter();
 			msg = messageSource.getMessage("books.menu.update.noIndexMsg",
-					null, null);
+					null, LocaleContextHolder.getLocale());
 		}
-		modifiedBookId = bookData.getId();
-
+		modifiedElementId = bookData.getId();
 		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksUpdateForm(msg));
-
-		model.addAttribute("bookData", bookData);
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.UPDATE,
+				getSection()));
+		model.addAttribute("elementData", bookData);
 		return "commons/body";
 	}
 
-	@RequestMapping(value = "/books", params = { "read" })
-	public String booksRead(@RequestParam("read") Integer index, Model model) {
-		Libro bookData = null;
-		String msg = "";
-
-		// Si tenemos un indice valido
-		if (index >= 0 && booksData != null) {
-			// Obtenemos todos los datos del libro seleccionado
-			LibroDao dao = DaoFactory.getLibroDao();
-			try {
-				bookData = dao.getLibro(booksData.get(index).getId());
-			} catch (Exception e) {
-				// Si no conseguimos un libro, creamos uno vacio para que no de
-				// error
-				if (bookData == null) {
-					bookData = new BooksFilter();
-				}
-				log.error("Error en el controlador 'Books'"
-						+ " para la ruta '/books?read'", e);
-				msg = messageSource.getMessage("error", null, null);
-			}
-		} else {
-			// Creamos un libro vacio, para que no de fallos al intentar acceder
-			// a algunos campos
-			bookData = new BooksFilter();
-			msg = messageSource.getMessage("books.menu.read.noIndexMsg", null,
-					null);
-		}
-
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksReadForm(msg));
-
-		model.addAttribute("bookData", bookData);
-		return "commons/body";
-	}
-
-	@RequestMapping(value = "/books", params = { "acceptCreation" })
-	public String booksAcceptCreation(Libro newBook, Model model) {
+	@Override
+	public String acceptCreation(Bean newElement, Model model) {
+		Libro newBook = (Libro) newElement;
 		String msg = "";
 		// Iniciamos la transaccion para guardar el libro
 		LibroDao dao = DaoFactory.getLibroDao();
@@ -642,15 +237,16 @@ public class BooksController {
 					EditorialDao editorialDao = DaoFactory.getEditorialDao();
 					int editorialId = editorialDao.insert(newPublisher);
 					newBook.getEditorial().setId(editorialId);
-					//Si tenemos un nueva coleccion, le asignamos el id de la editorial
+					// Si tenemos un nueva coleccion, le asignamos el id de la
+					// editorial
 					if (newBook.getColeccion().getId() == -1) {
 						newCollection.getEditorial().setId(editorialId);
 					}
 				} else {
 					msg += messageSource.getMessage(
-							"error.publisher.fieldsNotRight", null, null)
-							+ " "
-							+ newPublisher.getNombre() + "\n";
+							"error.publisher.fieldsNotRight", null,
+							LocaleContextHolder.getLocale())
+							+ " " + newPublisher.getNombre() + "\n";
 				}
 			}
 			// Si tenemos una coleccion nueva la creamos
@@ -658,17 +254,18 @@ public class BooksController {
 				// La coleccion tendra misma editorial que el libro
 				newBook.getColeccion().getEditorial()
 						.setId(newBook.getEditorial().getId());
+				newCollection.getEditorial().setId(
+						newBook.getEditorial().getId());
 				// Si tenemos una coleccion valida
 				if (NewDataManager.processCollection(newCollection,
 						messageSource)) {
-					newCollection.getEditorial().setId(
-							newBook.getEditorial().getId());
 					ColeccionDao coleccionDao = DaoFactory.getColeccionDao();
 					int coleccionId = coleccionDao.insert(newCollection);
 					newBook.getColeccion().setId(coleccionId);
 				} else {
 					msg += messageSource.getMessage(
-							"error.collection.fieldsNotRight", null, null)
+							"error.collection.fieldsNotRight", null,
+							LocaleContextHolder.getLocale())
 							+ " " + newCollection.getNombre() + "\n";
 				}
 			}
@@ -689,7 +286,8 @@ public class BooksController {
 						authorId = autorDao.insert(author.getValue());
 					} else {
 						msg += messageSource.getMessage(
-								"error.author.fieldsNotRight", null, null)
+								"error.author.fieldsNotRight", null,
+								LocaleContextHolder.getLocale())
 								+ " "
 								+ author.getValue().getNombre()
 								+ " "
@@ -722,7 +320,8 @@ public class BooksController {
 								.getValue());
 					} else {
 						msg += messageSource.getMessage(
-								"error.translator.fieldsNotRight", null, null)
+								"error.translator.fieldsNotRight", null,
+								LocaleContextHolder.getLocale())
 								+ " "
 								+ translator.getValue().getNombre()
 								+ "\n";
@@ -739,10 +338,11 @@ public class BooksController {
 			if (!NewDataManager.processBook(newBook, messageSource)) {
 				dao.rollbackTransaction();
 				// Enlazamos fragmentos de plantillas
-				model.addAllAttributes(FragmentManager
-						.getBooksCreateForm(messageSource.getMessage(
-								"error.book.fieldsNotRight", null, null)));
-				model.addAttribute("bookData", newBook);
+				model.addAllAttributes(FragmentManager.get(messageSource
+						.getMessage("error.book.fieldsNotRight", null,
+								LocaleContextHolder.getLocale()),
+						ACTION.CREATE, getSection()));
+				model.addAttribute("elementData", newBook);
 				return "commons/body";
 			}
 			// Guardamos el libro
@@ -750,47 +350,33 @@ public class BooksController {
 			dao.commitTransaction();
 		} catch (Exception e) {
 			dao.rollbackTransaction();
-			log.error(
-					"Error en el controlador 'Books'"
-							+ " para la ruta '/books?acceptCreation' al crear el libro",
-					e);
-			msg = messageSource.getMessage("error", null, null);
+			msg = manageException("acceptCreation, al crear el libro", e);
 		}
 
 		try {
 			// Iniciamos paginacion
-			booksPagManager = new PaginationManager(messageSource,
-					dao.getCountLibros());
+			pagManager = new PaginationManager(messageSource, dao.getCount());
 			// Buscamos los datos
-			booksData = dao.getLibrosWithPag(booksPagManager.getPage() - 1,
-					booksPagManager.getPageSize());
+			data = dao.getWithPag(pagManager.getPage() - 1,
+					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			booksFilter = null;
+			filter = null;
 		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error(
-					"Error en el controlador 'Books' para la ruta '/books?acceptCreation' al cargar los datos",
-					e);
-			// Enlazamos fragmentos de plantillas
-			msg = messageSource.getMessage("error", null, null);
+			msg = manageException("acceptCreation, al cargar los datos", e);
 		}
 
 		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksList(msg));
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
 		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
+		setModelData(model);
 		return "commons/body";
 	}
 
-	@RequestMapping(value = "/books", params = { "acceptUpdate" })
-	public String booksAcceptUpdate(Libro newBook, Model model) {
-		newBook.setId(modifiedBookId);
+	@Override
+	public String acceptUpdate(Bean newElement, Model model) {
+		Libro newBook = (Libro) newElement;
+		newBook.setId(modifiedElementId);
 		String msg = "";
 		// Iniciamos la transaccion para guardar el libro
 		LibroDao dao = DaoFactory.getLibroDao();
@@ -806,26 +392,26 @@ public class BooksController {
 					newBook.getEditorial().setId(editorialId);
 				} else {
 					msg += messageSource.getMessage(
-							"error.publisher.fieldsNotRight", null, null)
+							"error.publisher.fieldsNotRight", null,
+							LocaleContextHolder.getLocale())
 							+ "\n";
 				}
 			}
 			// Si tenemos una coleccion nueva la creamos
 			if (newBook.getColeccion().getId() == -1) {
 				// La coleccion tendra misma editorial que el libro
-				newBook.getColeccion().getEditorial()
-						.setId(newBook.getEditorial().getId());
+				newCollection.getEditorial().setId(
+						newBook.getEditorial().getId());
 				// Si tenemos una coleccion valida
 				if (NewDataManager.processCollection(newCollection,
 						messageSource)) {
-					newCollection.getEditorial().setId(
-							newBook.getEditorial().getId());
 					ColeccionDao coleccionDao = DaoFactory.getColeccionDao();
 					int coleccionId = coleccionDao.insert(newCollection);
 					newBook.getColeccion().setId(coleccionId);
 				} else {
 					msg += messageSource.getMessage(
-							"error.collection.fieldsNotRight", null, null)
+							"error.collection.fieldsNotRight", null,
+							LocaleContextHolder.getLocale())
 							+ "\n";
 				}
 			}
@@ -846,7 +432,8 @@ public class BooksController {
 						authorId = autorDao.insert(author.getValue());
 					} else {
 						msg += messageSource.getMessage(
-								"error.author.fieldsNotRight", null, null)
+								"error.author.fieldsNotRight", null,
+								LocaleContextHolder.getLocale())
 								+ "\n";
 					}
 				}
@@ -876,7 +463,8 @@ public class BooksController {
 								.getValue());
 					} else {
 						msg += messageSource.getMessage(
-								"error.translator.fieldsNotRight", null, null)
+								"error.translator.fieldsNotRight", null,
+								LocaleContextHolder.getLocale())
 								+ "\n";
 					}
 				}
@@ -891,10 +479,11 @@ public class BooksController {
 			if (!NewDataManager.processBook(newBook, messageSource)) {
 				dao.rollbackTransaction();
 				// Enlazamos fragmentos de plantillas
-				model.addAllAttributes(FragmentManager
-						.getBooksCreateForm(messageSource.getMessage(
-								"error.book.fieldsNotRight", null, null)));
-				model.addAttribute("bookData", newBook);
+				model.addAllAttributes(FragmentManager.get(messageSource
+						.getMessage("error.book.fieldsNotRight", null,
+								LocaleContextHolder.getLocale()),
+						ACTION.UPDATE, getSection()));
+				model.addAttribute("elementData", newBook);
 				return "commons/body";
 			}
 			// Guardamos el libro
@@ -902,40 +491,25 @@ public class BooksController {
 			dao.commitTransaction();
 		} catch (Exception e) {
 			dao.rollbackTransaction();
-			log.error(
-					"Error en el controlador 'Books'"
-							+ " para la ruta '/books?acceptUpdate' al modificar el libro",
-					e);
-			msg = messageSource.getMessage("error", null, null);
+			msg = manageException("acceptUpdate, al modificar el libro", e);
 		}
 
 		try {
 			// Iniciamos paginacion
-			booksPagManager = new PaginationManager(messageSource,
-					dao.getCountLibros());
+			pagManager = new PaginationManager(messageSource, dao.getCount());
 			// Buscamos los datos
-			booksData = dao.getLibrosWithPag(booksPagManager.getPage() - 1,
-					booksPagManager.getPageSize());
+			data = dao.getWithPag(pagManager.getPage() - 1,
+					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			booksFilter = null;
+			filter = null;
 		} catch (Exception e) {
-			if (booksPagManager == null) {
-				booksPagManager = new PaginationManager(messageSource, 0);
-			}
-			log.error(
-					"Error en el controlador 'Books' para la ruta '/books?acceptUpdate' al cargar los datos",
-					e);
-			// Enlazamos fragmentos de plantillas
-			msg = messageSource.getMessage("error", null, null);
+			msg = manageException("acceptUpdate, al cargar los datos", e);
 		}
 		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.getBooksList(msg));
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
 		// Fijamos variables para la vista
-		model.addAttribute("booksData", booksData);
-		model.addAttribute("page", booksPagManager.getPageLabel());
-		model.addAttribute("pageCount", booksPagManager.getPageCountLabel());
-		model.addAttribute("filter", booksFilter == null ? new BooksFilter()
-				: booksFilter);
+		setModelData(model);
 		return "commons/body";
 	}
 
@@ -946,15 +520,13 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books/newPublisher", method = RequestMethod.POST)
-	public @ResponseBody
-	String newPublisher(@RequestBody String requestBody) {
+	public String newPublisher(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Editorial
 			newPublisher = new ObjectMapper().readValue(requestBody,
 					Editorial.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -967,15 +539,13 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books/newCollection", method = RequestMethod.POST)
-	public @ResponseBody
-	String newCollection(@RequestBody String requestBody) {
+	public String newCollection(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Coleccion
 			newCollection = new ObjectMapper().readValue(requestBody,
 					Coleccion.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -987,9 +557,7 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books", params = { "addAuthor" }, method = RequestMethod.POST)
-	public @ResponseBody
-	String addAuthor(@RequestParam("addAuthor") Integer authorId) {
+	public String addAuthor(Integer authorId) {
 		if (!newAuthors.containsKey(authorId) && authorId > 0) {
 			newAuthors.put(authorId, null);
 		}
@@ -1002,16 +570,14 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books", params = { "quitAuthor" }, method = RequestMethod.POST)
-	public @ResponseBody
-	String quitAuthor(@RequestParam("quitAuthor") String authorId) {
+	public String quitAuthor(String authorId) {
 		String[] ids = authorId.split(",");
 		for (int i = 0; i < ids.length; i++) {
 			try {
 				Integer id = Integer.parseInt(ids[i]);
 				newAuthors.remove(id);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("", e);
 				continue;
 			}
 		}
@@ -1024,9 +590,7 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books/newAuthor", method = RequestMethod.POST)
-	public @ResponseBody
-	String newAuthor(@RequestBody String requestBody) {
+	public String newAuthor(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Autor
 			Autor tmpAutor = new ObjectMapper().readValue(requestBody,
@@ -1035,7 +599,7 @@ public class BooksController {
 				newAuthors.put(tmpAutor.getId(), tmpAutor);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -1047,9 +611,7 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books", params = { "addTranslator" }, method = RequestMethod.POST)
-	public @ResponseBody
-	String addTranslator(@RequestParam("addTranslator") Integer translatorId) {
+	public String addTranslator(Integer translatorId) {
 		if (!newTranslators.containsKey(translatorId) && translatorId > 0) {
 			newTranslators.put(translatorId, null);
 		}
@@ -1062,16 +624,14 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books", params = { "quitTranslator" }, method = RequestMethod.POST)
-	public @ResponseBody
-	String quitTranslator(@RequestParam("quitTranslator") String translatorId) {
+	public String quitTranslator(String translatorId) {
 		String[] ids = translatorId.split(",");
 		for (int i = 0; i < ids.length; i++) {
 			try {
 				Integer id = Integer.parseInt(ids[i]);
 				newTranslators.remove(id);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("", e);
 				continue;
 			}
 		}
@@ -1084,9 +644,7 @@ public class BooksController {
 	 * @param requestBody
 	 * @return
 	 */
-	@RequestMapping(value = "/books/newTranslator", method = RequestMethod.POST)
-	public @ResponseBody
-	String newTranslator(@RequestBody String requestBody) {
+	public String newTranslator(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Traductor
 			Traductor tmpTraductor = new ObjectMapper().readValue(requestBody,
@@ -1095,7 +653,7 @@ public class BooksController {
 				newTranslators.put(tmpTraductor.getId(), tmpTraductor);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 			return "FAIL";
 		}
 		return "OK";

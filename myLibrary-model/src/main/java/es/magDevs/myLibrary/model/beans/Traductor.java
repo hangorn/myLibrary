@@ -2,7 +2,7 @@ package es.magDevs.myLibrary.model.beans;
 
 /**
  * Bean con los datos de traductores
- * @author javi
+ * @author javier.vaquero
  *
  */
 @SuppressWarnings("serial")

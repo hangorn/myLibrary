@@ -3,7 +3,7 @@ package es.magDevs.myLibrary.web.gui.beans;
 /**
  * Bean para todos los datos de una entrada del menu (texto, imagen, link, ...)
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 public class MenuItem {

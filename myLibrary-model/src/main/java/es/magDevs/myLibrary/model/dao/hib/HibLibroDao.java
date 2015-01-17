@@ -2,7 +2,9 @@ package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +16,9 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
@@ -24,32 +28,31 @@ import es.magDevs.myLibrary.model.dao.LibroDao;
 /**
  * Acceso a los datos de libros, usando hibernate
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
+@SuppressWarnings("unchecked")
 public class HibLibroDao extends HibAbstractDao implements LibroDao {
 
 	public HibLibroDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
+		super(sessionFactory, Constants.BOOKS_TABLE);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Map<String, Boolean> getOrders() {
+		Map<String, Boolean> orders = new LinkedHashMap<String, Boolean>();
+		orders.put("id", true);
+		return orders;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	public List<Libro> getLibrosWithPag(int page, int pageSize)
-			throws Exception {
-		return getLibrosWithPag(null, page, pageSize);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Libro> getLibrosWithPag(Libro filter, int page, int pageSize)
+	@Override
+	public List<Libro> getWithPag(Bean filter, int page, int pageSize)
 			throws Exception {
 		Session s = null;
 		try {
@@ -113,77 +116,9 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
 	 */
-	public int getCountLibros() throws Exception {
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Long count = (Long) s.createQuery("SELECT count(*) FROM Libro")
-					.uniqueResult();
-			s.getTransaction().commit();
-			return count.intValue();
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	public int getCountLibros(Libro filter) throws Exception {
-		if (filter == null) {
-			return getCountLibros();
-		}
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Criteria query = getFilters(s, filter);
-			query.setProjection(Projections.rowCount());
-
-			Long count = (Long) query.uniqueResult();
-			s.getTransaction().commit();
-			return count.intValue();
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @throws Exception 
-	 */
-	public Libro getLibro(int id) throws Exception {
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			Libro libro = (Libro) s.createQuery("FROM Libro WHERE id=:id").setParameter("id", id)
-					.uniqueResult();
-			s.getTransaction().commit();
-			return libro;
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
-	}
-
-	/**
-	 * Crea un criterio de busqueda para la sesion indicada, segun los filtros
-	 * suministrados
-	 * 
-	 * @param session
-	 * @param filter
-	 * @return
-	 */
-	private Criteria getFilters(Session session, Libro filter) {
+	protected Criteria getFilters(Session session, Bean f) {
+		Libro filter = (Libro) f;
 		Criteria c = session.createCriteria(Libro.class);
 		if (filter == null) {
 			return c;

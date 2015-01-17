@@ -3,7 +3,7 @@
 <div th:fragment="authorsRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/authors}" th:object="${authorData}" method="post">
+			<form th:action="@{/authors}" th:object="${elementData}" method="post">
 				<div th:replace="/authors/authorsForm :: authorsForm(false)"></div>
 	
 				<div class="crudButtons">

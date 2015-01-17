@@ -40,6 +40,7 @@ inputPublisherSearch.oninput = function() {
 				listItem.title = publisherData.nombre;
 				list.appendChild(listItem);
 			}
+			list.multiple = true;
 		}
 	};
 	// Configuramos y enviamos la peticion
@@ -96,7 +97,7 @@ document.getElementById("acceptNewPublisher").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado una
 	// nueva editorial
-	ajaxRequest.open("POST", booksLink + "/newPublisher", true);
+	ajaxRequest.open("POST", currentSectionLink + "/newPublisher", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/json");
 	ajaxRequest.onreadystatechange = addPublisher;
 	ajaxRequest.send(json);
@@ -113,4 +114,8 @@ document.getElementById("cancelNewPublisher").onclick = function() {
 // una editorial se recarguen las colecciones
 document.getElementById("editorial.id").onchange = function() {
 	document.getElementById("collectionSearch").oninput();
+};
+
+document.getElementById("editorial.id").onclick = function() {
+	document.getElementById("editorial.id").multiple = false;
 };

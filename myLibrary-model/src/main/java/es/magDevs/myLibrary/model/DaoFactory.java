@@ -26,7 +26,7 @@ import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
 /**
  * Factoria para instanciar los DAOs
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 public class DaoFactory {

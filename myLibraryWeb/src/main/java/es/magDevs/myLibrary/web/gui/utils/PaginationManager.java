@@ -1,19 +1,14 @@
 package es.magDevs.myLibrary.web.gui.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 /**
  * Gestiona las opciones de paginacion de un apartado
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 public class PaginationManager {
-	// Spring Message Source
-	@Autowired
-	private MessageSource messageSource;
-
 	private int page;
 	private int pageCount;
 	private int pageSize;
@@ -30,6 +25,22 @@ public class PaginationManager {
 			} catch (Exception e) {
 				setPageSize(30);
 			}
+		}
+		setElementsCount(elementsCount);
+		setPageCount((int) Math.ceil((double) getElementsCount()
+				/ (double) getPageSize()));
+	}
+
+	/**
+	 * Reinicia la paginacion a la primera pagina con el numero de elementos
+	 * indicado
+	 * 
+	 * @param elementsCount
+	 *            numero total de elementos
+	 */
+	public void reset(int elementsCount) {
+		if (getPage() < 1) {
+			setPage(1);
 		}
 		setElementsCount(elementsCount);
 		setPageCount((int) Math.ceil((double) getElementsCount()
@@ -107,7 +118,7 @@ public class PaginationManager {
 	}
 
 	/**
-	 * Obtiene le texto a mostrar en la parte izquierda del texto de la
+	 * Obtiene el texto a mostrar en la parte izquierda del texto de la
 	 * paginacion
 	 * 
 	 * @return

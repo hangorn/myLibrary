@@ -42,6 +42,7 @@ inputCollectionSearch.oninput = function() {
 						+ collectionData.editorial.nombre + ")";
 				list.appendChild(listItem);
 			}
+			list.multiple = true;
 		}
 	};
 	// Configuramos y enviamos la peticion
@@ -110,4 +111,8 @@ document.getElementById("acceptNewCollection").onclick = function() {
 // coleccion
 document.getElementById("cancelNewCollection").onclick = function() {
 	document.getElementById("newCollectionFormBackground").style.display = "none";
+};
+
+document.getElementById("coleccion.id").onclick = function() {
+	document.getElementById("coleccion.id").multiple = false;
 };

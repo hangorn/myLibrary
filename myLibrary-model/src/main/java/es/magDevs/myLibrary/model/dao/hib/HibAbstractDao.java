@@ -1,18 +1,55 @@
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 
 /**
  * Clase abstracta con los metodos comunes para los DAO de Hibernate
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
-public class HibAbstractDao implements AbstractDao {
+@SuppressWarnings("rawtypes")
+public abstract class HibAbstractDao implements AbstractDao {
 
 	private SessionFactory sessionFactory;
+
+	private String table;
+
+	/**
+	 * Metodo abstracto con el que se obtendra el filtro general para cualquier
+	 * dato
+	 * 
+	 * @param s
+	 * @param filter
+	 *            bean con los campos a filtrar
+	 * @return
+	 */
+	protected abstract Criteria getFilters(Session s, Bean filter);
+
+	/**
+	 * Metodo abstracto para obtener los ordenes con los que se ordenaran los
+	 * resultados de las consultas, ordenados por prioridad. Se debe utilizar la
+	 * implementacion {@link LinkedHashMap} para preservar el orden de
+	 * inserccion
+	 * 
+	 * @return mapa con los nombres de los campos por los cuales se han de
+	 *         ordenar como clave, y un boleano para saber si el orden es
+	 *         ascendente o no
+	 */
+	protected abstract Map<String, Boolean> getOrders();
 
 	/**
 	 * Obtiene la sesion actual para realizar operaciones contra el origen de
@@ -24,8 +61,9 @@ public class HibAbstractDao implements AbstractDao {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public HibAbstractDao(SessionFactory sessionFactory) {
+	public HibAbstractDao(SessionFactory sessionFactory, String table) {
 		this.sessionFactory = sessionFactory;
+		this.table = table;
 	}
 
 	/**
@@ -81,5 +119,110 @@ public class HibAbstractDao implements AbstractDao {
 			return;
 		}
 		session.update(data);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Bean get(int id) throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Bean bean = (Bean) s.createQuery("FROM " + table + " WHERE id=:id")
+					.setParameter("id", id).uniqueResult();
+			s.getTransaction().commit();
+			return bean;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getWithPag(int page, int pageSize) throws Exception {
+		return getWithPag(null, page, pageSize);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getWithPag(Bean filter, int page, int pageSize)
+			throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			// Obtenemos el filtro
+			Criteria query = getFilters(s, filter);
+			// Fijamos las opciones de paginacion
+			if(pageSize > 0)  {
+				query.setMaxResults(pageSize);
+			}
+			query.setFirstResult(page * pageSize);
+			// Ordenamos por los ordenes indicados
+			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+				Property field = Property.forName(orderData.getKey());
+				Order order = orderData.getValue() ? field.asc() : field.desc();
+				query.addOrder(order);
+			}
+			List l = query.list();
+			s.getTransaction().commit();
+			return l;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getAll() throws Exception {
+		return getWithPag(0, 0);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getCount() throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Long count = (Long) s.createQuery("SELECT count(*) FROM "+table)
+					.uniqueResult();
+			s.getTransaction().commit();
+			return count.intValue();
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public int getCount(Bean filter) throws Exception {
+		if (filter == null) {
+			return getCount();
+		}
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			Criteria query = getFilters(s, filter);
+			query.setProjection(Projections.rowCount());
+			Long count = (Long) query.uniqueResult();
+			s.getTransaction().commit();
+			return count.intValue();
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
 	}
 }

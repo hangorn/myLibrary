@@ -58,18 +58,17 @@
 		<!-- isbn -->
 		<div class="formField">
 			<label for="isbn" th:text="#{books.field.isbn}"></label> <input
-				th:maxlength="#{ISBN_MAX_LENGHT}" type="text"
-				th:field="*{isbn}" th:disabled="!${editable}"
-				th:errorclass="fieldError" th:title="${editable}?'':*{isbn}"
+				th:maxlength="#{ISBN_MAX_LENGHT}" type="text" th:field="*{isbn}"
+				th:disabled="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{isbn}"
 			/>
 		</div>
 		<!-- notas -->
 		<div class="formField">
 			<label for="notas" th:text="#{books.field.notes}"></label> <input
-				th:maxlength="#{NOTES_MAX_LENGHT}"
-				class="bigTextFormField" type="text" th:field="*{notas}"
-				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{notas}"
+				th:maxlength="#{NOTES_MAX_LENGHT}" class="bigTextFormField"
+				type="text" th:field="*{notas}" th:disabled="!${editable}"
+				th:errorclass="fieldError" th:title="${editable}?'':*{notas}"
 			/>
 		</div>
 		<!-- ubicacion -->
@@ -124,8 +123,9 @@
 		<div class="formField searchFormField">
 			<label th:if="${editable}" for="publisherSearch"
 				th:text="#{books.crud.labelPublishersSearch}"
-			> </label> <input th:if="${editable}" type="text" id="publisherSearch" /><label
-				for="editorial.id"
+			> </label> <input th:if="${editable}" type="text" id="publisherSearch"
+				autocomplete="off"
+			/><label for="editorial.id"
 				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"
 			></label> <select th:field="*{editorial.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
@@ -153,8 +153,9 @@
 		<div class="formField searchFormField">
 			<label th:if="${editable}" for="collectionSearch"
 				th:text="#{books.crud.labelCollectionsSearch}"
-			> </label> <input th:if="${editable}" type="text" id="collectionSearch" /><label
-				for="coleccion.id"
+			> </label> <input th:if="${editable}" type="text" id="collectionSearch"
+				autocomplete="off"
+			/><label for="coleccion.id"
 				th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"
 			></label> <select th:field="*{coleccion.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
@@ -165,8 +166,8 @@
 				></option>
 				<option
 					th:if="*{coleccion.id} != null AND *{coleccion.id} > 0 AND !*{#strings.isEmpty(coleccion.nombre)}"
-					th:text="*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'"
-					th:title="*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'"
+					th:text="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.nombre,'')})+')'"
+					th:title="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.nombre,'')})+')'"
 					th:value="*{coleccion.id}" id="defaultCollection"
 				></option>
 			</select>
@@ -481,6 +482,7 @@
     collectionsLink = /*[[@{/collections}]]*/;
     authorsLink = /*[[@{/authors}]]*/;
     translatorsLink = /*[[@{/translators}]]*/;
+    currentSectionLink = booksLink;
 /*]]>*/
 	</script>
 	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}"

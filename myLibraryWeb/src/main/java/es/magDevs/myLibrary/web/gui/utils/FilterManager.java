@@ -13,7 +13,7 @@ import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 /**
  * Realizara diversas operaciones sobre los filtros disponibles
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 public class FilterManager {

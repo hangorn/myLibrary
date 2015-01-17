@@ -44,7 +44,7 @@ button {
 }
 
 .menu ul {
-	margin: 0 0 0 20px;
+	margin: 0 0 0 10px;
 	padding: 0;
 }
 
@@ -52,38 +52,50 @@ button {
 	float: left;
 	display: inline;
 	list-style: none outside none;
-	margin: 10px 10px;
+	margin: 10px 5px;
 }
 
 .menuitem {
-	border: 5px double black;
+	border-radius: 20px;
+	border: 1px solid yellow;
 	font-variant: small-caps;
 	font-weight: normal;
-	width: 86px;
+	width: 70px;
+	height: 70px;
 	padding: 3px 10px;
 	text-align: center;
 	color: black;
 	background-color: #fff690;
-	-webkit-transition: width 1s; /* Safari */
-	transition: width 1s;
+	-webkit-transition: height 1s, width 1s, border-radius 1s; /* Safari */
+	transition: height 1s, width 1s, border-radius 1s;
+	overflow: hidden;
 }
 
 .menuitemselected {
 	border: 5px double #b80b0b;
 	font-variant: small-caps;
 	font-weight: normal;
-	width: 86px;
+	width: 70px;
+	height: 70px;
 	padding: 3px 10px;
 	text-align: center;
 	color: #b80b0b;
 	background-color: #fff690;
-	-webkit-transition: width 1s; /* Safari */
-	transition: width 1s;
+	-webkit-transition: height 1s, width 1s; /* Safari */
+	transition: height 1s, width 1s;
+	overflow: hidden;
 }
 
-.menuitem:hover {
+.menuitem:hover, .menuitemselected:hover {
 	width: 106px;
-	background-color: #f0e787;
+	height: 89px;
+	background-color: inherit;
+	border-radius: 0px;
+	border: 5px double;
+}
+
+.rightMenu {
+	float: right;
 }
 
 /************************************

@@ -16,7 +16,7 @@ import es.magDevs.myLibrary.model.beans.Ubicacion;
  * datos, como comprobar su validez o rellenar campos necesarios con el valor
  * por defecto
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 public class NewDataManager {
@@ -31,6 +31,16 @@ public class NewDataManager {
 	public static boolean processBook(Libro libro, MessageSource messageSource) {
 		// Si el libro es null o no tenemos titulo los datos no son validos
 		if (libro == null || StringUtils.isBlank(libro.getTitulo())) {
+			return false;
+		}
+		// Si el libro tiene una coleccion pero no una editorial, los datos no
+		// son validos
+		if (libro.getColeccion() != null
+				&& libro.getColeccion().getId() != null
+				&& libro.getColeccion().getId() > 0
+				&& (libro.getEditorial() == null
+						|| libro.getEditorial().getId() == null || libro
+						.getEditorial().getId() <= 0)) {
 			return false;
 		}
 
@@ -232,8 +242,7 @@ public class NewDataManager {
 	 * @param type
 	 * @return {@code true} si los datos son validos
 	 */
-	public static boolean processType(Tipo type,
-			MessageSource messageSource) {
+	public static boolean processType(Tipo type, MessageSource messageSource) {
 		if (StringUtils.isBlank(type.getDescripcion())) {
 			return false;
 		}
@@ -242,8 +251,8 @@ public class NewDataManager {
 		// Cortamos los textos por el tamaño maximo
 		if (type.getDescripcion().length() > Integer.parseInt(messageSource
 				.getMessage("TITLE_MAX_LENGHT", null, null))) {
-			type.setDescripcion(StringUtils.substring(type.getDescripcion(),
-					0, Integer.parseInt(messageSource.getMessage(
+			type.setDescripcion(StringUtils.substring(type.getDescripcion(), 0,
+					Integer.parseInt(messageSource.getMessage(
 							"TITLE_MAX_LENGHT", null, null))));
 		}
 
@@ -274,9 +283,9 @@ public class NewDataManager {
 		}
 		if (place.getCodigo().length() > Integer.parseInt(messageSource
 				.getMessage("COD_MAX_LENGHT", null, null))) {
-			place.setCodigo(StringUtils.substring(place.getCodigo(),
-					0, Integer.parseInt(messageSource.getMessage(
-							"COD_MAX_LENGHT", null, null))));
+			place.setCodigo(StringUtils.substring(place.getCodigo(), 0, Integer
+					.parseInt(messageSource.getMessage("COD_MAX_LENGHT", null,
+							null))));
 		}
 
 		return true;

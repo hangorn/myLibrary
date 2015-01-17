@@ -3,7 +3,7 @@
 <div th:fragment="translatorsCreate">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/translators}" th:object="${translatorData}" method="post">
+			<form th:action="@{/translators}" th:object="${elementData}" method="post">
 				<div th:replace="/translators/translatorsForm :: translatorsForm(true)"></div>
 	
 				<div class="crudButtons">

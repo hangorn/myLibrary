@@ -8,7 +8,7 @@ import org.hibernate.Hibernate;
  * Clase padre abstracta para todos los bean. Contiene un ID y los metodos
  * {@link Bean#equals(Object)} y {@link Bean#hashCode()}
  * 
- * @author javi
+ * @author javier.vaquero
  * 
  */
 @SuppressWarnings("serial")
@@ -48,7 +48,7 @@ public abstract class Bean implements Serializable, Cloneable {
 			return false;
 		}
 
-		Autor otherBean = (Autor) other;
+		Bean otherBean = (Bean) other;
 		if (this.getId() == null && otherBean.getId() == null) {
 			return true;
 		}

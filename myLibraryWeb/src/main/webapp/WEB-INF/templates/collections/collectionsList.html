@@ -3,7 +3,7 @@
 <div class="collectionsList" th:fragment="collectionsList">
 	<div th:replace="/collections/collectionsMenu :: collectionsMenu"></div>
 	<div class="dataTable"
-		th:if="(${collectionsData} != null AND !${#lists.isEmpty(collectionsData)})"
+		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
 	>
 		<table>
 			<thead>
@@ -13,7 +13,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="collectionData,dataStat : ${collectionsData}"
+				<tr th:each="collectionData,dataStat : ${data}"
 					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
 				>
 					<td th:text="${collectionData.nombre}"
@@ -28,11 +28,11 @@
 		</table>
 	</div>
 	<div class="dataTable"
-		th:if="(${collectionsData} == null OR ${#lists.isEmpty(collectionsData)})"
+		th:if="(${data} == null OR ${#lists.isEmpty(data)})"
 		th:text="#{collections.table.empty}"
 	></div>
 	<div
-		th:if="(${collectionsData} != null AND !${#lists.isEmpty(collectionsData)})"
+		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
 	>
 		<div th:replace="/collections/collectionsMenu :: collectionsMenu"></div>
 	</div>

@@ -2,8 +2,8 @@ package es.magDevs.myLibrary.model.beans;
 
 /**
  * Bean de los datos de los tipos de libros
- * @author javi
- *
+ * 
+ * @author javier.vaquero
  */
 @SuppressWarnings("serial")
 public class Tipo extends Bean {
