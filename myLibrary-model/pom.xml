@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.magDevs.myLibrary</groupId>
 	<artifactId>myLibrary-model</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<description>Capa del modelo de datos</description>
 
 	<properties>
@@ -67,4 +67,46 @@
 			<version>3.3.2</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/license/apache2.0/</directory>
+				<targetPath>META-INF</targetPath>
+				<includes>
+					<include>LICENSE.txt</include>
+					<include>NOTICE.txt</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<header>src/license/apache2.0/HEADER.txt</header>
+					<properties>
+						<owner>Javier Vaquero</owner>
+						<email>javi_salamanca@hotmail.com</email>
+					</properties>
+					<excludes>
+						<exclude>**/README</exclude>
+						<exclude>**/pom.xml</exclude>
+						<exclude>src/test/**</exclude>
+						<exclude>src/main/resources/**</exclude>
+						<exclude>src/license/**</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
