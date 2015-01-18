@@ -84,11 +84,11 @@ public class MainController implements InitializingBean {
 		for (int i = 0; i < items.length; i++) {
 			MenuItem item = new MenuItem();
 			item.setText(messageSource.getMessage("menu." + items[i] + ".text",
-					null, null));
+					null, LocaleContextHolder.getLocale()));
 			item.setImg(messageSource.getMessage("menu." + items[i] + ".img",
 					null, null));
 			item.setLink(messageSource.getMessage("menu." + items[i] + ".link",
-					null, LocaleContextHolder.getLocale()));
+					null, null));
 			menuItems.add(item);
 		}
 		return menuItems;

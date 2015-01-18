@@ -75,8 +75,8 @@ button {
 	border: 1px solid yellow;
 	font-variant: small-caps;
 	font-weight: normal;
-	width: 70px;
-	height: 70px;
+	width: 89px;
+	height: 89px;
 	padding: 3px 10px;
 	text-align: center;
 	color: black;
@@ -90,8 +90,8 @@ button {
 	border: 5px double #b80b0b;
 	font-variant: small-caps;
 	font-weight: normal;
-	width: 70px;
-	height: 70px;
+	width: 89px;
+	height: 89px;
 	padding: 3px 10px;
 	text-align: center;
 	color: #b80b0b;
@@ -99,14 +99,6 @@ button {
 	-webkit-transition: height 1s, width 1s; /* Safari */
 	transition: height 1s, width 1s;
 	overflow: hidden;
-}
-
-.menuitem:hover, .menuitemselected:hover {
-	width: 106px;
-	height: 89px;
-	background-color: inherit;
-	border-radius: 0px;
-	border: 5px double;
 }
 
 .rightMenu {
@@ -222,11 +214,6 @@ button {
 	background-color: white;
 }
 
-.dataTable tbody tr:hover {
-	background-color: #a5c8e1;
-	cursor: pointer;
-}
-
 .selectedRow {
 	background-color: #447598 !important;
 	color: red;
@@ -237,37 +224,24 @@ button {
  ************************************/
 .searchContainer {
 	background-color: #d0c8e9;
-	position: fixed;
-	top: 120px;
+	position: relative;
+	padding: 20px;
+	padding-right: 0;
 	padding-left: 2px;
 	border-left: 2px solid #59367c;
 	border-top: 2px solid #59367c;
 	border-bottom: 2px solid #59367c;
 	border-top-left-radius: 25px;
 	border-bottom-left-radius: 25px;
-	height: 420px;
-	width: 25px;
+	height: 500px;
+	width: auto;
 	right: 0;
 	overflow: hidden;
 	border-left: 2px solid #59367c;
 }
 
-.searchContainer:hover {
-	width: 400px;
-	height: 440px;
-	padding: 20px;
-	padding-right: 0;
-}
-
 .searchIcon {
-	width: 20px;
-	margin-top: 30px;
-	float: left;
-}
-
-.searchIcon img {
-	float: left;
-	margin: 40px 2px;
+	display: none;
 }
 
 .search {
@@ -506,19 +480,6 @@ button {
 	}
 	.main {
 		margin-top: 3px;
-	}
-	.searchContainer {
-		position: relative;
-		height: 440px;
-		width: auto;
-		padding: 20px;
-		padding-right: 0;
-	}
-	.searchContainer:hover {
-		width: auto;
-		height: 440px;
-		padding: 20px;
-		padding-right: 0;
 	}
 }
 
