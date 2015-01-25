@@ -15,6 +15,9 @@
  */
 package es.magDevs.myLibrary.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Clase con valores constantes 
  * @author javier.vaquero
@@ -64,11 +67,22 @@ public class Constants {
 		PLACES("places",5),
 		TRANSLATORS("translators",6);
 		
-		String value;
-		Integer order;
+		private String value;
+		private Integer order;
+		private static Map<String, Integer> orders;
+		private static void setOrder(String value, Integer order) {
+			if(orders == null) {
+				orders = new HashMap<String,Integer>();
+			}
+			orders.put(value, order);
+		}
+		public static int getOrder(String value) {
+			return orders.get(value);
+		}
 		private SECTION(String s, int i) {
 			value = s;
 			order = i;
+			setOrder(value, order);
 		}
 		public String get() {
 			return value;

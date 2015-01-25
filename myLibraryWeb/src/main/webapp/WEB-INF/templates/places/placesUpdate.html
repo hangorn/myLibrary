@@ -20,7 +20,7 @@
 <div th:fragment="placesUpdate">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/places}" th:object="${elementData}" method="post">
+			<form th:action="@{/placesacceptUpdate}" th:object="${elementData}" method="post">
 				<div th:replace="/places/placesForm :: placesForm(true)"></div>
 
 				<div class="crudButtons">

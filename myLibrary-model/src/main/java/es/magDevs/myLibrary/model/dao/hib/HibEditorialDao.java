@@ -106,8 +106,8 @@ public class HibEditorialDao extends HibAbstractDao implements EditorialDao {
 			s = getSession();
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
-					.createCriteria("editorial").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.addOrder(Property.forName("titulo").asc())
+					.createCriteria("editorial").add(Restrictions.idEq(id)).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

@@ -500,6 +500,9 @@
     authorsLink = /*[[@{/authors}]]*/;
     translatorsLink = /*[[@{/translators}]]*/;
     currentSectionLink = booksLink;
+    
+    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+    csrfToken=/*[[${_csrf.token}]]*/;
 /*]]>*/
 	</script>
 	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}"

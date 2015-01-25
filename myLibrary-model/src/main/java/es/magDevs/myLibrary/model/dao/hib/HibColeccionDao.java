@@ -138,8 +138,8 @@ public class HibColeccionDao extends HibAbstractDao implements ColeccionDao {
 			s = getSession();
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
-					.createCriteria("coleccion").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.addOrder(Property.forName("titulo").asc())
+					.createCriteria("coleccion").add(Restrictions.idEq(id)).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

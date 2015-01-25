@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html>
+<div th:fragment="login">
+	<div class="loginContainer">
+		<div class="login">
+			<form name="f" th:action="@{/login}" method="post">
+				<fieldset>
+					<legend th:text="#{login.form.legend}"></legend>
+					<div th:if="${needed} AND !${error} AND !${logout}"
+						class="alert alert-warn"
+					>
+						<div class="alertImg">
+							<img th:src="@{img/warn.png}" />
+						</div>
+						<div class="alertTxt">
+							<span th:text="#{login.form.legend.needed}"></span>
+						</div>
+					</div>
+					<div th:if="${error}" class="alert alert-error">
+						<div class="alertImg">
+							<img th:src="@{img/error.png}" />
+						</div>
+						<div class="alertTxt">
+							<span th:text="#{login.form.error}"></span>
+						</div>
+					</div>
+					<div th:if="${logout}" class="alert alert-info">
+						<div class="alertImg">
+							<img th:src="@{img/info.png}" />
+						</div>
+						<div class="alertTxt">
+							<span th:text="#{login.form.logoutMsg}"></span>
+						</div>
+					</div>
+					<div class="loginLabelContainer">
+						<label for="username" th:text="#{login.form.username}"></label>
+					</div>
+					<div class="loginInputContainer">
+						<input type="text" id="username" name="username" />
+					</div>
+					<div class="loginLabelContainer">
+						<label for="password" th:text="#{login.form.password}"></label>
+					</div>
+					<div class="loginInputContainer">
+						<input type="password" id="password" name="password" />
+					</div>
+					<div class="loginButtonContainer">
+						<label for="rememberme" th:text="#{login.form.rememberme}">
+						</label> <input id="rememberme" type="checkbox" name="remember-me" />
+						<button type="submit" th:text="#{login.form.login}"></button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+</html>

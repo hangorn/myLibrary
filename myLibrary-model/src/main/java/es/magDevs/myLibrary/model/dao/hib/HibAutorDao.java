@@ -178,9 +178,9 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 		try {
 			s = getSession();
 			s.beginTransaction();
-			List<Libro> l = s.createCriteria(Libro.class)
+			List<Libro> l = s.createCriteria(Libro.class).addOrder(Property.forName("titulo").asc())
 					.createCriteria("autores").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

@@ -44,6 +44,7 @@ function submit(formID, paramName, paramValue, msg) {
 			hidden.type = "hidden";
 			hidden.name = paramName;
 			hidden.value = paramValue;
+			form.action=form.action+paramName;
 			form.appendChild(hidden);
 			form.submit();
 		}
@@ -54,6 +55,7 @@ function submit(formID, paramName, paramValue, msg) {
 	hidden.type = "hidden";
 	hidden.name = paramName;
 	hidden.value = paramValue;
+	form.action=form.action+paramName;
 	form.appendChild(hidden);
 	form.submit();
 }

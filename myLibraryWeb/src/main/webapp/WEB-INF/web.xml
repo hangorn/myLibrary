@@ -16,6 +16,13 @@
     under the License.
 
 -->
+<!-- Copyright (c) 2014-2015, Javier Vaquero Licensed under the Apache License, 
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	required by applicable law or agreed to in writing, software under the License 
+	is distributed on an "AS IS" BASIS, WARRANTIES OR CONDITIONS OF ANY KIND, 
+	either express or implied. the License for the specific language governing 
+	permissions and under the License. -->
 <web-app id="stsm" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
@@ -36,8 +43,4 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<welcome-file-list>
-		<welcome-file>seedstartermng</welcome-file>
-	</welcome-file-list>
 </web-app>

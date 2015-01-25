@@ -87,8 +87,8 @@ public class HibUbicacionDao extends HibAbstractDao implements UbicacionDao {
 			s = getSession();
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
-					.createCriteria("ubicacion").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.addOrder(Property.forName("titulo").asc())
+					.createCriteria("ubicacion").add(Restrictions.idEq(id)).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

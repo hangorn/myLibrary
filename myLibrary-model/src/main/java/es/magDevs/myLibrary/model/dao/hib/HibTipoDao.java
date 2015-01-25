@@ -82,8 +82,8 @@ public class HibTipoDao extends HibAbstractDao implements TipoDao {
 			s = getSession();
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
-					.createCriteria("tipo").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.addOrder(Property.forName("titulo").asc())
+					.createCriteria("tipo").add(Restrictions.idEq(id)).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

@@ -26,7 +26,7 @@
 		/>
 	</div>
 	<div class="search">
-		<form th:action="@{/places}" th:object="${filter}" method="post">
+		<form th:action="@{/placessearch}" th:object="${filter}" method="post">
 			<div class="searchField">
 				<label for="codigo" th:text="#{places.field.code}"></label> <input
 					place="text" th:field="*{codigo}" th:errorclass="fieldError"

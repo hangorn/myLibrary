@@ -90,4 +90,18 @@ public class FragmentManager {
 		
 		return fragmentMapper;
 	}
+	
+	/**
+	 * Obtiene el mapeo con los elementos comunes (menu, pie de pagina y
+	 * mensaje) y con la plantilla de login
+	 * 
+	 * @return
+	 */
+	public static Map<String, Object> getLogin(String msg) {
+		Map<String, Object> fragmentMapper = getCommonElements(msg);
+		// Fragmento vacio
+		fragmentMapper.put("mainTemplate", "login/login");
+		fragmentMapper.put("mainFragment", "login");
+		return fragmentMapper;
+	}
 }

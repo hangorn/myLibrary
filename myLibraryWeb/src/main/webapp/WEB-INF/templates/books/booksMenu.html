@@ -22,21 +22,21 @@
 		<form th:action="@{/books}" method="post" id="crudForm">
 			<nav>
 				<ul>
-					<li><a onclick="submit('crudForm','create',index,'')">
+					<li th:if="${userData} != null"><a onclick="submit('crudForm','create',index,'')">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.create}"
 									th:src="@{img/crudmenu/create.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{books.menu.delete.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{books.menu.delete.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.delete}"
 									th:src="@{img/crudmenu/delete.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{books.menu.update.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{books.menu.update.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{books.menu.update}"
 									th:src="@{img/crudmenu/update.png}"
@@ -60,14 +60,14 @@
 	>
 		<nav>
 			<ul>
-				<li><a th:href="@{/books(start)}">
+				<li><a th:href="@{/booksstart}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.start}"
 								th:src="@{img/pagmenu/start.png}"
 							/>
 						</div>
 				</a></li>
-				<li><a th:href="@{/books(previous)}">
+				<li><a th:href="@{/booksprevious}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.previous}"
 								th:src="@{img/pagmenu/previous.png}"
@@ -77,14 +77,14 @@
 				<li><div class="submenuitem">
 						<span th:text="#{menu.pag.of(${page},${pageCount})}"></span>
 					</div></li>
-				<li><a th:href="@{/books(next)}">
+				<li><a th:href="@{/booksnext}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.next}"
 								th:src="@{img/pagmenu/next.png}"
 							/>
 						</div>
 				</a></li>
-				<li><a th:href="@{/books(end)}">
+				<li><a th:href="@{/booksend}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.end}"
 								th:src="@{img/pagmenu/end.png}"
@@ -93,7 +93,7 @@
 				</a></li>
 
 				<li><div class="submenuitem">
-						<form th:action="@{/books}" method="post">
+						<form th:action="@{/bookspageSize}" method="post">
 							<label for="pageSizeSelect" th:text="#{menu.pag.pageSize}"></label>
 							<select id="pageSizeSelect" name="pageSize"
 								onchange="this.form.submit()"

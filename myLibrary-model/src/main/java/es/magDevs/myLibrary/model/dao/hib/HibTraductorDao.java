@@ -101,8 +101,8 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 			s = getSession();
 			s.beginTransaction();
 			List<Libro> l = s.createCriteria(Libro.class)
-					.createCriteria("traductores").add(Restrictions.idEq(id))
-					.addOrder(Property.forName("titulo").asc()).list();
+					.addOrder(Property.forName("titulo").asc())
+					.createCriteria("traductores").add(Restrictions.idEq(id)).list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

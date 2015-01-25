@@ -22,28 +22,36 @@
 		<form th:action="@{/authors}" method="post" id="crudForm">
 			<nav>
 				<ul>
-					<li><a onclick="submit('crudForm','create',index,'')">
+					<li th:if="${userData} != null"><a
+						onclick="submit('crudForm','create',index,'')"
+					>
 							<div class="submenuitem">
 								<img th:alt-title="#{authors.menu.create}"
 									th:src="@{img/crudmenu/create.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{authors.menu.delete.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a
+						th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{authors.menu.delete.noIndexMsg}+'&#34;)'"
+					>
 							<div class="submenuitem">
 								<img th:alt-title="#{authors.menu.delete}"
 									th:src="@{img/crudmenu/delete.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{authors.menu.update.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a
+						th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{authors.menu.update.noIndexMsg}+'&#34;)'"
+					>
 							<div class="submenuitem">
 								<img th:alt-title="#{authors.menu.update}"
 									th:src="@{img/crudmenu/update.png}"
 								/>
 							</div>
 					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{authors.menu.read.noIndexMsg}+'&#34;)'">
+					<li><a
+						th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{authors.menu.read.noIndexMsg}+'&#34;)'"
+					>
 							<div class="submenuitem">
 								<img th:alt-title="#{authors.menu.read}"
 									th:src="@{img/crudmenu/read.png}"
@@ -60,14 +68,14 @@
 	>
 		<nav>
 			<ul>
-				<li><a th:href="@{/authors(start)}">
+				<li><a th:href="@{/authorsstart}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.start}"
 								th:src="@{img/pagmenu/start.png}"
 							/>
 						</div>
 				</a></li>
-				<li><a th:href="@{/authors(previous)}">
+				<li><a th:href="@{/authorsprevious}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.previous}"
 								th:src="@{img/pagmenu/previous.png}"
@@ -77,14 +85,14 @@
 				<li><div class="submenuitem">
 						<span th:text="#{menu.pag.of(${page},${pageCount})}"></span>
 					</div></li>
-				<li><a th:href="@{/authors(next)}">
+				<li><a th:href="@{/authorsnext}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.next}"
 								th:src="@{img/pagmenu/next.png}"
 							/>
 						</div>
 				</a></li>
-				<li><a th:href="@{/authors(end)}">
+				<li><a th:href="@{/authorsend}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.end}"
 								th:src="@{img/pagmenu/end.png}"
@@ -93,7 +101,7 @@
 				</a></li>
 
 				<li><div class="submenuitem">
-						<form th:action="@{/authors}" method="post">
+						<form th:action="@{/authorspageSize}" method="post">
 							<label for="pageSizeSelect" th:text="#{menu.pag.pageSize}"></label>
 							<select id="pageSizeSelect" name="pageSize"
 								onchange="this.form.submit()"

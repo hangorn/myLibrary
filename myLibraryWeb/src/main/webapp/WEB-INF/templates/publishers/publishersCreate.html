@@ -20,7 +20,7 @@
 <div th:fragment="publishersCreate">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/publishers}" th:object="${elementData}" method="post">
+			<form th:action="@{/publishersacceptCreation}" th:object="${elementData}" method="post">
 				<div th:replace="/publishers/publishersForm :: publishersForm(true)"></div>
 	
 				<div class="crudButtons">

@@ -31,10 +31,10 @@ buttonQuitAuthor.onclick = function() {
 		// Creamos un peticion AJAX
 		var ajaxRequest = new XMLHttpRequest();
 		// Configuramos y enviamos la peticion
-		ajaxRequest.open("POST", booksLink, true);
+		ajaxRequest.open("POST", booksLink+"quitAuthor", true);
 		ajaxRequest.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded");
-		ajaxRequest.send("quitAuthor=" + authorsIdToRemove);
+		ajaxRequest.send("quitAuthor=" + authorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
 	}
 };
 
@@ -113,20 +113,20 @@ inputAuthorSearch.oninput = function() {
 					// un autor
 					var ajaxRequest = new XMLHttpRequest();
 					// Configuramos y enviamos la peticion
-					ajaxRequest.open("POST", booksLink, true);
+					ajaxRequest.open("POST", booksLink+"addAuthor", true);
 					ajaxRequest.setRequestHeader("Content-type",
 							"application/x-www-form-urlencoded");
-					ajaxRequest.send("addAuthor=" + data[1]);
+					ajaxRequest.send("addAuthor=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
 				};
 			}
 		}
 	};
 	// Configuramos y enviamos la peticion
-	ajaxRequest.open("POST", authorsLink, true);
+	ajaxRequest.open("POST", authorsLink+"getdata", true);
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + inputAuthorSearch.value);
+	ajaxRequest.send("getdata=" + inputAuthorSearch.value+"&"+csrfParameterName+"="+csrfToken);
 };
 
 // Añadimos el evento de abrir el dialogo para crear un nuevo autor
@@ -180,9 +180,9 @@ document.getElementById("acceptNewAuthor").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado un
 	// nuevo autor
-	ajaxRequest.open("POST", booksLink+"/newAuthor", true);
-	ajaxRequest.setRequestHeader("Content-type", "application/json");
+	ajaxRequest.open("POST", booksLink+"newAuthor", true);
+	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addAuthor;
-	ajaxRequest.send(json);
+	ajaxRequest.send("json="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newAuthorFormBackground").style.display = "none";
 };

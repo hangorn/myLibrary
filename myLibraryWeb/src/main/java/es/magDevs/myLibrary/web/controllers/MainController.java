@@ -16,6 +16,8 @@
 package es.magDevs.myLibrary.web.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,16 +26,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
+import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Coleccion;
@@ -64,6 +69,8 @@ public class MainController implements InitializingBean {
 	private MessageSource messageSource;
 	// LOG
 	private static final Logger log = Logger.getLogger(MainController.class);
+	//Cache para elementos del menu
+	private List<MenuItem> menuItems = null;
 
 	/* *****************************************
 	 * ********** DATOS DEL MODELO *************
@@ -77,10 +84,26 @@ public class MainController implements InitializingBean {
 	 */
 	@ModelAttribute("menuItems")
 	List<MenuItem> getMenuItems() {
-		List<MenuItem> menuItems = new ArrayList<MenuItem>();
+		if(menuItems != null) {
+			return menuItems;
+		}
+		menuItems = new ArrayList<MenuItem>();
 		// Obtenemos los elementos del menu
 		String[] items = messageSource.getMessage("menu.items", null, null)
 				.split(" ");
+		//Ordenamos 
+		Arrays.sort(items, new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				int i1 = SECTION.getOrder(o1);
+				int i2 = SECTION.getOrder(o2);
+				if(i1 == i2) {
+					return 0;
+				} else if(i1 > i2) {
+					return 1;
+				}
+				return -1;
+			}
+		});
 		for (int i = 0; i < items.length; i++) {
 			MenuItem item = new MenuItem();
 			item.setText(messageSource.getMessage("menu." + items[i] + ".text",
@@ -165,6 +188,33 @@ public class MainController implements InitializingBean {
 		}
 	}
 
+	/**
+	 * Datos del usuario autenticado, si lo esta, <code>null</code> en caso de
+	 * que no haya un usuario autenticado
+	 * 
+	 * @return datos del usuario
+	 */
+	@ModelAttribute("userData")
+	Authentication getUserData() {
+		 Authentication authentication =
+			      SecurityContextHolder.getContext().getAuthentication();
+		 if(authentication == null){
+			 return null;
+		 }
+		 boolean auth = false;
+		 for (GrantedAuthority authority : authentication.getAuthorities()) {
+			String a = authority.getAuthority();
+			if(a != null && (a.equals("ROLE_USER") || a.equals("ROLE_ADMIN"))) {
+				auth=true;
+				break;
+			}
+		}
+		if(!auth) {
+			return null;
+		}
+		return authentication;
+	}
+	
 	/* *****************************************
 	 * ************ CONTROLADORES **************
 	 * *****************************************
@@ -218,6 +268,13 @@ public class MainController implements InitializingBean {
 		}
 		return authorsController;
 	}
+	private LoginController loginController;
+	private LoginController getLoginController() {
+		if (loginController == null) {
+			loginController = new LoginController(messageSource);
+		}
+		return loginController;
+	}
 
 	/* *****************************************
 	 * ******* GESTION DE PETICIONES ***********
@@ -238,116 +295,132 @@ public class MainController implements InitializingBean {
 	public String types(Model model) {
 		return getTypesController().list(model);
 	}
-	@RequestMapping(value = "/types", params = { "next" })
+	@RequestMapping(value = "/typesnext")
 	public String typesNext(Model model) {
 		return getTypesController().listNext(model);
 	}
-	@RequestMapping(value = "/types", params = { "previous" })
+	@RequestMapping(value = "/typesprevious")
 	public String typesPrevious(Model model) {
 		return getTypesController().listPrevious(model);
 	}
-	@RequestMapping(value = "/types", params = { "start" })
+	@RequestMapping(value = "/typesstart")
 	public String typesStart(Model model) {
 		return getTypesController().listStart(model);
 	}
-	@RequestMapping(value = "/types", params = { "end" })
+	@RequestMapping(value = "/typesend")
 	public String typesEnd(Model model) {
 		return getTypesController().listEnd(model);
 	}
-	@RequestMapping(value = "/types", params = { "pageSize" })
+	@RequestMapping(value = "/typespageSize")
 	public String typesPagesSize(@RequestParam("pageSize") String pageSize,
 			Model model) {
 		return getTypesController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/types", params = { "search" })
+	@RequestMapping(value = "/typessearch")
 	public String typesFilter(Tipo filter, Model model) {
 		return getTypesController().filter(filter, model);
 	}
-	@RequestMapping(value = "/types", params = { "create" })
+	@RequestMapping(value = "/typescreate")
 	public String typesCreate(@RequestParam("create") Integer index, Model model) {
 		return getTypesController().create(index, model);
 	}
-	@RequestMapping(value = "/types", params = { "delete" })
+	@RequestMapping(value = "/typesdelete")
 	public String typesDelete(@RequestParam("delete") Integer index, Model model) {
 		return getTypesController().delete(index, model);
 	}
-	@RequestMapping(value = "/types", params = { "update" })
+	@RequestMapping(value = "/typesupdate")
 	public String typesUpdate(@RequestParam("update") Integer index, Model model) {
 		return getTypesController().update(index, model);
 	}
-	@RequestMapping(value = "/types", params = { "read" })
+	@RequestMapping(value = "/typesread")
 	public String typesRead(@RequestParam("read") Integer index, Model model) {
 		return getTypesController().read(index, model);
 	}
-	@RequestMapping(value = "/types", params = { "acceptCreation" })
+	@RequestMapping(value = "/typesacceptCreation", params = {"acceptCreation"})
 	public String typesAcceptCreation(Tipo newType, Model model) {
 		return getTypesController().acceptCreation(newType, model);
 	}
-	@RequestMapping(value = "/types", params = { "acceptUpdate" })
+	@RequestMapping(value = "/typesacceptUpdate", params = {"acceptUpdate"})
 	public String typesAcceptUpdate(Tipo newType, Model model) {
 		return getTypesController().acceptUpdate(newType, model);
 	}
+	@RequestMapping(value = "/typesacceptCreation")
+	public String typesCancelAcceptCreation(Tipo newType, Model model) {
+		return getTypesController().list(model);
+	}
+	@RequestMapping(value = "/typesacceptUpdate")
+	public String typesCancelAcceptUpdate(Tipo newType, Model model) {
+		return getTypesController().list(model);
+	}
 	/* *****************************************
-	 * **************** TIPOS ******************
+	 * ************ TRADUCTORES ****************
 	 * *****************************************
 	 */
 	@RequestMapping(value = "/translators")
 	public String translators(Model model) {
 		return getTranslatorsController().list(model);
 	}
-	@RequestMapping(value = "/translators", params = { "next" })
+	@RequestMapping(value = "/translatorsnext")
 	public String translatorsNext(Model model) {
 		return getTranslatorsController().listNext(model);
 	}
-	@RequestMapping(value = "/translators", params = { "previous" })
+	@RequestMapping(value = "/translatorsprevious")
 	public String translatorsPrevious(Model model) {
 		return getTranslatorsController().listPrevious(model);
 	}
-	@RequestMapping(value = "/translators", params = { "start" })
+	@RequestMapping(value = "/translatorsstart")
 	public String translatorsStart(Model model) {
 		return getTranslatorsController().listStart(model);
 	}
-	@RequestMapping(value = "/translators", params = { "end" })
+	@RequestMapping(value = "/translatorsend")
 	public String translatorsEnd(Model model) {
 		return getTranslatorsController().listEnd(model);
 	}
-	@RequestMapping(value = "/translators", params = { "pageSize" })
+	@RequestMapping(value = "/translatorspageSize")
 	public String translatorsPagesSize(
 			@RequestParam("pageSize") String pageSize, Model model) {
 		return getTranslatorsController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/translators", params = { "search" })
+	@RequestMapping(value = "/translatorssearch")
 	public String translatorsFilter(Traductor filter, Model model) {
 		return getTranslatorsController().filter(filter, model);
 	}
-	@RequestMapping(value = "/translators", params = { "create" })
+	@RequestMapping(value = "/translatorscreate")
 	public String translatorsCreate(@RequestParam("create") Integer index,
 			Model model) {
 		return getTranslatorsController().create(index, model);
 	}
-	@RequestMapping(value = "/translators", params = { "delete" })
+	@RequestMapping(value = "/translatorsdelete")
 	public String translatorsDelete(@RequestParam("delete") Integer index,
 			Model model) {
 		return getTranslatorsController().delete(index, model);
 	}
-	@RequestMapping(value = "/translators", params = { "update" })
+	@RequestMapping(value = "/translatorsupdate")
 	public String translatorsUpdate(@RequestParam("update") Integer index, Model model) {
 		return getTranslatorsController().update(index, model);
 	}
-	@RequestMapping(value = "/translators", params = { "read" })
+	@RequestMapping(value = "/translatorsread")
 	public String translatorsRead(@RequestParam("read") Integer index,
 			Model model) {
 		return getTranslatorsController().read(index, model);
 	}
-	@RequestMapping(value = "/translators", params = { "acceptCreation" })
+	@RequestMapping(value = "/translatorsacceptCreation", params = {"acceptCreation"})
 	public String translatorsAcceptCreation(Traductor newTranslator, Model model) {
 		return getTranslatorsController().acceptCreation(newTranslator, model);
 	}
-	@RequestMapping(value = "/translators", params = { "acceptUpdate" })
+	@RequestMapping(value = "/translatorsacceptUpdate", params = {"acceptUpdate"})
 	public String translatorsAcceptUpdate(Traductor newTranslator, Model model) {
 		return getTranslatorsController().acceptUpdate(newTranslator, model);
 	}
-	@RequestMapping(value = "/translators", params = { "getdata" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/translatorsacceptCreation")
+	public String translatorsCancelAcceptCreation(Traductor newTranslator, Model model) {
+		return getTranslatorsController().list(model);
+	}
+	@RequestMapping(value = "/translatorsacceptUpdate")
+	public String translatorsCancelAcceptUpdate(Traductor newTranslator, Model model) {
+		return getTranslatorsController().list(model);
+	}
+	@RequestMapping(value = "/translatorsgetdata", method = RequestMethod.POST)
 	public @ResponseBody
 	List<Traductor> getTranslatorsData(@RequestParam("getdata") String hint) {
 		return getTranslatorsController().getData(hint);
@@ -360,58 +433,66 @@ public class MainController implements InitializingBean {
 	public String publishers(Model model) {
 		return getPublishersController().list(model);
 	}
-	@RequestMapping(value = "/publishers", params = { "next" })
+	@RequestMapping(value = "/publishersnext")
 	public String publishersNext(Model model) {
 		return getPublishersController().listNext(model);
 	}
-	@RequestMapping(value = "/publishers", params = { "previous" })
+	@RequestMapping(value = "/publishersprevious")
 	public String publishersPrevious(Model model) {
 		return getPublishersController().listPrevious(model);
 	}
-	@RequestMapping(value = "/publishers", params = { "start" })
+	@RequestMapping(value = "/publishersstart")
 	public String publishersStart(Model model) {
 		return getPublishersController().listStart(model);
 	}
-	@RequestMapping(value = "/publishers", params = { "end" })
+	@RequestMapping(value = "/publishersend")
 	public String publishersEnd(Model model) {
 		return getPublishersController().listEnd(model);
 	}
-	@RequestMapping(value = "/publishers", params = { "pageSize" })
+	@RequestMapping(value = "/publisherspageSize")
 	public String publishersPagesSize(
 			@RequestParam("pageSize") String pageSize, Model model) {
 		return getPublishersController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "search" })
+	@RequestMapping(value = "/publisherssearch")
 	public String publishersFilter(Editorial filter, Model model) {
 		return getPublishersController().filter(filter, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "create" })
+	@RequestMapping(value = "/publisherscreate")
 	public String publishersCreate(@RequestParam("create") Integer index,
 			Model model) {
 		return getPublishersController().create(index, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "delete" })
+	@RequestMapping(value = "/publishersdelete")
 	public String publishersDelete(@RequestParam("delete") Integer index,
 			Model model) {
 		return getPublishersController().delete(index, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "update" })
+	@RequestMapping(value = "/publishersupdate")
 	public String publishersUpdate(@RequestParam("update") Integer index, Model model) {
 		return getPublishersController().update(index, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "read" })
+	@RequestMapping(value = "/publishersread")
 	public String publishersRead(@RequestParam("read") Integer index, Model model) {
 		return getPublishersController().read(index, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "acceptCreation" })
+	@RequestMapping(value = "/publishersacceptCreation", params = {"acceptCreation"})
 	public String publishersAcceptCreation(Editorial newPublisher, Model model) {
 		return getPublishersController().acceptCreation(newPublisher, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "acceptUpdate" })
+	@RequestMapping(value = "/publishersacceptUpdate", params = {"acceptUpdate"})
 	public String publishersAcceptUpdate(Editorial newPublisher, Model model) {
 		return getPublishersController().acceptUpdate(newPublisher, model);
 	}
-	@RequestMapping(value = "/publishers", params = { "getdata" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/publishersacceptCreation")
+	public String publishersCancelAcceptCreation(Editorial newPublisher, Model model) {
+		return getPublishersController().list(model);
+	}
+	@RequestMapping(value = "/publishersacceptUpdate")
+	public String publishersCancelAcceptUpdate(Editorial newPublisher, Model model) {
+		return getPublishersController().list(model);
+	}
+	@RequestMapping(value = "/publishersgetdata", method = RequestMethod.POST)
 	public @ResponseBody
 	List<Editorial> getPublishersData(@RequestParam("getdata") String hint) {
 		return getPublishersController().getData(hint);
@@ -424,56 +505,64 @@ public class MainController implements InitializingBean {
 	public String places(Model model) {
 		return getPlacesController().list(model);
 	}
-	@RequestMapping(value = "/places", params = { "next" })
+	@RequestMapping(value = "/placesnext")
 	public String placesNext(Model model) {
 		return getPlacesController().listNext(model);
 	}
-	@RequestMapping(value = "/places", params = { "previous" })
+	@RequestMapping(value = "/placesprevious")
 	public String placesPrevious(Model model) {
 		return getPlacesController().listPrevious(model);
 	}
-	@RequestMapping(value = "/places", params = { "start" })
+	@RequestMapping(value = "/placesstart")
 	public String placesStart(Model model) {
 		return getPlacesController().listStart(model);
 	}
-	@RequestMapping(value = "/places", params = { "end" })
+	@RequestMapping(value = "/placesend")
 	public String placesEnd(Model model) {
 		return getPlacesController().listEnd(model);
 	}
-	@RequestMapping(value = "/places", params = { "pageSize" })
+	@RequestMapping(value = "/placespageSize")
 	public String placesPagesSize(@RequestParam("pageSize") String pageSize,
 			Model model) {
 		return getPlacesController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/places", params = { "search" })
+	@RequestMapping(value = "/placessearch")
 	public String placesFilter(Ubicacion filter, Model model) {
 		return getPlacesController().filter(filter, model);
 	}
-	@RequestMapping(value = "/places", params = { "create" })
+	@RequestMapping(value = "/placescreate")
 	public String placesCreate(@RequestParam("create") Integer index,
 			Model model) {
 		return getPlacesController().create(index, model);
 	}
-	@RequestMapping(value = "/places", params = { "delete" })
+	@RequestMapping(value = "/placesdelete")
 	public String placesDelete(@RequestParam("delete") Integer index,
 			Model model) {
 		return getPlacesController().delete(index, model);
 	}
-	@RequestMapping(value = "/places", params = { "update" })
+	@RequestMapping(value = "/placesupdate")
 	public String placesUpdate(@RequestParam("update") Integer index, Model model) {
 		return getPlacesController().update(index, model);
 	}
-	@RequestMapping(value = "/places", params = { "read" })
+	@RequestMapping(value = "/placesread")
 	public String placesRead(@RequestParam("read") Integer index, Model model) {
 		return getPlacesController().read(index, model);
 	}
-	@RequestMapping(value = "/places", params = { "acceptCreation" })
+	@RequestMapping(value = "/placesacceptCreation", params = {"acceptCreation"})
 	public String placesAcceptCreation(Ubicacion newPlace, Model model) {
 		return getPlacesController().acceptCreation(newPlace, model);
 	}
-	@RequestMapping(value = "/places", params = { "acceptUpdate" })
+	@RequestMapping(value = "/placesacceptUpdate", params = {"acceptUpdate"})
 	public String placesAcceptUpdate(Ubicacion newPlace, Model model) {
 		return getPlacesController().acceptUpdate(newPlace, model);
+	}
+	@RequestMapping(value = "/placesacceptCreation")
+	public String placesCancelAcceptCreation(Ubicacion newPlace, Model model) {
+		return getPlacesController().list(model);
+	}
+	@RequestMapping(value = "/placesacceptUpdate")
+	public String placesCancelAcceptUpdate(Ubicacion newPlace, Model model) {
+		return getPlacesController().list(model);
 	}
 	/* *****************************************
 	 * ************* COLECCIONES ***************
@@ -483,67 +572,75 @@ public class MainController implements InitializingBean {
 	public String collections(Model model) {
 		return getCollectionsController().list(model);
 	}
-	@RequestMapping(value = "/collections", params = { "next" })
+	@RequestMapping(value = "/collectionsnext")
 	public String collectionsNext(Model model) {
 		return getCollectionsController().listNext(model);
 	}
-	@RequestMapping(value = "/collections", params = { "previous" })
+	@RequestMapping(value = "/collectionsprevious")
 	public String collectionsPrevious(Model model) {
 		return getCollectionsController().listPrevious(model);
 	}
-	@RequestMapping(value = "/collections", params = { "start" })
+	@RequestMapping(value = "/collectionsstart")
 	public String collectionsStart(Model model) {
 		return getCollectionsController().listStart(model);
 	}
-	@RequestMapping(value = "/collections", params = { "end" })
+	@RequestMapping(value = "/collectionsend")
 	public String collectionsEnd(Model model) {
 		return getCollectionsController().listEnd(model);
 	}
-	@RequestMapping(value = "/collections", params = { "pageSize" })
+	@RequestMapping(value = "/collectionspageSize")
 	public String collectionsPagesSize(
 			@RequestParam("pageSize") String pageSize, Model model) {
 		return getCollectionsController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/collections", params = { "search" })
+	@RequestMapping(value = "/collectionssearch")
 	public String collectionsFilter(Coleccion filter, Model model) {
 		return getCollectionsController().filter(filter, model);
 	}
-	@RequestMapping(value = "/collections", params = { "create" })
+	@RequestMapping(value = "/collectionscreate")
 	public String collectionsCreate(@RequestParam("create") Integer index,
 			Model model) {
 		return getCollectionsController().create(index, model);
 	}
-	@RequestMapping(value = "/collections", params = { "delete" })
+	@RequestMapping(value = "/collectionsdelete")
 	public String collectionsDelete(@RequestParam("delete") Integer index,
 			Model model) {
 		return getCollectionsController().delete(index, model);
 	}
-	@RequestMapping(value = "/collections", params = { "update" })
+	@RequestMapping(value = "/collectionsupdate")
 	public String collectionsUpdate(@RequestParam("update") Integer index,
 			Model model) {
 		return getCollectionsController().update(index, model);
 	}
-	@RequestMapping(value = "/collections", params = { "read" })
+	@RequestMapping(value = "/collectionsread")
 	public String collectionsRead(@RequestParam("read") Integer index,
 			Model model) {
 		return getCollectionsController().read(index, model);
 	}
-	@RequestMapping(value = "/collections", params = { "acceptCreation" })
+	@RequestMapping(value = "/collectionsacceptCreation", params = {"acceptCreation"})
 	public String collectionsAcceptCreation(Coleccion newCollection, Model model) {
 		return getCollectionsController().acceptCreation(newCollection, model);
 	}
-	@RequestMapping(value = "/collections", params = { "acceptUpdate" })
+	@RequestMapping(value = "/collectionsacceptCreation")
+	public String collectionsCancelAcceptCreation(Coleccion newCollection, Model model) {
+		return getCollectionsController().list(model);
+	}
+	@RequestMapping(value = "/collectionsacceptUpdate", params = {"acceptUpdate"})
 	public String collectionsAcceptUpdate(Coleccion newCollection, Model model) {
 		return getCollectionsController().acceptUpdate(newCollection, model);
 	}
-	@RequestMapping(value = "/collections", params = { "getdata" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/collectionsacceptUpdate")
+	public String collectionsCancelAcceptUpdate(Coleccion newCollection, Model model) {
+		return getCollectionsController().list(model);
+	}
+	@RequestMapping(value = "/collectionsgetdata", method = RequestMethod.POST)
 	public @ResponseBody
 	List<Coleccion> getData(@RequestParam("getdata") String hint,
 			@RequestParam("publisherId") Integer publisherId) {
 		return getCollectionsController().getData(hint, publisherId);
 	}
-	@RequestMapping(value = "/collections/newPublisher", method = RequestMethod.POST)
-	public @ResponseBody String newCollectionPublisher(@RequestBody String requestBody) {
+	@RequestMapping(value = "/collectionsnewPublisher", method = RequestMethod.POST)
+	public @ResponseBody String newCollectionPublisher(@RequestParam("json") String requestBody) {
 		return getCollectionsController().newPublisher(requestBody);
 	}
 	/* *****************************************
@@ -554,93 +651,100 @@ public class MainController implements InitializingBean {
 	public String books(Model model) {
 		return getBooksController().list(model);
 	}
-	@RequestMapping(value = "/books", params = { "next" })
+	@RequestMapping(value = "/booksnext")
 	public String booksNext(Model model) {
 		return getBooksController().listNext(model);
 	}
-	@RequestMapping(value = "/books", params = { "previous" })
+	@RequestMapping(value = "/booksprevious")
 	public String booksPrevious(Model model) {
 		return getBooksController().listPrevious(model);
 	}
-	@RequestMapping(value = "/books", params = { "start" })
+	@RequestMapping(value = "/booksstart")
 	public String booksStart(Model model) {
 		return getBooksController().listStart(model);
 	}
-	@RequestMapping(value = "/books", params = { "end" })
+	@RequestMapping(value = "/booksend")
 	public String booksEnd(Model model) {
 		return getBooksController().listEnd(model);
 	}
-	@RequestMapping(value = "/books", params = { "pageSize" })
+	@RequestMapping(value = "/bookspageSize")
 	public String booksPagesSize(@RequestParam("pageSize") String pageSize,
 			Model model) {
 		return getBooksController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/books", params = { "search" })
+	@RequestMapping(value = "/bookssearch")
 	public String booksFilter(BooksFilter filter, Model model) {
 		return getBooksController().filter(filter, model);
 	}
-	@RequestMapping(value = "/books", params = { "create" })
+	@RequestMapping(value = "/bookscreate")
 	public String booksCreate(@RequestParam("create") Integer index, Model model) {
 		return getBooksController().create(index, model);
 	}
-	@RequestMapping(value = "/books", params = { "delete" })
+	@RequestMapping(value = "/booksdelete")
 	public String booksDelete(@RequestParam("delete") Integer index, Model model) {
 		return getBooksController().delete(index, model);
 	}
-	@RequestMapping(value = "/books", params = { "update" })
+	@RequestMapping(value = "/booksupdate")
 	public String booksUpdate(@RequestParam("update") Integer index, Model model) {
 		return getBooksController().update(index, model);
 	}
-	@RequestMapping(value = "/books", params = { "read" })
+	@RequestMapping(value = "/booksread")
 	public String booksRead(@RequestParam("read") Integer index, Model model) {
 		return getBooksController().read(index, model);
 	}
-	@RequestMapping(value = "/books", params = { "acceptCreation" })
+	@RequestMapping(value = "/booksacceptCreation", params = {"acceptCreation"})
 	public String booksAcceptCreation(Libro newBook, Model model) {
 		return getBooksController().acceptCreation(newBook, model);
 	}
-	@RequestMapping(value = "/books", params = { "acceptUpdate" })
+	@RequestMapping(value = "/booksacceptCreation")
+	public String booksCancelAcceptCreation(Libro newBook, Model model) {
+		return getBooksController().list(model);
+	}
+	@RequestMapping(value = "/booksacceptUpdate", params = {"acceptUpdate"})
 	public String booksAcceptUpdate(Libro newBook, Model model) {
 		return getBooksController().acceptUpdate(newBook, model);
+	}@RequestMapping(value = "/booksacceptUpdate")
+	public String booksCancelAcceptUpdate(Libro newBook, Model model) {
+		return getBooksController().list(model);
 	}
-	@RequestMapping(value = "/books/newPublisher", method = RequestMethod.POST)
+	@RequestMapping(value = "/booksnewPublisher", method = RequestMethod.POST)
 	public @ResponseBody
-	String newPublisher(@RequestBody String requestBody) {
+	String newPublisher(@RequestParam("json") String requestBody) {
 		return getBooksController().newPublisher(requestBody);
 	}
-	@RequestMapping(value = "/books/newCollection", method = RequestMethod.POST)
+	@RequestMapping(value = "/booksnewCollection", method = RequestMethod.POST)
 	public @ResponseBody
-	String newCollection(@RequestBody String requestBody) {
+	String newCollection(@RequestParam("json") String requestBody) {
 		return getBooksController().newCollection(requestBody);
 	}
-	@RequestMapping(value = "/books", params = { "addAuthor" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/booksaddAuthor", method = RequestMethod.POST)
 	public @ResponseBody
 	String addAuthor(@RequestParam("addAuthor") Integer authorId) {
 		return getBooksController().addAuthor(authorId);
 	}
-	@RequestMapping(value = "/books", params = { "quitAuthor" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/booksquitAuthor", method = RequestMethod.POST)
 	public @ResponseBody
 	String quitAuthor(@RequestParam("quitAuthor") String authorId) {
 		return getBooksController().quitAuthor(authorId);
 	}
-	@RequestMapping(value = "/books/newAuthor", method = RequestMethod.POST)
+	@RequestMapping(value = "/booksnewAuthor", method = RequestMethod.POST)
 	public @ResponseBody
-	String newAuthor(@RequestBody String requestBody) {
+	String newAuthor(@RequestParam("json") String requestBody) {
 		return getBooksController().newAuthor(requestBody);
 	}
-	@RequestMapping(value = "/books", params = { "addTranslator" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/booksaddTranslator", method = RequestMethod.POST)
 	public @ResponseBody
 	String addTranslator(@RequestParam("addTranslator") Integer translatorId) {
 		return getBooksController().addTranslator(translatorId);
 	}
-	@RequestMapping(value = "/books", params = { "quitTranslator" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/booksquitTranslator", method = RequestMethod.POST)
 	public @ResponseBody
 	String quitTranslator(@RequestParam("quitTranslator") String translatorId) {
 		return getBooksController().quitTranslator(translatorId);
 	}
-	@RequestMapping(value = "/books/newTranslator", method = RequestMethod.POST)
+	@RequestMapping(value = "/booksnewTranslator", method = RequestMethod.POST)
 	public @ResponseBody
-	String newTranslator(@RequestBody String requestBody) {
+	String newTranslator(@RequestParam("json") String requestBody) {
 		return getBooksController().newTranslator(requestBody);
 	}
 	/* *****************************************
@@ -651,60 +755,82 @@ public class MainController implements InitializingBean {
 	public String authors(Model model) {
 		return getAuthorsController().list(model);
 	}
-	@RequestMapping(value = "/authors", params = { "next" })
+	@RequestMapping(value = "/authorsnext")
 	public String authorsNext(Model model) {
 		return getAuthorsController().listNext(model);
 	}
-	@RequestMapping(value = "/authors", params = { "previous" })
+	@RequestMapping(value = "/authorsprevious")
 	public String authorsPrevious(Model model) {
 		return getAuthorsController().listPrevious(model);
 	}
-	@RequestMapping(value = "/authors", params = { "start" })
+	@RequestMapping(value = "/authorsstart")
 	public String authorsStart(Model model) {
 		return getAuthorsController().listStart(model);
 	}
-	@RequestMapping(value = "/authors", params = { "end" })
+	@RequestMapping(value = "/authorsend")
 	public String authorsEnd(Model model) {
 		return getAuthorsController().listEnd(model);
 	}
-	@RequestMapping(value = "/authors", params = { "pageSize" })
+	@RequestMapping(value = "/authorspageSize")
 	public String authorsPagesSize(@RequestParam("pageSize") String pageSize,
 			Model model) {
 		return getAuthorsController().listPageSize(pageSize, model);
 	}
-	@RequestMapping(value = "/authors", params = { "search" })
+	@RequestMapping(value = "/authorssearch")
 	public String authorsFilter(Autor filter, Model model) {
 		return getAuthorsController().filter(filter, model);
 	}
-	@RequestMapping(value = "/authors", params = { "create" })
+	@RequestMapping(value = "/authorscreate")
 	public String authorsCreate(@RequestParam("create") Integer index,
 			Model model) {
 		return getAuthorsController().create(index, model);
 	}
-	@RequestMapping(value = "/authors", params = { "delete" })
+	@RequestMapping(value = "/authorsdelete")
 	public String authorsDelete(@RequestParam("delete") Integer index,
 			Model model) {
 		return getAuthorsController().delete(index, model);
 	}
-	@RequestMapping(value = "/authors", params = { "update" })
+	@RequestMapping(value = "/authorsupdate")
 	public String authorsUpdate(@RequestParam("update") Integer index, Model model) {
 		return getAuthorsController().update(index, model);
 	}
-	@RequestMapping(value = "/authors", params = { "read" })
+	@RequestMapping(value = "/authorsread")
 	public String authorsRead(@RequestParam("read") Integer index, Model model) {
 		return getAuthorsController().read(index, model);
 	}
-	@RequestMapping(value = "/authors", params = { "acceptCreation" })
+	@RequestMapping(value = "/authorsacceptCreation", params = {"acceptCreation"})
 	public String authorsAcceptCreation(Autor newAuthor, Model model) {
 		return getAuthorsController().acceptCreation(newAuthor, model);
 	}
-	@RequestMapping(value = "/authors", params = { "acceptUpdate" })
+	@RequestMapping(value = "/authorsacceptCreation")
+	public String authorsCancelAcceptCreation(Autor newAuthor, Model model) {
+		return getAuthorsController().list(model);
+	}
+	@RequestMapping(value = "/authorsacceptUpdate", params = {"acceptUpdate"})
 	public String authorsAcceptUpdate(Autor newAuthor, Model model) {
 		return getAuthorsController().acceptUpdate(newAuthor, model);
 	}
-	@RequestMapping(value = "/authors", params = { "getdata" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/authorsacceptUpdate")
+	public String authorsCancelAcceptUpdate(Autor newAuthor, Model model) {
+		return getAuthorsController().list(model);
+	}
+	@RequestMapping(value = "/authorsgetdata", method = RequestMethod.POST)
 	public @ResponseBody
 	List<Autor> getData(@RequestParam("getdata") String hint) {
 		return getAuthorsController().getData(hint);
+	}
+	/* *****************************************
+	 * **************** LOGIN ******************
+	 * *****************************************
+	 */
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login(Model model, @RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout) {
+		return getLoginController().login(model, error, logout, true);
+	}
+	@RequestMapping(value = "/loginForm", method = RequestMethod.GET)
+	public String loginForm(Model model, @RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout) {
+		return getLoginController().login(model, error, logout, false);
 	}
 }
