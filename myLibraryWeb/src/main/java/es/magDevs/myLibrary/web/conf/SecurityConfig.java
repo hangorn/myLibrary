@@ -29,6 +29,8 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import es.magDevs.myLibrary.model.Constants;
 
@@ -90,5 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //Simpre se recordara al usuario
         http.rememberMe().tokenValiditySeconds(Integer.MAX_VALUE);
         http.csrf();
+        
+		// Añadimos un filtro de codificacion antes del de seguridad, esto no
+		// tiene mucho que ver con la seguridad pero no hay otro sitio donde
+		// ponerlo
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter,CsrfFilter.class);
     }
 }
