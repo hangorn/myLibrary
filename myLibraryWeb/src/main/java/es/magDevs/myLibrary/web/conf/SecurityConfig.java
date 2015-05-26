@@ -16,6 +16,9 @@
 package es.magDevs.myLibrary.web.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,9 +26,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import es.magDevs.myLibrary.model.Constants.SECTION;
+import es.magDevs.myLibrary.model.Constants;
 
 /**
  * Clases para configurar la seguridad de la aplicacion
@@ -35,52 +40,55 @@ import es.magDevs.myLibrary.model.Constants.SECTION;
  */
 @Configuration
 @EnableWebMvcSecurity
+@ComponentScan(value={"es.magDevs.myLibrary.*"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth)
-			throws Exception {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		auth.inMemoryAuthentication().passwordEncoder(encoder)
-				.withUser("user").password("$2a$10$u/gTxtfnnenV6H.WbGJ5p.dapEUibiD1lw8jvsyEJYTUZfzYSwVmy")
-				.roles("USER").and()
-				.withUser("josea").password("$2a$10$JgxHKBSw9z0XutV1.VIXGOS8WS1BFIFcGC2a5c1L7iHofrFQUAa32")
-				.roles("USER").and()
-				.withUser("admin").password("$2a$10$u/gTxtfnnenV6H.WbGJ5p.dapEUibiD1lw8jvsyEJYTUZfzYSwVmy")
-				.roles("USER", "ADMIN");
-	}
+    @Qualifier(value="userDetailsService")
+    UserDetailsService userDetailsService;
 
-	@Override
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @SuppressWarnings("rawtypes")
 	protected void configure(HttpSecurity http) throws Exception {
-		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry r = http
-				.authorizeRequests();
-		//Permitimos a cualquiera ver listados
-		// Recorremos todas las secciones disponibles
-		for (SECTION section : SECTION.values()) {
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()).permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"next").permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"previous").permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"start").permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"end").permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"pageSize").permitAll();
-			r.regexMatchers(HttpMethod.POST, "/"+section.get()+"search").permitAll();
-			r.regexMatchers(HttpMethod.POST, "/"+section.get()+"read").permitAll();
-			r.regexMatchers(HttpMethod.GET, "/"+section.get()+"\\?language=[a-zA-Z]{2}").permitAll();
-		}
-		//Permitimos acceso a la pantalla de login a cualquiera
-		r.regexMatchers(HttpMethod.GET, "/loginForm").permitAll();
-		r.regexMatchers("/login?logout").permitAll();
-		//Permitimos a cualquiera obtener los recursos (/img, /js o /css)
-		r.antMatchers("/img/**").permitAll();
-		r.antMatchers("/js/**").permitAll();
-		r.antMatchers("/css/**").permitAll();
-		//Permitimos a cualquiera ver la pagina inicial
-		r.antMatchers("/").permitAll();
-		// Hay que ser usuario para cualquier otra accion
-		r.antMatchers("/**").hasRole("USER");
-		http.formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/books", false);
-		http.logout().logoutSuccessUrl("/loginForm?logout").permitAll();
-		http.rememberMe().tokenValiditySeconds(Integer.MAX_VALUE);
-		http.csrf();
-	}
+        ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry r = http.authorizeRequests();
+        //Para todas las secciones, siempre se tendra acceso a listar, consultar y cambiar de idioma
+        for (Constants.SECTION section : Constants.SECTION.values()) {
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get()})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "next"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "previous"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "start"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "end"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "pageSize"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "search"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "read"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?language=[a-zA-Z]{2}"})).permitAll();
+        }
+        //Siempre se tendra acceso a formulario para entrar y salir, y a la pagina inicial
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm"})).permitAll();
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(new String[]{"/login?logout"})).permitAll();
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/"})).permitAll();
+        //Siempre se tendra acceso a los fichero de recursos (imagenes, scripts y css)
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/img/**"})).permitAll();
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/js/**"})).permitAll();
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/css/**"})).permitAll();
+        //Para todo lo demas se necesita rol de usuario registrado
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/**"})).hasRole("USER");
+        
+        //Cuando un usuario entre, se redirige a la seccion de libros
+        http.formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/books", false);
+        //Cuando un usuario sale, se redirige al formulario para entrar
+        http.logout().logoutSuccessUrl("/loginForm?logout").permitAll();
+        //Simpre se recordara al usuario
+        http.rememberMe().tokenValiditySeconds(Integer.MAX_VALUE);
+        http.csrf();
+    }
 }

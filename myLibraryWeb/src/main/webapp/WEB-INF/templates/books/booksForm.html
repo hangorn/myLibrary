@@ -183,8 +183,8 @@
 				></option>
 				<option
 					th:if="*{coleccion.id} != null AND *{coleccion.id} > 0 AND !*{#strings.isEmpty(coleccion.nombre)}"
-					th:text="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.nombre,'')})+')'"
-					th:title="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.nombre,'')})+')'"
+					th:text="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
+					th:title="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
 					th:value="*{coleccion.id}" id="defaultCollection"
 				></option>
 			</select>

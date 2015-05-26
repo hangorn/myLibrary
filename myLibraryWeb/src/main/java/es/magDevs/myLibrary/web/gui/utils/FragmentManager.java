@@ -95,13 +95,29 @@ public class FragmentManager {
 	 * Obtiene el mapeo con los elementos comunes (menu, pie de pagina y
 	 * mensaje) y con la plantilla de login
 	 * 
+	 * @param msg
+	 *            mensaje que se mostrara al cargar la pagina si no esta vacio
 	 * @return
 	 */
 	public static Map<String, Object> getLogin(String msg) {
 		Map<String, Object> fragmentMapper = getCommonElements(msg);
-		// Fragmento vacio
 		fragmentMapper.put("mainTemplate", "login/login");
 		fragmentMapper.put("mainFragment", "login");
 		return fragmentMapper;
 	}
+
+	/**
+	 * Obtiene el mapeo con los elementos comunes (menu, pie de pagina y
+	 * mensaje) y con la plantilla de cambio de contraseña
+	 * 
+	 * @param msg
+	 *            mensaje que se mostrara al cargar la pagina si no esta vacio
+	 * @return
+	 */
+	public static Map<String, Object> getPasswordChange(String msg) {
+        Map<String, Object> fragmentMapper = FragmentManager.getCommonElements(msg);
+        fragmentMapper.put("mainTemplate", "login/passwordChange");
+        fragmentMapper.put("mainFragment", "passwordChange");
+        return fragmentMapper;
+    }
 }

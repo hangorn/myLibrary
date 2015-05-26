@@ -63,7 +63,7 @@
 				</form>
 			</div>
 			<div th:if="${userData} != null" class="loginMenu">
-				<form action="" method="get">
+				<form th:action="@{passwordChange}" method="get">
 					<button class="menuBtn" type="submit" th:title="#{login.form.config}"
 						onmouseover="document.getElementById('userConfigImg').style='-webkit-transform: rotateX(180deg);transform: rotateX(180deg);bottom: 10px;'"
 						onmouseout="document.getElementById('userConfigImg').style='-webkit-transform: rotateX(0deg);transform: rotateX(0deg);bottom: 15px;'">

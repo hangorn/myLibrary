@@ -32,6 +32,13 @@ public class Constants {
 	public static final String TYPES_TABLE = "Tipo";
 	public static final String TRANSLATORS_TABLE = "Traductor";
 	public static final String PLACES_TABLE = "Ubicacion";
+    public static final String USERS_TABLE = "Usuario";
+    
+    //Roles
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_ROLE_ADMIN = "ROLE_ADMIN";
 	
 	/**
 	 * Distintos tipos de acciones que se pueden realizar

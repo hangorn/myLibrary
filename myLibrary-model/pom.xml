@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.magDevs.myLibrary</groupId>
 	<artifactId>myLibrary-model</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description>Capa del modelo de datos</description>
 
 	<properties>
@@ -70,6 +70,9 @@
 
 	<build>
 		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
 			<resource>
 				<directory>src/license/apache2.0/</directory>
 				<targetPath>META-INF</targetPath>

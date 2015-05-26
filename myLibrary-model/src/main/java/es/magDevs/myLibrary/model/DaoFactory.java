@@ -26,10 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.magDevs.myLibrary.model.dao.AutorDao;
+import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
+import es.magDevs.myLibrary.model.dao.TraductorDao;
 import es.magDevs.myLibrary.model.dao.UbicacionDao;
+import es.magDevs.myLibrary.model.dao.UsuarioDao;
 import es.magDevs.myLibrary.model.dao.hib.HibAutorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibColeccionDao;
 import es.magDevs.myLibrary.model.dao.hib.HibEditorialDao;
@@ -37,6 +40,7 @@ import es.magDevs.myLibrary.model.dao.hib.HibLibroDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTipoDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTraductorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
+import es.magDevs.myLibrary.model.dao.hib.HibUsuarioDao;
 
 /**
  * Factoria para instanciar los DAOs
@@ -45,7 +49,7 @@ import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
  * 
  */
 public class DaoFactory {
-	private static boolean init = false;
+	private static Boolean init = Boolean.FALSE;
 	private static final int HIBERNATE = 1;
 
 	private static Logger log = LoggerFactory.getLogger(DaoFactory.class);
@@ -53,24 +57,26 @@ public class DaoFactory {
 	private static Properties conf;
 
 	public static void init() {
-		if (!init) {
-			// Obtenemos la configuracion
-			conf = new Properties();
-			try {
-				// Obtemos el properties de la configuracion
-				conf.load(Thread.currentThread().getContextClassLoader()
-						.getResourceAsStream("configuration.properties"));
-			} catch (IOException e) {
-				log.error(
-						"No se ha podido obtener el fichero de configuracion.",
-						e);
-				throw new ExceptionInInitializerError(e);
+		synchronized (init) {
+			if (!init) {
+				// Obtenemos la configuracion
+				conf = new Properties();
+				try {
+					// Obtemos el properties de la configuracion
+					conf.load(Thread.currentThread().getContextClassLoader()
+							.getResourceAsStream("configuration.properties"));
+				} catch (IOException e) {
+					log.error(
+							"No se ha podido obtener el fichero de configuracion.",
+							e);
+					throw new ExceptionInInitializerError(e);
+				}
+				String dataAccess = conf.getProperty("dataAccess");
+				if ("hibernate".equals(dataAccess)) {
+					dataAccessType = HIBERNATE;
+				}
+				init = true;
 			}
-			String dataAccess = conf.getProperty("dataAccess");
-			if ("hibernate".equals(dataAccess)) {
-				dataAccessType = HIBERNATE;
-			}
-			init = true;
 		}
 	}
 
@@ -178,7 +184,7 @@ public class DaoFactory {
 	 * 
 	 * @return
 	 */
-	public static HibColeccionDao getColeccionDao() {
+	public static ColeccionDao getColeccionDao() {
 		if (dataAccessType == HIBERNATE) {
 			return new HibColeccionDao(sessionFactory);
 		} else {
@@ -192,11 +198,24 @@ public class DaoFactory {
 	 * 
 	 * @return
 	 */
-	public static HibTraductorDao getTraductorDao() {
+	public static TraductorDao getTraductorDao() {
 		if (dataAccessType == HIBERNATE) {
 			return new HibTraductorDao(sessionFactory);
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de los
+	 * usuarios
+	 * 
+	 * @return
+	 */
+	public static UsuarioDao getUsuarioDao() {
+		if (dataAccessType == 1) {
+			return new HibUsuarioDao(sessionFactory);
+		}
+		return null;
 	}
 }

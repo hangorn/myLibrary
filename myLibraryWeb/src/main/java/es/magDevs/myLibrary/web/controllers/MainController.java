@@ -18,7 +18,10 @@ package es.magDevs.myLibrary.web.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -29,6 +32,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -67,10 +71,13 @@ public class MainController implements InitializingBean {
 	// Spring Message Source
 	@Autowired
 	private MessageSource messageSource;
+	//Codificador de contraseñas
+	@Autowired
+    private PasswordEncoder passwordEncoder;
 	// LOG
 	private static final Logger log = Logger.getLogger(MainController.class);
 	//Cache para elementos del menu
-	private List<MenuItem> menuItems = null;
+	private Map<Locale, List<MenuItem>> menuItems = new HashMap<Locale, List<MenuItem>>();
 
 	/* *****************************************
 	 * ********** DATOS DEL MODELO *************
@@ -84,10 +91,11 @@ public class MainController implements InitializingBean {
 	 */
 	@ModelAttribute("menuItems")
 	List<MenuItem> getMenuItems() {
-		if(menuItems != null) {
-			return menuItems;
-		}
-		menuItems = new ArrayList<MenuItem>();
+		Locale locale = LocaleContextHolder.getLocale();
+        if (menuItems.containsKey(locale)) {
+            return menuItems.get(locale);
+        }
+        menuItems.put(locale, new ArrayList<MenuItem>());
 		// Obtenemos los elementos del menu
 		String[] items = messageSource.getMessage("menu.items", null, null)
 				.split(" ");
@@ -107,14 +115,14 @@ public class MainController implements InitializingBean {
 		for (int i = 0; i < items.length; i++) {
 			MenuItem item = new MenuItem();
 			item.setText(messageSource.getMessage("menu." + items[i] + ".text",
-					null, LocaleContextHolder.getLocale()));
+					null, locale));
 			item.setImg(messageSource.getMessage("menu." + items[i] + ".img",
 					null, null));
 			item.setLink(messageSource.getMessage("menu." + items[i] + ".link",
 					null, null));
-			menuItems.add(item);
+			menuItems.get(locale).add(item);
 		}
-		return menuItems;
+		return menuItems.get(locale);
 	}
 
 	/**
@@ -271,9 +279,9 @@ public class MainController implements InitializingBean {
 	private LoginController loginController;
 	private LoginController getLoginController() {
 		if (loginController == null) {
-			loginController = new LoginController(messageSource);
-		}
-		return loginController;
+            loginController = new LoginController(messageSource, passwordEncoder);
+        }
+        return loginController;
 	}
 
 	/* *****************************************
@@ -833,4 +841,16 @@ public class MainController implements InitializingBean {
 			@RequestParam(value = "logout", required = false) String logout) {
 		return getLoginController().login(model, error, logout, false);
 	}
+    @RequestMapping(value={"/passwordChange"}, method={RequestMethod.GET})
+    public String passwordAcceptChange(Model model) {
+        return this.getLoginController().passwordChange(model);
+    }
+    @RequestMapping(value={"/passwordacceptChange"}, method={RequestMethod.POST}, params={"acceptChange"})
+    public String passwordAcceptChange(Model model, @RequestParam(value="oldPassword") String oldPassword, @RequestParam(value="newPassword1") String newPassword1, @RequestParam(value="newPassword2") String newPassword2) {
+        String template = this.getLoginController().passwordAcceptChange(model, oldPassword, newPassword1, newPassword2);
+        if (!model.containsAttribute("error")) {
+            return this.getBooksController().list(model);
+        }
+        return template;
+    }
 }

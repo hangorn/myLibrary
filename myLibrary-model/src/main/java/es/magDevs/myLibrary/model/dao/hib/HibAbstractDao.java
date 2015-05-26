@@ -37,9 +37,7 @@ import es.magDevs.myLibrary.model.dao.AbstractDao;
  * 
  */
 @SuppressWarnings("rawtypes")
-public abstract class HibAbstractDao implements AbstractDao {
-
-	private SessionFactory sessionFactory;
+public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao {
 
 	private String table;
 
@@ -66,41 +64,9 @@ public abstract class HibAbstractDao implements AbstractDao {
 	 */
 	protected abstract Map<String, Boolean> getOrders();
 
-	/**
-	 * Obtiene la sesion actual para realizar operaciones contra el origen de
-	 * datos
-	 * 
-	 * @return
-	 */
-	protected Session getSession() {
-		return sessionFactory.getCurrentSession();
-	}
-
 	public HibAbstractDao(SessionFactory sessionFactory, String table) {
 		this.sessionFactory = sessionFactory;
 		this.table = table;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void beginTransaction() {
-		getSession().beginTransaction();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void commitTransaction() {
-		getSession().getTransaction().commit();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void rollbackTransaction() {
-		getSession().getTransaction().rollback();
-		;
 	}
 
 	/**
