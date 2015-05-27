@@ -174,6 +174,7 @@ public class BooksController extends AbstractController {
 				getSection()));
 		// Fijamos variables para la vista
 		model.addAttribute("elementData", bookData);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 
@@ -233,6 +234,7 @@ public class BooksController extends AbstractController {
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.UPDATE,
 				getSection()));
 		model.addAttribute("elementData", bookData);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 

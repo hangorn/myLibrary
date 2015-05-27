@@ -134,6 +134,7 @@ public class PlacesController extends AbstractController {
 				getSection()));
 		model.addAttribute("elementData", elementData);
 		model.addAttribute("placeBooks", placeBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 }

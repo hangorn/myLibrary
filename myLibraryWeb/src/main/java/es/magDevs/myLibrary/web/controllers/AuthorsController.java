@@ -135,6 +135,7 @@ public class AuthorsController extends AbstractController {
 				SECTION.AUTHORS));
 		model.addAttribute("elementData", authorData);
 		model.addAttribute("authorBooks", authorBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 

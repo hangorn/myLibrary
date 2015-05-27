@@ -133,6 +133,7 @@ public class TypesController extends AbstractController {
 				getSection()));
 		model.addAttribute("elementData", elementData);
 		model.addAttribute("typeBooks", typeBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 }

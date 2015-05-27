@@ -131,6 +131,7 @@ public class PublishersController extends AbstractController {
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ, getSection()));
 		model.addAttribute("elementData", elementData);
 		model.addAttribute("publisherBooks", publisherBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 

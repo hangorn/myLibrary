@@ -339,6 +339,7 @@ public abstract class AbstractController {
 				getSection()));
 		// Fijamos variables para la vista
 		model.addAttribute("elementData", elementData);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 
@@ -401,6 +402,7 @@ public abstract class AbstractController {
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.UPDATE,
 				getSection()));
 		model.addAttribute("elementData", elementData);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 
@@ -428,6 +430,7 @@ public abstract class AbstractController {
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
 				getSection()));
 		model.addAttribute("elementData", elementData);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 

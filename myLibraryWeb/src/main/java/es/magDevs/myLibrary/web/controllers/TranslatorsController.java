@@ -139,6 +139,7 @@ public class TranslatorsController extends AbstractController {
 				getSection()));
 		model.addAttribute("elementData", elementData);
 		model.addAttribute("translatorBooks", translatorBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 

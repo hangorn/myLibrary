@@ -143,6 +143,7 @@ public class CollectionsController extends AbstractController {
 				getSection()));
 		model.addAttribute("elementData", elementData);
 		model.addAttribute("collectionBooks", collectionBooks);
+		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
 
