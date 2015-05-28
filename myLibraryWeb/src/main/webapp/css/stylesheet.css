@@ -101,7 +101,7 @@ button {
 	overflow: hidden;
 }
 
-.menuitem:hover,.menuitemselected:hover {
+.menuitem:hover, .menuitemselected:hover {
 	width: 106px;
 	height: 89px;
 	background-color: inherit;
@@ -133,7 +133,7 @@ button {
 	margin: 0 10px;
 }
 
-#loginImg,#logoutImg {
+#loginImg, #logoutImg {
 	float: left;
 	position: relative;
 	bottom: 23px;
@@ -181,6 +181,16 @@ button {
 	display: inline-block;
 	width: 100%;
 	margin-bottom: 80px;
+}
+
+.searchInput {
+	background-color: #d0c8e9;
+	border: 2px solid grey;
+	border-radius: 5px;
+	background-image: url('../img/crudmenu/miniSearch.gif');
+	background-position: 4px;
+	background-repeat: no-repeat;
+	padding-left: 20px;
 }
 
 /************************************
@@ -244,7 +254,7 @@ button {
 	width: 100%;
 }
 
-.dataTable table,th,td {
+.dataTable table, th, td {
 	border: 2px solid #59367c;
 }
 
@@ -337,7 +347,7 @@ button {
 	margin-right: 15px;
 }
 
-.searchField input,.searchField select {
+.searchField input, .searchField select {
 	width: 200px;
 }
 
@@ -457,7 +467,7 @@ button {
 	overflow: auto;
 }
 
-.formField input,.formField select {
+.formField input, .formField select {
 	float: right;
 	width: 200px;
 }

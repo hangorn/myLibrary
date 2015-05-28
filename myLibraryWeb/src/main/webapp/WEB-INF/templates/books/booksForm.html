@@ -141,7 +141,7 @@
 			<label th:if="${editable}" for="publisherSearch"
 				th:text="#{books.crud.labelPublishersSearch}"
 			> </label> <input th:if="${editable}" type="text" id="publisherSearch"
-				autocomplete="off"
+				autocomplete="off" class="searchInput"
 			/><label for="editorial.id"
 				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"
 			></label> <select th:field="*{editorial.id}" th:disabled="!${editable}"
@@ -171,7 +171,7 @@
 			<label th:if="${editable}" for="collectionSearch"
 				th:text="#{books.crud.labelCollectionsSearch}"
 			> </label> <input th:if="${editable}" type="text" id="collectionSearch"
-				autocomplete="off"
+				autocomplete="off" class="searchInput"
 			/><label for="coleccion.id"
 				th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"
 			></label> <select th:field="*{coleccion.id}" th:disabled="!${editable}"
@@ -326,7 +326,7 @@
 		<div id="addAuthorFormContainer" class="dataFormContainer">
 			<div id="addAuthorForm" class="dataForm">
 				<label for="authorSearch" th:text="#{books.crud.labelAuthorSearch}">
-				</label> <input type="text" id="authorSearch" />
+				</label> <input type="text" id="authorSearch" class="searchInput"/>
 				<button id="addNewAuthor" class="addQuitButton"
 					th:title="#{books.crud.newAuthor}" type="button"
 				>
@@ -426,7 +426,7 @@
 			<div id="addTranslatorForm" class="dataForm">
 				<label for="translatorSearch"
 					th:text="#{books.crud.labelTranslatorSearch}"
-				> </label> <input type="text" id="translatorSearch" />
+				> </label> <input type="text" id="translatorSearch" class="searchInput"/>
 				<button id="addNewTranslator" class="addQuitButton"
 					th:title="#{books.crud.newTranslator}" type="button"
 				>

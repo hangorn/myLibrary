@@ -36,7 +36,7 @@
 		<div class="formField searchFormField">
 			<label th:if="${editable}" for="publisherSearch"
 				th:text="#{books.crud.labelPublishersSearch}"
-			> </label> <input th:if="${editable}" type="text" id="publisherSearch"
+			> </label> <input th:if="${editable}" type="text" id="publisherSearch" class="searchInput"
 				autocomplete="off"
 			/><label for="editorial.id"
 				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"

@@ -170,6 +170,16 @@ button {
 	margin-bottom: 80px;
 }
 
+.searchInput {
+	background-color: #d0c8e9;
+	border: 2px solid grey;
+	border-radius: 5px;
+	background-image: url('../img/crudmenu/miniSearch.gif');
+	background-position: 4px;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
 /************************************
  Submenu general
  ************************************/
