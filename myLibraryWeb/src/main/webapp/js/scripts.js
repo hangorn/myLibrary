@@ -14,6 +14,7 @@
  * under the License.
  */
 index = -1;
+window.onload = initSearchDialog;
 
 // Metodo para fijar un fila como seleccionada
 function setSelected(domElement) {
@@ -29,22 +30,23 @@ function setSelected(domElement) {
 
 // submit the specified form with the params
 function submit(formID, paramName, paramValue, msg) {
-	//Si no tenemos un mensaje que mostrar no comprobamos si el indice es valido
-	if(msg && msg != '') {
-		if(index < 0) {
+	// Si no tenemos un mensaje que mostrar no comprobamos si el indice es
+	// valido
+	if (msg && msg != '') {
+		if (index < 0) {
 			alert(msg);
 			return;
 		}
 	}
-	//Si se trata de una eliminacion pedimos confirmacion antes de proceder
-	if(paramName == "delete") {
-		if(confirm(deleteConfirmMessage)) {
+	// Si se trata de una eliminacion pedimos confirmacion antes de proceder
+	if (paramName == "delete") {
+		if (confirm(deleteConfirmMessage)) {
 			var form = document.getElementById(formID);
 			var hidden = document.createElement("input");
 			hidden.type = "hidden";
 			hidden.name = paramName;
 			hidden.value = paramValue;
-			form.action=form.action+paramName;
+			form.action = form.action + paramName;
 			form.appendChild(hidden);
 			form.submit();
 		}
@@ -55,7 +57,7 @@ function submit(formID, paramName, paramValue, msg) {
 	hidden.type = "hidden";
 	hidden.name = paramName;
 	hidden.value = paramValue;
-	form.action=form.action+paramName;
+	form.action = form.action + paramName;
 	form.appendChild(hidden);
 	form.submit();
 }
@@ -81,4 +83,54 @@ function clearSearch() {
 	}
 }
 
-
+// Inicia el comportamiento del dialogo de busqueda, si existe
+function initSearchDialog() {
+	// Si no tenemos dialogo de busqueda, salimos
+	if (document.getElementsByClassName('searchContainer').length == 0) {
+		return;
+	}
+	var container = document.getElementsByClassName('searchContainer')[0];
+	var button = document.getElementsByClassName('searchIcon')[0];
+	var buttonElements = [];
+	for(var i=0; i<button.children.length; i++) {
+		buttonElements[i] = button.children[i];
+	}
+	var hideImg = document.createElement('img');
+	hideImg.src = 'img/searchmenu/hideSearch.png';
+	
+	//accion del evento de ocultar
+	var showSearch = function() {
+		//le añadimos la clase CSS correspondiente
+		container.classList.add("searchContainerOpen");
+		button.classList.add('closeSearch');
+		// Registramos el evento de hacer click en el boton de ocultar
+		//y desactivamos el de mostrar
+		container.onmouseenter = null;
+		button.onclick = buttonClicked;
+		// Borramos imagenes del boton
+		for(var i=0; i<buttonElements.length; i++) {
+			button.removeChild(buttonElements[i]);
+		}
+		// Añadimos la imagen de ocultar
+		button.appendChild(hideImg);
+	}
+	//accion del evento de ocultar
+	var buttonClicked = function() {
+		//le quitamos la clase CSS correspondiente
+		container.classList.remove("searchContainerOpen");
+		button.classList.remove('closeSearch');
+		//borramos el evento de ocultar, si esta oculto no se podra ocultar
+		//y activamos el de mostrar
+		button.onclick = null;
+		container.onmouseenter = showSearch;
+		// Añadimos imagenes del boton
+		for(var i=0; i<buttonElements.length; i++) {
+			button.appendChild(buttonElements[i]);
+		}
+		// Borramos la imagen de ocultar
+		button.removeChild(hideImg);
+	}
+	
+	// Registramos el evento de mover el raton sobre el dialogo de busqueda
+	container.onmouseenter = showSearch;
+}
