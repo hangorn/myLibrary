@@ -198,7 +198,7 @@ public class CollectionsController extends AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptCreation, cargando los datos", e);
 		}
@@ -263,7 +263,7 @@ public class CollectionsController extends AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptUpdate, cargando los datos", e);
 		}

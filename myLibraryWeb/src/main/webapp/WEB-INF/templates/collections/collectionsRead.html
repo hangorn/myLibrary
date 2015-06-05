@@ -20,7 +20,7 @@
 <div th:fragment="collectionsRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/collections}" th:object="${elementData}" method="post">
+			<form th:action="@{/collections}" th:object="${elementData}" method="get">
 				<div th:replace="/collections/collectionsForm :: collectionsForm(false)"></div>
 	
 				<div class="crudButtons">

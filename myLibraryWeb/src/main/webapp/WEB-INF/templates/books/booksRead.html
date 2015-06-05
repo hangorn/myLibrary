@@ -20,7 +20,7 @@
 <div th:fragment="booksRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/books}" th:object="${elementData}" method="post">
+			<form th:action="@{/books}" th:object="${elementData}" method="get">
 				<div th:replace="/books/booksForm :: booksForm(false)"></div>
 	
 				<div class="crudButtons">

@@ -377,7 +377,7 @@ public class BooksController extends AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptCreation, al cargar los datos", e);
 		}
@@ -518,7 +518,7 @@ public class BooksController extends AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptUpdate, al cargar los datos", e);
 		}

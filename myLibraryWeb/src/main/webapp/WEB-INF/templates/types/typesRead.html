@@ -20,7 +20,7 @@
 <div th:fragment="typesRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/types}" th:object="${elementData}" method="post">
+			<form th:action="@{/types}" th:object="${elementData}" method="get">
 				<div th:replace="/types/typesForm :: typesForm(false)"></div>
 	
 				<div class="crudButtons">

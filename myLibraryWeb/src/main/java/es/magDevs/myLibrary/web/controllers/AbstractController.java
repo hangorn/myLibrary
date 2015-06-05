@@ -159,11 +159,11 @@ public abstract class AbstractController {
 			// Iniciamos paginacion
 			AbstractDao dao = getDao();
 			pagManager.reset(dao.getCount());
+			// Reiniciamos el filtro de busqueda si no hay un filtro valido
+			filter = processFilter(filter);
 			// Buscamos los datos
-			data = dao.getWithPag(pagManager.getPage() - 1,
+			data = dao.getWithPag(filter, pagManager.getPage() - 1,
 					pagManager.getPageSize());
-			// Reiniciamos el filtro de busqueda
-			filter = null;
 		} catch (Exception e) {
 			msg = manageException("", e);
 		}
@@ -295,11 +295,11 @@ public abstract class AbstractController {
 		return "commons/body";
 	}
 
-	public String filter(Bean filter, Model model) {
+	public String filter(Bean f, Model model) {
 		String msg = "";
 		try {
 			// Guardamos el filtro
-			this.filter = processFilter(filter);
+			filter = processFilter(f);
 			// Iniciamos paginacion
 			AbstractDao dao = getDao();
 			pagManager.reset(dao.getCount(filter));
@@ -365,7 +365,7 @@ public abstract class AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("delete", e);
 		}
@@ -466,7 +466,7 @@ public abstract class AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptCreation, cargando los datos", e);
 		}
@@ -512,7 +512,7 @@ public abstract class AbstractController {
 			data = dao.getWithPag(pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			filter = null;
+			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("acceptUpdate, cargando los datos", e);
 		}
