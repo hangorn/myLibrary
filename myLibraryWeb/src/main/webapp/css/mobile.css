@@ -36,6 +36,16 @@ button {
 	color: #000;
 }
 
+a {
+	color: #4078C0;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #800080;
+	text-decoration: underline;
+}
+
 /************************************
  Personalizacion del menu
  ************************************/
@@ -120,7 +130,7 @@ button {
 	margin: 0 10px;
 }
 
-#loginImg,#logoutImg {
+#loginImg, #logoutImg {
 	float: left;
 	position: relative;
 	bottom: 23px;
@@ -153,7 +163,6 @@ button {
 	bottom: 0;
 	margin-right: 40px;
 	margin-left: auto;
-	z-index: -5000;
 }
 
 .footer span {
@@ -241,7 +250,7 @@ button {
 	width: 100%;
 }
 
-.dataTable table,th,td {
+.dataTable table, th, td {
 	border: 2px solid #59367c;
 }
 
@@ -316,7 +325,7 @@ button {
 	margin-right: 15px;
 }
 
-.searchField input,.searchField select {
+.searchField input, .searchField select {
 	width: 200px;
 }
 
@@ -436,7 +445,7 @@ button {
 	overflow: auto;
 }
 
-.formField input,.formField select {
+.formField input, .formField select {
 	float: right;
 	width: 200px;
 }

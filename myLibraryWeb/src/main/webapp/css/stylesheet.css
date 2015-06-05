@@ -36,6 +36,16 @@ button {
 	color: #000;
 }
 
+a {
+	color: #4078C0;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #800080;
+	text-decoration: underline;
+}
+
 /************************************
  Personalizacion del menu
  ************************************/
@@ -166,7 +176,6 @@ button {
 	bottom: 0;
 	margin-right: 40px;
 	margin-left: auto;
-	z-index: -5000;
 }
 
 .footer span {
