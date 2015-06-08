@@ -65,6 +65,9 @@ public class DaoFactory {
 					// Obtemos el properties de la configuracion
 					conf.load(Thread.currentThread().getContextClassLoader()
 							.getResourceAsStream("configuration.properties"));
+					// Obtemos el properties de credenciales
+					conf.load(Thread.currentThread().getContextClassLoader()
+							.getResourceAsStream("credentials.properties"));
 				} catch (IOException e) {
 					log.error(
 							"No se ha podido obtener el fichero de configuracion.",
@@ -93,10 +96,16 @@ public class DaoFactory {
 				Configuration hibernateConfiguration = new Configuration()
 						.configure(conf
 								.getProperty("hibernate.configurationFile"));
+				// Cargamos las credenciales del fichero correspondiente
+				hibernateConfiguration.getProperties().setProperty(
+						"hibernate.connection.password",
+						conf.getProperty("password"));
+				hibernateConfiguration.getProperties().setProperty(
+						"hibernate.connection.username",
+						conf.getProperty("username"));
+				// Creamos una factorias de sesiones
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-						.applySettings(hibernateConfiguration.getProperties())
-						.build();
-				// creamos una factorias de sesiones
+						.applySettings(hibernateConfiguration.getProperties()).build();
 				SessionFactory factory = hibernateConfiguration
 						.buildSessionFactory(serviceRegistry);
 				log.info("Iniciada factoria hibernate para la instanciacion de los DAO disponibles.");
