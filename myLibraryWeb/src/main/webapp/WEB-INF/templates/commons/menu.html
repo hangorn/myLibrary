@@ -68,7 +68,7 @@
 						th:onmouseover="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.gif}+'\''"
 						th:onmouseout="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.png}+'\''">
 						<img id="userConfigImg" th:src="@{img/menu/gear.png}" /> <label
-							th:text="${userData.name}"
+							th:text="#{login.form.settings}"
 						></label>
 						<!-- 					cache para imagen del boton de configuracion -->
 						<img id="logoutImgCache" th:src="@{img/menu/gear.gif}"

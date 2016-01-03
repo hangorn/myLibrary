@@ -283,16 +283,16 @@ a:hover {
 	background-color: #d0c8e9;
 	position: relative;
 	padding: 20px;
-	padding-right: 0;
-	padding-left: 2px;
-	border-left: 2px solid #59367c;
+	padding-left: 0;
+	padding-right: 2px;
+	border-right: 2px solid #59367c;
 	border-top: 2px solid #59367c;
 	border-bottom: 2px solid #59367c;
-	border-top-left-radius: 25px;
-	border-bottom-left-radius: 25px;
+	border-top-right-radius: 25px;
+	border-bottom-right-radius: 25px;
 	height: 500px;
 	width: auto;
-	right: 0;
+	left: 0;
 	overflow: hidden;
 	border-left: 2px solid #59367c;
 }
@@ -303,13 +303,14 @@ a:hover {
 
 .search {
 	background-color: #fff690;
-	border-bottom-left-radius: 15px;
-	border-left: 2px solid #59367c;
+	border-bottom-right-radius: 15px;
+	border-right: 2px solid #59367c;
 	border-top: 2px solid #59367c;
 	border-bottom: 2px solid #59367c;
-	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 	font-weight: bold;
-	float: right;
+	padding-right: 20px;
+	float: left;
 	overflow: auto;
 }
 
