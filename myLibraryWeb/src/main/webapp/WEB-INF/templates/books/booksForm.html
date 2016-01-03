@@ -27,16 +27,14 @@
 				required="required" th:maxlength="#{TITLE_MAX_LENGHT}"
 				class="bigTextFormField" th:disabled="!${editable}" type="text"
 				th:field="*{titulo}" th:errorclass="fieldError "
-				th:title="${editable}?'':*{titulo}"
-			/>
+				th:title="${editable}?'':*{titulo}" />
 		</div>
 		<!-- año compra -->
 		<div class="formField">
 			<label for="annoCompra" th:text="#{books.field.purchaseYear}"></label>
 			<input class="numberFormField" type="number" th:field="*{annoCompra}"
 				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{annoCompra}"
-			/>
+				th:title="${editable}?'':*{annoCompra}" />
 		</div>
 		<!-- año copyright -->
 		<div class="formField">
@@ -44,8 +42,7 @@
 			<input class="numberFormField" type="number"
 				th:field="*{annoCopyright}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable}?'':*{annoCopyright}"
-			/>
+				th:title="${editable}?'':*{annoCopyright}" />
 		</div>
 		<!-- año publicacion -->
 		<div class="formField">
@@ -53,71 +50,61 @@
 			<input class="numberFormField" type="number"
 				th:field="*{annoPublicacion}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable}?'':*{annoPublicacion}"
-			/>
+				th:title="${editable}?'':*{annoPublicacion}" />
 		</div>
 		<!-- numero de paginas -->
 		<div class="formField">
 			<label for="numPaginas" th:text="#{books.field.pagNumber}"></label> <input
 				class="numberFormField" type="number" th:field="*{numPaginas}"
 				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{numPaginas}"
-			/>
+				th:title="${editable}?'':*{numPaginas}" />
 		</div>
 		<!-- numero de edicion -->
 		<div class="formField">
 			<label for="numEdicion" th:text="#{books.field.editionNumber}"></label>
 			<input class="numberFormField" type="number" th:field="*{numEdicion}"
 				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{numEdicion}"
-			/>
+				th:title="${editable}?'':*{numEdicion}" />
 		</div>
 		<!-- isbn -->
 		<div class="formField">
 			<label for="isbn" th:text="#{books.field.isbn}"></label> <input
 				th:maxlength="#{ISBN_MAX_LENGHT}" type="text" th:field="*{isbn}"
 				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{isbn}"
-			/>
+				th:title="${editable}?'':*{isbn}" />
 		</div>
 		<!-- notas -->
 		<div class="formField">
 			<label for="notas" th:text="#{books.field.notes}"></label> <input
 				th:maxlength="#{NOTES_MAX_LENGHT}" class="bigTextFormField"
 				type="text" th:field="*{notas}" th:disabled="!${editable}"
-				th:errorclass="fieldError" th:title="${editable}?'':*{notas}"
-			/>
+				th:errorclass="fieldError" th:title="${editable}?'':*{notas}" />
 		</div>
 		<!-- ubicacion -->
 		<div class="formField">
-			<label for="ubicacion.id" th:text="#{places.field.code}"></label> <select
-				th:field="*{ubicacion.id}" th:disabled="!${editable}"
+			<label for="ubicacion.id" th:text="#{places.field.code}"></label>
+			<select th:field="*{ubicacion.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable} OR *{ubicacion} == null OR *{#strings.isEmpty(ubicacion.codigo)}?'':*{ubicacion.codigo}"
-			>
+				th:title="${editable} OR *{ubicacion} == null OR *{#strings.isEmpty(ubicacion.codigo)}?'':(*{ubicacion.codigo}+' '+*{#strings.defaultString(ubicacion.descripcion,'')})">
 				<option th:if="${editable}" th:text="#{places.search.combo}"
-					value=""
-				></option>
+					value=""></option>
 				<option th:each="dataPlace : ${dataPlaces}"
 					th:if="${editable} OR *{ubicacion.id} == ${dataPlace.id}"
-					th:value="${dataPlace.id}" th:text="${dataPlace.codigo}"
-					th:selected="*{ubicacion.id} == ${dataPlace.id}"
-				></option>
+					th:value="${dataPlace.id}" th:text="${dataPlace.codigo}+' '+${#strings.defaultString(dataPlace.descripcion,'')}"
+					th:selected="*{ubicacion.id} == ${dataPlace.id}"></option>
 			</select>
 		</div>
 		<!-- tipo -->
 		<div class="formField">
-			<label for="tipo.id" th:text="#{types.field.description}"></label> <select
-				th:field="*{tipo.id}" th:disabled="!${editable}"
+			<label for="tipo.id" th:text="#{types.field.description}"></label>
+			<select th:field="*{tipo.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable} OR *{tipo} == null OR *{#strings.isEmpty(tipo.descripcion)}?'':*{tipo.descripcion}"
-			>
+				th:title="${editable} OR *{tipo} == null OR *{#strings.isEmpty(tipo.descripcion)}?'':*{tipo.descripcion}">
 				<option th:if="${editable}" th:text="#{types.search.combo}" value=""></option>
 				<option th:each="dataType : ${dataTypes}" th:value="${dataType.id}"
 					th:if="${editable} OR *{tipo.id} == ${dataType.id}"
 					th:text="${dataType.descripcion}"
-					th:selected="*{tipo.id} == ${dataType.id}"
-				></option>
+					th:selected="*{tipo.id} == ${dataType.id}"></option>
 			</select>
 		</div>
 		<!-- precio -->
@@ -125,161 +112,136 @@
 			<label for="precio" th:text="#{books.field.price}"></label> <input
 				class="numberFormField" type="number" step="any"
 				th:field="*{precio}" th:disabled="!${editable}"
-				th:errorclass="fieldError" th:title="${editable}?'':*{precio}"
-			/>
+				th:errorclass="fieldError" th:title="${editable}?'':*{precio}" />
 		</div>
 		<!-- tomo -->
 		<div class="formField">
 			<label for="tomo" th:text="#{books.field.volume}"></label> <input
 				class="numberFormField" type="number" th:field="*{tomo}"
 				th:disabled="!${editable}" th:errorclass="fieldError"
-				th:title="${editable}?'':*{tomo}"
-			/>
+				th:title="${editable}?'':*{tomo}" />
 		</div>
 		<!-- editorial -->
 		<div class="formField searchFormField">
 			<label th:if="${editable}" for="publisherSearch"
-				th:text="#{books.crud.labelPublishersSearch}"
-			> </label> <input th:if="${editable}" type="text" id="publisherSearch"
-				autocomplete="off" class="searchInput"
-			/><label for="editorial.id"
-				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"
-			></label> <select th:field="*{editorial.id}" th:disabled="!${editable}"
+				th:text="#{books.crud.labelPublishersSearch}"> </label> <input
+				th:if="${editable}" type="text" id="publisherSearch"
+				autocomplete="off" class="searchInput" /><label for="editorial.id"
+				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"></label>
+			<select th:field="*{editorial.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable} OR *{editorial} == null OR *{#strings.isEmpty(editorial.nombre)}?'':*{editorial.nombre}"
-			>
+				th:title="${editable} OR *{editorial} == null OR *{#strings.isEmpty(editorial.nombre)}?'':*{editorial.nombre}">
 				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '"
-					id="emptyPublisher" value="0" selected="selected"
-				></option>
+					id="emptyPublisher" value="0" selected="selected"></option>
 				<option
 					th:if="*{editorial.id} != null AND *{editorial.id} > 0 AND !*{#strings.isEmpty(editorial.nombre)}"
 					th:text="*{editorial.nombre}" th:title="*{editorial.nombre}"
-					th:value="*{editorial.id}" id="defaultPublisher"
-				></option>
+					th:value="*{editorial.id}" id="defaultPublisher"></option>
 			</select>
 			<button th:if="${editable}" id="addNewPublisher"
 				class="addQuitButton" th:title="#{books.crud.newPublisher}"
-				type="button"
-			>
+				type="button">
 				<img th:alt-title="#{books.crud.newPublisher}"
-					th:src="@{img/crudmenu/add.png}"
-				/> <label th:text="#{books.crud.newPublisher}"></label>
+					th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.newPublisher}"></label>
 			</button>
 		</div>
 		<!-- coleccion -->
 		<div class="formField searchFormField">
 			<label th:if="${editable}" for="collectionSearch"
-				th:text="#{books.crud.labelCollectionsSearch}"
-			> </label> <input th:if="${editable}" type="text" id="collectionSearch"
-				autocomplete="off" class="searchInput"
-			/><label for="coleccion.id"
-				th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"
-			></label> <select th:field="*{coleccion.id}" th:disabled="!${editable}"
+				th:text="#{books.crud.labelCollectionsSearch}"> </label> <input
+				th:if="${editable}" type="text" id="collectionSearch"
+				autocomplete="off" class="searchInput" /><label for="coleccion.id"
+				th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"></label>
+			<select th:field="*{coleccion.id}" th:disabled="!${editable}"
 				th:errorclass="fieldError"
-				th:title="${editable} OR *{coleccion} == null OR *{#strings.isEmpty(coleccion.nombre)}?'':*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'"
-			>
+				th:title="${editable} OR *{coleccion} == null OR *{#strings.isEmpty(coleccion.nombre)}?'':*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'">
 				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '"
-					id="emptyCollection" value="0" selected="selected"
-				></option>
+					id="emptyCollection" value="0" selected="selected"></option>
 				<option
 					th:if="*{coleccion.id} != null AND *{coleccion.id} > 0 AND !*{#strings.isEmpty(coleccion.nombre)}"
 					th:text="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
 					th:title="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
-					th:value="*{coleccion.id}" id="defaultCollection"
-				></option>
+					th:value="*{coleccion.id}" id="defaultCollection"></option>
 			</select>
 			<button th:if="${editable}" id="addNewCollection"
 				class="addQuitButton" th:title="#{books.crud.newCollection}"
-				type="button"
-			>
+				type="button">
 				<img th:alt-title="#{books.crud.newCollection}"
-					th:src="@{img/crudmenu/add.png}"
-				/> <label th:text="#{books.crud.newCollection}"></label>
+					th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.newCollection}"></label>
 			</button>
 		</div>
 		<!-- autores -->
 		<div class="formField searchFormField">
 			<label for="authorsList" th:text="#{books.crud.labelAuthorsList}"></label>
 			<select id="authorsList" size="6" multiple="multiple"
-				th:disabled="!${editable}"
-			>
+				th:disabled="!${editable}">
 				<option th:each="autor : *{autores}"
 					th:if="${autor.id} != null AND ${autor.id} > 0"
 					th:text="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
 					th:title="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
-					th:value="${autor.id}"
-				></option>
+					th:value="${autor.id}"></option>
 			</select>
 			<button th:if="${editable}" id="addAuthor" class="addQuitButton"
-				th:title="#{books.crud.addAuthor}" type="button"
-			>
+				th:title="#{books.crud.addAuthor}" type="button">
 				<img th:alt-title="#{books.crud.addAuthor}"
-					th:src="@{img/crudmenu/add.png}"
-				/> <label th:text="#{books.crud.addAuthor}"></label>
+					th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.addAuthor}"></label>
 			</button>
 			<button th:if="${editable}" id="quitAuthor" class="addQuitButton"
-				th:title="#{books.crud.quitAuthor}" type="button"
-			>
+				th:title="#{books.crud.quitAuthor}" type="button">
 				<img th:alt-title="#{books.crud.quitAuthor}"
-					th:src="@{img/crudmenu/quit.png}"
-				/> <label th:text="#{books.crud.quitAuthor}"></label>
+					th:src="@{img/crudmenu/quit.png}" /> <label
+					th:text="#{books.crud.quitAuthor}"></label>
 			</button>
 		</div>
 		<!-- traductores -->
 		<div class="formField searchFormField">
 			<label for="translatorsList"
-				th:text="#{books.crud.labelTranslatorsList}"
-			></label> <select id="translatorsList" size="6" multiple="multiple"
-				th:disabled="!${editable}"
-			>
+				th:text="#{books.crud.labelTranslatorsList}"></label>
+			<select id="translatorsList" size="6" multiple="multiple"
+				th:disabled="!${editable}">
 				<option th:each="traductor : *{traductores}"
 					th:if="${traductor.id} != null AND ${traductor.id} > 0"
 					th:text="${traductor.nombre}" th:title="${traductor.nombre}"
-					th:value="${traductor.id}"
-				></option>
+					th:value="${traductor.id}"></option>
 			</select>
 			<button th:if="${editable}" id="addTranslator" class="addQuitButton"
-				th:title="#{books.crud.addTranslator}" type="button"
-			>
+				th:title="#{books.crud.addTranslator}" type="button">
 				<img th:alt-title="#{books.crud.addTranslator}"
-					th:src="@{img/crudmenu/add.png}"
-				/> <label th:text="#{books.crud.addTranslator}"></label>
+					th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.addTranslator}"></label>
 			</button>
 			<button th:if="${editable}" id="quitTranslator" class="addQuitButton"
-				th:title="#{books.crud.quitTranslator}" type="button"
-			>
+				th:title="#{books.crud.quitTranslator}" type="button">
 				<img th:alt-title="#{books.crud.quitTranslator}"
-					th:src="@{img/crudmenu/quit.png}"
-				/> <label th:text="#{books.crud.quitTranslator}"></label>
+					th:src="@{img/crudmenu/quit.png}" /> <label
+					th:text="#{books.crud.quitTranslator}"></label>
 			</button>
 		</div>
 	</div>
 
 	<!-- dialogo para añadir una nueva editorial -->
 	<div th:if="${editable}" id="newPublisherFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="newPublisherFormContainer" class="dataFormContainer">
 			<div id="newPublisherForm" class="dataForm">
 				<div class="dataFormField">
 					<label for="newPublisherName" th:text="#{publishers.field.name}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newPublisherName"
-					></input>
+						id="newPublisherName"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newPublisherCity" th:text="#{publishers.field.city}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newPublisherCity"
-					></input>
+						id="newPublisherCity"></input>
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewPublisher}" type="button"
-						id="acceptNewPublisher"
-					>
+						id="acceptNewPublisher">
 						<img th:alt-title="#{books.crud.acceptNewPublisher}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+							th:src="@{img/crudmenu/create.png}" /> <label th:text="#{add}"></label>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewPublisher">
 						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -292,23 +254,19 @@
 
 	<!-- dialogo para añadir una nueva coleccion -->
 	<div th:if="${editable}" id="newCollectionFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="newCollectionFormContainer" class="dataFormContainer">
 			<div id="newCollectionForm" class="dataForm">
 				<div class="dataFormField">
 					<label for="newCollectionName" th:text="#{collections.field.name}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newCollectionName"
-					></input>
+						id="newCollectionName"></input>
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewCollection}" type="button"
-						id="acceptNewCollection"
-					>
+						id="acceptNewCollection">
 						<img th:alt-title="#{books.crud.acceptNewCollection}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+							th:src="@{img/crudmenu/create.png}" /> <label th:text="#{add}"></label>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewCollection">
 						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -321,18 +279,16 @@
 
 	<!-- dialogo para asignar un autor -->
 	<div th:if="${editable}" id="addAuthorFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="addAuthorFormContainer" class="dataFormContainer">
 			<div id="addAuthorForm" class="dataForm">
 				<label for="authorSearch" th:text="#{books.crud.labelAuthorSearch}">
-				</label> <input type="text" id="authorSearch" class="searchInput"/>
+				</label> <input type="text" id="authorSearch" class="searchInput" />
 				<button id="addNewAuthor" class="addQuitButton"
-					th:title="#{books.crud.newAuthor}" type="button"
-				>
+					th:title="#{books.crud.newAuthor}" type="button">
 					<img th:alt-title="#{books.crud.newAuthor}"
-						th:src="@{img/crudmenu/add.png}"
-					/> <label th:text="#{books.crud.newAuthor}"></label>
+						th:src="@{img/crudmenu/add.png}" /> <label
+						th:text="#{books.crud.newAuthor}"></label>
 				</button>
 				<div class="closeButton" id="closeButtonAuthors">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -357,57 +313,49 @@
 
 	<!-- dialogo para añadir un nuevo autor -->
 	<div th:if="${editable}" id="newAuthorFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="newAuthorFormContainer" class="dataFormContainer">
 			<div id="newAuthorForm" class="dataForm">
 				<div class="dataFormField">
 					<label for="newAuthorName" th:text="#{authors.field.name}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newAuthorName"
-					></input>
+						id="newAuthorName"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorSurname" th:text="#{authors.field.surname}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newAuthorSurname"
-					></input>
+						id="newAuthorSurname"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorCountry" th:text="#{authors.field.country}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newAuthorCountry"
-					></input>
+						id="newAuthorCountry"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorCity" th:text="#{authors.field.city}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newAuthorCity"
-					></input>
+						id="newAuthorCity"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorBirthyear"
-						th:text="#{authors.field.birthyear}"
-					> </label> <input type="number" id="newAuthorBirthyear"></input>
+						th:text="#{authors.field.birthyear}"> </label> <input
+						type="number" id="newAuthorBirthyear"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorDeathyear"
-						th:text="#{authors.field.deathyear}"
-					> </label> <input type="number" id="newAuthorDeathyear"></input>
+						th:text="#{authors.field.deathyear}"> </label> <input
+						type="number" id="newAuthorDeathyear"></input>
 				</div>
 				<div class="dataFormField">
 					<label for="newAuthorNotes" th:text="#{authors.field.notes}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newAuthorNotes"
-					></input>
+						id="newAuthorNotes"></input>
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewAuthor}" type="button"
-						id="acceptNewAuthor"
-					>
+						id="acceptNewAuthor">
 						<img th:alt-title="#{books.crud.acceptNewAuthor}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+							th:src="@{img/crudmenu/create.png}" /> <label th:text="#{add}"></label>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewAuthor">
 						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -420,19 +368,17 @@
 
 	<!-- dialogo para asignar un traductor -->
 	<div th:if="${editable}" id="addTranslatorFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="addTranslatorFormContainer" class="dataFormContainer">
 			<div id="addTranslatorForm" class="dataForm">
 				<label for="translatorSearch"
-					th:text="#{books.crud.labelTranslatorSearch}"
-				> </label> <input type="text" id="translatorSearch" class="searchInput"/>
+					th:text="#{books.crud.labelTranslatorSearch}"> </label> <input
+					type="text" id="translatorSearch" class="searchInput" />
 				<button id="addNewTranslator" class="addQuitButton"
-					th:title="#{books.crud.newTranslator}" type="button"
-				>
+					th:title="#{books.crud.newTranslator}" type="button">
 					<img th:alt-title="#{books.crud.newTranslator}"
-						th:src="@{img/crudmenu/add.png}"
-					/> <label th:text="#{books.crud.newTranslator}"></label>
+						th:src="@{img/crudmenu/add.png}" /> <label
+						th:text="#{books.crud.newTranslator}"></label>
 				</button>
 				<div class="closeButton" id="closeButtonTranslators">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -457,23 +403,19 @@
 
 	<!-- dialogo para añadir un nuevo traductor -->
 	<div th:if="${editable}" id="newTranslatorFormBackground"
-		class="background" style="display: none;"
-	>
+		class="background" style="display: none;">
 		<div id="newTranslatorFormContainer" class="dataFormContainer">
 			<div id="newTranslatorForm" class="dataForm">
 				<div class="dataFormField">
 					<label for="newTranslatorName" th:text="#{translators.field.name}">
 					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newTranslatorName"
-					></input>
+						id="newTranslatorName"></input>
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewTranslator}" type="button"
-						id="acceptNewTranslator"
-					>
+						id="acceptNewTranslator">
 						<img th:alt-title="#{books.crud.acceptNewTranslator}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+							th:src="@{img/crudmenu/create.png}" /> <label th:text="#{add}"></label>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewTranslator">
 						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -506,16 +448,12 @@
 /*]]>*/
 	</script>
 	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}"
-		type="text/javascript"
-	></script>
+		type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.collectionsScripts}}"
-		type="text/javascript"
-	></script>
+		type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.authorsScripts}}"
-		type="text/javascript"
-	></script>
+		type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.translatorsScripts}}"
-		type="text/javascript"
-	></script>
+		type="text/javascript"></script>
 </div>
 </html>
