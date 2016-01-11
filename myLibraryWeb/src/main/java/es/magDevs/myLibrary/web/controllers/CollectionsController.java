@@ -111,39 +111,34 @@ public class CollectionsController extends AbstractController {
 
 	@Override
 	public String read(Integer index, Model model) {
-		Coleccion elementData = null;
-		List<Libro> collectionBooks = null;
-		String msg = "";
-		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
-			// Obtenemos todos los datos del libro seleccionado
-			ColeccionDao dao = DaoFactory.getColeccionDao();
-			try {
-				elementData = (Coleccion) dao.get(((Bean) data.get(index))
-						.getId());
-				collectionBooks = dao.getLibrosColeccion(((Bean) data
-						.get(index)).getId());
-			} catch (Exception e) {
-				if (elementData == null) {
-					elementData = new Coleccion();
-				}
-				collectionBooks = new ArrayList<Libro>();
-				msg = manageException("read", e);
-			}
-		} else {
-			// Creamos un coleccion vacio, para que no de fallos al intentar
-			// acceder a algunos campos
-			elementData = new Coleccion();
-			collectionBooks = new ArrayList<Libro>();
-			msg = messageSource.getMessage("collections.menu.read.noIndexMsg",
-					null, LocaleContextHolder.getLocale());
+		super.read(index, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		ColeccionDao dao = DaoFactory.getColeccionDao();
+		try {
+			books = dao.getLibrosColeccion(((Bean) data.get(index))
+					.getId());
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("read", e);
 		}
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
-				getSection()));
-		model.addAttribute("elementData", elementData);
-		model.addAttribute("collectionBooks", collectionBooks);
-		model.addAttribute("currentURL", getSection().get());
+		model.addAttribute("collectionBooks", books);
+		return "commons/body";
+	}
+
+	@Override
+	public String readFromId(Integer id, Model model) {
+		super.readFromId(id, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		ColeccionDao dao = DaoFactory.getColeccionDao();
+		try {
+			books = dao.getLibrosColeccion(id);
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("readid", e);
+		}
+		model.addAttribute("collectionBooks", books);
 		return "commons/body";
 	}
 

@@ -20,10 +20,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
-import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
@@ -32,7 +30,6 @@ import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
-import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -103,37 +100,33 @@ public class TypesController extends AbstractController {
 	 */
 	@Override
 	public String read(Integer index, Model model) {
-		Tipo elementData = null;
-		List<Libro> typeBooks = null;
-		String msg = "";
-		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
-			// Obtenemos todos los datos del libro seleccionado
-			TipoDao dao = DaoFactory.getTipoDao();
-			try {
-				elementData = (Tipo) dao.get(((Bean) data.get(index)).getId());
-				typeBooks = dao.getLibrosTipo(((Bean) data.get(index)).getId());
-			} catch (Exception e) {
-				if (elementData == null) {
-					elementData = new Tipo();
-				}
-				typeBooks = new ArrayList<Libro>();
-				msg = manageException("read", e);
-			}
-		} else {
-			// Creamos un tipo vacio, para que no de fallos al intentar acceder
-			// a algunos campos
-			elementData = new Tipo();
-			typeBooks = new ArrayList<Libro>();
-			msg = messageSource.getMessage("types.menu.read.noIndexMsg", null,
-					LocaleContextHolder.getLocale());
+		super.read(index, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		TipoDao dao = DaoFactory.getTipoDao();
+		try {
+			books = dao.getLibrosTipo(((Bean) data.get(index)).getId());
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("read", e);
 		}
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
-				getSection()));
-		model.addAttribute("elementData", elementData);
-		model.addAttribute("typeBooks", typeBooks);
-		model.addAttribute("currentURL", getSection().get());
+		model.addAttribute("typeBooks", books);
+		return "commons/body";
+	}
+
+	@Override
+	public String readFromId(Integer id, Model model) {
+		super.readFromId(id, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		TipoDao dao = DaoFactory.getTipoDao();
+		try {
+			books = dao.getLibrosTipo(id);
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("readid", e);
+		}
+		model.addAttribute("typeBooks", books);
 		return "commons/body";
 	}
 }

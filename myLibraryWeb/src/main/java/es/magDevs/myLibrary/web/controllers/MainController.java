@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -57,10 +58,10 @@ import es.magDevs.myLibrary.web.gui.beans.MenuItem;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "serial" })
 @Controller
 @Scope(WebApplicationContext.SCOPE_SESSION)
-public class MainController implements InitializingBean {
+public class MainController implements InitializingBean, Serializable {
 	/**
 	 * Ejecuta las inicializaciones necesarias
 	 */
@@ -344,6 +345,10 @@ public class MainController implements InitializingBean {
 	public String typesRead(@RequestParam("read") Integer index, Model model) {
 		return getTypesController().read(index, model);
 	}
+	@RequestMapping(value = "/typesreadid")
+	public String typesReadId(@RequestParam("readid") Integer id, Model model) {
+		return getTypesController().readFromId(id, model);
+	}
 	@RequestMapping(value = "/typesacceptCreation", params = {"acceptCreation"})
 	public String typesAcceptCreation(Tipo newType, Model model) {
 		return getTypesController().acceptCreation(newType, model);
@@ -408,9 +413,12 @@ public class MainController implements InitializingBean {
 		return getTranslatorsController().update(index, model);
 	}
 	@RequestMapping(value = "/translatorsread")
-	public String translatorsRead(@RequestParam("read") Integer index,
-			Model model) {
+	public String translatorsRead(@RequestParam("read") Integer index, Model model) {
 		return getTranslatorsController().read(index, model);
+	}
+	@RequestMapping(value = "/translatorsreadid")
+	public String translatorsReadId(@RequestParam("readid") Integer id, Model model) {
+		return getTranslatorsController().readFromId(id, model);
 	}
 	@RequestMapping(value = "/translatorsacceptCreation", params = {"acceptCreation"})
 	public String translatorsAcceptCreation(Traductor newTranslator, Model model) {
@@ -484,6 +492,10 @@ public class MainController implements InitializingBean {
 	public String publishersRead(@RequestParam("read") Integer index, Model model) {
 		return getPublishersController().read(index, model);
 	}
+	@RequestMapping(value = "/publishersreadid")
+	public String publishersReadId(@RequestParam("readid") Integer id, Model model) {
+		return getPublishersController().readFromId(id, model);
+	}
 	@RequestMapping(value = "/publishersacceptCreation", params = {"acceptCreation"})
 	public String publishersAcceptCreation(Editorial newPublisher, Model model) {
 		return getPublishersController().acceptCreation(newPublisher, model);
@@ -556,6 +568,10 @@ public class MainController implements InitializingBean {
 	public String placesRead(@RequestParam("read") Integer index, Model model) {
 		return getPlacesController().read(index, model);
 	}
+	@RequestMapping(value = "/placesreadid")
+	public String placesReadId(@RequestParam("readid") Integer id, Model model) {
+		return getPlacesController().readFromId(id, model);
+	}
 	@RequestMapping(value = "/placesacceptCreation", params = {"acceptCreation"})
 	public String placesAcceptCreation(Ubicacion newPlace, Model model) {
 		return getPlacesController().acceptCreation(newPlace, model);
@@ -621,9 +637,12 @@ public class MainController implements InitializingBean {
 		return getCollectionsController().update(index, model);
 	}
 	@RequestMapping(value = "/collectionsread")
-	public String collectionsRead(@RequestParam("read") Integer index,
-			Model model) {
+	public String collectionsRead(@RequestParam("read") Integer index, Model model) {
 		return getCollectionsController().read(index, model);
+	}
+	@RequestMapping(value = "/collectionsreadid")
+	public String collectionsReadId(@RequestParam("readid") Integer id, Model model) {
+		return getCollectionsController().readFromId(id, model);
 	}
 	@RequestMapping(value = "/collectionsacceptCreation", params = {"acceptCreation"})
 	public String collectionsAcceptCreation(Coleccion newCollection, Model model) {
@@ -699,6 +718,10 @@ public class MainController implements InitializingBean {
 	@RequestMapping(value = "/booksread")
 	public String booksRead(@RequestParam("read") Integer index, Model model) {
 		return getBooksController().read(index, model);
+	}
+	@RequestMapping(value = "/booksreadid")
+	public String booksReadId(@RequestParam("readid") Integer id, Model model) {
+		return getBooksController().readFromId(id, model);
 	}
 	@RequestMapping(value = "/booksacceptCreation", params = {"acceptCreation"})
 	public String booksAcceptCreation(Libro newBook, Model model) {
@@ -805,6 +828,10 @@ public class MainController implements InitializingBean {
 	@RequestMapping(value = "/authorsread")
 	public String authorsRead(@RequestParam("read") Integer index, Model model) {
 		return getAuthorsController().read(index, model);
+	}
+	@RequestMapping(value = "/authorsreadid")
+	public String authorsReadId(@RequestParam("readid") Integer id, Model model) {
+		return getAuthorsController().readFromId(id, model);
 	}
 	@RequestMapping(value = "/authorsacceptCreation", params = {"acceptCreation"})
 	public String authorsAcceptCreation(Autor newAuthor, Model model) {

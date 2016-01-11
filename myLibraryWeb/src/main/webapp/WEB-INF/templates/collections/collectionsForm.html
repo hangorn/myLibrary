@@ -17,94 +17,60 @@
 -->
 <!DOCTYPE html>
 <html>
-<div class="collectionsFormContainer"
-	th:fragment="collectionsForm(editable)"
->
+<div class="collectionsFormContainer" th:fragment="collectionsForm(editable)">
 
 	<!-- formulario para los datos de las colecciones -->
 	<div class="booksForm">
 		<!-- nombre -->
 		<div class="formField">
-			<label for="nombre" th:text="#{collections.field.name}"></label> <input
-				required="required" th:maxlength="#{TEXT_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text"
-				th:field="*{nombre}" th:errorclass="fieldError "
-				th:title="${editable}?'':*{nombre}"
-			/>
+			<label for="nombre" th:text="#{collections.field.name}"></label> <input required="required"
+				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:field="*{nombre}" th:errorclass="fieldError " th:title="${editable}?'':*{nombre}" />
 		</div>
 		<!-- editorial -->
 		<div class="formField searchFormField">
-			<label th:if="${editable}" for="publisherSearch"
-				th:text="#{books.crud.labelPublishersSearch}"
-			> </label> <input th:if="${editable}" type="text" id="publisherSearch" class="searchInput"
-				autocomplete="off"
-			/><label for="editorial.id"
-				th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"
-			></label> <select th:field="*{editorial.id}" th:disabled="!${editable}"
-				th:errorclass="fieldError"
-				th:title="${editable} OR *{editorial} == null OR *{#strings.isEmpty(editorial.nombre)}?'':*{editorial.nombre}"
-			>
-				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '"
-					id="emptyPublisher" value="0" selected="selected"
-				></option>
-				<option
-					th:if="*{editorial.id} != null AND *{editorial.id} > 0 AND !*{#strings.isEmpty(editorial.nombre)}"
-					th:text="*{editorial.nombre}" th:title="*{editorial.nombre}"
-					th:value="*{editorial.id}" id="defaultPublisher"
-				></option>
+			<label th:if="${editable}" for="publisherSearch" th:text="#{books.crud.labelPublishersSearch}"> </label> <input
+				th:if="${editable}" type="text" id="publisherSearch" class="searchInput" autocomplete="off" /><label
+				for="editorial.id" th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"></label>
+			<select th:field="*{editorial.id}" th:if="${editable}" th:errorclass="fieldError"
+				th:title="*{editorial} == null OR *{#strings.isEmpty(editorial.nombre)}?'':*{editorial.nombre}">
+				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '" id="emptyPublisher" value="0"
+					selected="selected"></option>
+				<option th:if="*{editorial.id} != null AND *{editorial.id} > 0 AND !*{#strings.isEmpty(editorial.nombre)}"
+					th:text="*{editorial.nombre}" th:title="*{editorial.nombre}" th:value="*{editorial.id}" id="defaultPublisher"></option>
 			</select>
-			<button th:if="${editable}" id="addNewPublisher"
-				class="addQuitButton" th:title="#{books.crud.newPublisher}"
-				type="button"
-			>
-				<img th:alt-title="#{books.crud.newPublisher}"
-					th:src="@{img/crudmenu/add.png}"
-				/> <label th:text="#{books.crud.newPublisher}"></label>
+			<button th:if="${editable}" id="addNewPublisher" class="addQuitButton" th:title="#{books.crud.newPublisher}"
+				type="button">
+				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.newPublisher}"></label>
 			</button>
+			<div th:if="!${editable}"
+				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishersreadid?readid=}+*{editorial.id} : null)"></div>
 		</div>
 		<!--  lista de libros -->
-		<div th:if="!${editable}" class="formField bigSearchFormField">
-			<label for="collectionsBooks"
-				th:text="#{collections.crud.collectionsBooks}"
-			></label> <select id="collectionsBooks" size="6" multiple="multiple"
-				disabled="disabled"
-			>
-				<option th:each="book : ${collectionBooks}" th:text="${book.titulo}"
-					th:title="${book.titulo}"
-				></option>
-			</select>
-		</div>
+		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField"
+			th:include="commons/components :: readOnlyBooksList(#{collections.crud.collectionsBooks}, ${collectionBooks})"></div>
 	</div>
 
 	<!-- dialogo para añadir una nueva editorial -->
-	<div th:if="${editable}" id="newPublisherFormBackground"
-		class="background" style="display: none;"
-	>
+	<div th:if="${editable}" id="newPublisherFormBackground" class="background" style="display: none;">
 		<div id="newPublisherFormContainer" class="dataFormContainer">
 			<div id="newPublisherForm" class="dataForm">
 				<div class="dataFormField">
-					<label for="newPublisherName" th:text="#{publishers.field.name}">
-					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newPublisherName"
-					></input>
+					<label for="newPublisherName" th:text="#{publishers.field.name}"> </label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+						type="text" id="newPublisherName"></input>
 				</div>
 				<div class="dataFormField">
-					<label for="newPublisherCity" th:text="#{publishers.field.city}">
-					</label> <input th:maxlength="#{TEXT_MAX_LENGHT}" type="text"
-						id="newPublisherCity"
-					></input>
+					<label for="newPublisherCity" th:text="#{publishers.field.city}"> </label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+						type="text" id="newPublisherCity"></input>
 				</div>
 				<div class="dataFormButtons">
-					<button th:title="#{books.crud.acceptNewPublisher}" type="button"
-						id="acceptNewPublisher"
-					>
-						<img th:alt-title="#{books.crud.acceptNewPublisher}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+					<button th:title="#{books.crud.acceptNewPublisher}" type="button" id="acceptNewPublisher">
+						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{add}"></label>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewPublisher">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
-						<label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
 					</button>
 				</div>
 			</div>
@@ -131,8 +97,6 @@
     csrfToken=/*[[${_csrf.token}]]*/;
 /*]]>*/
 	</script>
-	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}"
-		type="text/javascript"
-	></script>
+	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}" type="text/javascript"></script>
 </div>
 </html>

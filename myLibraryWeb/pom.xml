@@ -51,7 +51,7 @@
 			</resource>
 		</resources>
 
-		<finalName>myLibraryWeb</finalName>
+		<finalName>mylib</finalName>
 
 		<plugins>
 			<plugin>

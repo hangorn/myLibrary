@@ -20,10 +20,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
-import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Autor;
@@ -32,7 +30,6 @@ import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
-import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -101,41 +98,36 @@ public class AuthorsController extends AbstractController {
 	 * ************** ACCIONES *****************
 	 * *****************************************
 	 */
-
 	@Override
 	public String read(Integer index, Model model) {
-		Autor authorData = null;
-		List<Libro> authorBooks = null;
-		String msg = "";
-		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
-			// Obtenemos todos los datos del libro seleccionado
-			AutorDao dao = DaoFactory.getAutorDao();
-			try {
-				authorData = (Autor) dao.get(((Bean) data.get(index)).getId());
-				authorBooks = dao.getLibrosAutor(((Bean) data.get(index))
-						.getId());
-			} catch (Exception e) {
-				if (authorData == null) {
-					authorData = new Autor();
-				}
-				authorBooks = new ArrayList<Libro>();
-				msg = manageException("read", e);
-			}
-		} else {
-			// Creamos un autor vacio, para que no de fallos al intentar acceder
-			// a algunos campos
-			authorData = new Autor();
-			authorBooks = new ArrayList<Libro>();
-			msg = messageSource.getMessage("authors.menu.read.noIndexMsg",
-					null, LocaleContextHolder.getLocale());
+		super.read(index, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		AutorDao dao = DaoFactory.getAutorDao();
+		try {
+			books = dao.getLibrosAutor(((Bean) data.get(index))
+					.getId());
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("read", e);
 		}
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
-				SECTION.AUTHORS));
-		model.addAttribute("elementData", authorData);
-		model.addAttribute("authorBooks", authorBooks);
-		model.addAttribute("currentURL", getSection().get());
+		model.addAttribute("authorBooks", books);
+		return "commons/body";
+	}
+
+	@Override
+	public String readFromId(Integer id, Model model) {
+		super.readFromId(id, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		AutorDao dao = DaoFactory.getAutorDao();
+		try {
+			books = dao.getLibrosAutor(id);
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("readid", e);
+		}
+		model.addAttribute("authorBooks", books);
 		return "commons/body";
 	}
 

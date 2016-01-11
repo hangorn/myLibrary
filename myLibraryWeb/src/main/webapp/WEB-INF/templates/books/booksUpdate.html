@@ -24,19 +24,13 @@
 				<div th:replace="/books/booksForm :: booksForm(true)"></div>
 
 				<div class="crudButtons">
-					<button th:title="#{books.crud.acceptUpdate}" type="submit"
-						name="acceptUpdate"
-					>
-						<img th:alt-title="#{books.crud.acceptUpdate}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{modify}"></label>
+					<button th:title="#{books.crud.acceptUpdate}" type="submit" name="acceptUpdate">
+						<img th:alt-title="#{books.crud.acceptUpdate}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{modify}"></label>
 					</button>
-					<button th:title="#{books.crud.cancelUpdate}" type="submit"
-						formnovalidate="formnovalidate" name=""
-					>
-						<img th:alt-title="#{books.crud.cancelUpdate}"
-							th:src="@{img/searchmenu/reset.png}"
-						/> <label th:text="#{cancel}"></label>
+					<button th:title="#{books.crud.cancelUpdate}" type="submit" formnovalidate="formnovalidate" name="">
+						<img th:alt-title="#{books.crud.cancelUpdate}" th:src="@{img/searchmenu/reset.png}" /> <label
+							th:text="#{cancel}"></label>
 					</button>
 				</div>
 			</form>

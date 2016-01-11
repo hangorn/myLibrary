@@ -23,33 +23,19 @@
 	<div class="booksForm">
 		<!-- codigo -->
 		<div class="formField">
-			<label for="codigo" th:text="#{places.field.code}"></label>
-			<input required="required" th:maxlength="#{COD_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text"
-				th:field="*{codigo}" th:errorclass="fieldError "
-				th:title="${editable}?'':*{codigo}"
-			/>
+			<label for="codigo" th:text="#{places.field.code}"></label> <input required="required"
+				th:maxlength="#{COD_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:field="*{codigo}" th:errorclass="fieldError " th:title="${editable}?'':*{codigo}" />
 		</div>
 		<!-- descripcion -->
 		<div class="formField">
-			<label for="descripcion" th:text="#{places.field.description}"></label>
-			<input th:maxlength="#{TEXT_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text"
-				th:field="*{descripcion}" th:errorclass="fieldError "
-				th:title="${editable}?'':*{descripcion}"
-			/>
+			<label for="descripcion" th:text="#{places.field.description}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+				class="bigTextFormField" th:disabled="!${editable}" type="text" th:field="*{descripcion}"
+				th:errorclass="fieldError " th:title="${editable}?'':*{descripcion}" />
 		</div>
 		<!--  lista de libros -->
-		<div th:if="!${editable}" class="formField bigSearchFormField">
-			<label for="placesBooks" th:text="#{places.crud.placesBooks}"></label>
-			<select id="placesBooks" size="6" multiple="multiple"
-				disabled="disabled"
-			>
-				<option th:each="book : ${placeBooks}" th:text="${book.titulo}"
-					th:title="${book.titulo}"
-				></option>
-			</select>
-		</div>
+		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField"
+			th:include="commons/components :: readOnlyBooksList(#{places.crud.placesBooks}, ${placeBooks})"></div>
 	</div>
 </div>
 </html>

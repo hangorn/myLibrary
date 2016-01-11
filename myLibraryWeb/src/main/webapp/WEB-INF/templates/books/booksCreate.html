@@ -22,17 +22,15 @@
 		<div class="crudForm">
 			<form th:action="@{/booksacceptCreation}" th:object="${elementData}" method="post">
 				<div th:replace="/books/booksForm :: booksForm(true)"></div>
-	
+
 				<div class="crudButtons">
 					<button th:title="#{books.crud.acceptCreation}" type="submit" name="acceptCreation">
-						<img th:alt-title="#{books.crud.acceptCreation}"
-							th:src="@{img/crudmenu/create.png}"
-						/> <label th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptCreation}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{add}"></label>
 					</button>
 					<button th:title="#{books.crud.cancelCreation}" type="submit" formnovalidate="formnovalidate" name="">
-						<img th:alt-title="#{books.crud.cancelCreation}"
-							th:src="@{img/searchmenu/reset.png}"
-						/> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{books.crud.cancelCreation}" th:src="@{img/searchmenu/reset.png}" /> <label
+							th:text="#{cancel}"></label>
 					</button>
 				</div>
 			</form>

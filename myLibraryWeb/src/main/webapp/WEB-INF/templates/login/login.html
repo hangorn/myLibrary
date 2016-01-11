@@ -23,9 +23,7 @@
 			<form name="f" th:action="@{/login}" method="post">
 				<fieldset>
 					<legend th:text="#{login.form.legend}"></legend>
-					<div th:if="${needed} AND !${error} AND !${logout}"
-						class="alert alert-warn"
-					>
+					<div th:if="${needed} AND !${error} AND !${logout}" class="alert alert-warn">
 						<div class="alertImg">
 							<img th:src="@{img/warn.png}" />
 						</div>
@@ -62,8 +60,8 @@
 						<input type="password" id="password" name="password" />
 					</div>
 					<div class="loginButtonContainer">
-						<label for="rememberme" th:text="#{login.form.rememberme}">
-						</label> <input id="rememberme" type="checkbox" name="remember-me" />
+						<label for="rememberme" th:text="#{login.form.rememberme}"> </label> <input id="rememberme" type="checkbox"
+							name="remember-me" />
 						<button type="submit" th:text="#{login.form.login}"></button>
 					</div>
 				</fieldset>

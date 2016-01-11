@@ -21,45 +21,33 @@
 	<header>
 		<nav>
 			<ul>
-				<li th:each="item,itemStat : ${menuItems}"><a
-					th:href="@{${item.link}}"
-				>
+				<li th:each="item,itemStat : ${menuItems}"><a th:href="@{${item.link}}">
 						<div
-							th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})"
-						>
-							<img th:alt-title="${item.text}" th:src="@{${item.img}}" /> <span
-								th:text="${item.text}"
-							></span>
+							th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})">
+							<img th:alt-title="${item.text}" th:src="@{${item.img}}" /> <span th:text="${item.text}"></span>
 						</div>
-				</a></li>
+					</a></li>
 			</ul>
 		</nav>
 		<div class="rightMenu">
 			<div class="langMenu">
 				<ul class="langList">
-					<li th:each="item,itemStat : ${languages}"><a
-						th:href="@{${currentURL}+'?'+${item.link}}"
-					>
+					<li th:each="item,itemStat : ${languages}"><a th:href="@{${currentURL}+'?'+${item.link}}">
 							<div class="langMenuItem">
 								<img th:alt-title="${item.text}" th:src="@{${item.img}}" />
 							</div>
-					</a></li>
+						</a></li>
 				</ul>
 			</div>
 			<div th:if="${userData} == null" class="loginMenu">
 				<form th:action="@{loginForm}" method="get">
 					<button class="menuBtn" type="submit"
 						th:onmouseover="'document.getElementById(\'loginImg\').src=\''+@{img/menu/lock_open.png}+'\''"
-						th:onmouseout="'document.getElementById(\'loginImg\').src=\''+@{img/menu/lock_closed.png}+'\''"
-					>
-						<img id="loginImg" th:src="@{img/menu/lock_closed.png}" /> <label
-							th:text="#{login.form.login}"
-						></label>
+						th:onmouseout="'document.getElementById(\'loginImg\').src=\''+@{img/menu/lock_closed.png}+'\''">
+						<img id="loginImg" th:src="@{img/menu/lock_closed.png}" /> <label th:text="#{login.form.login}"></label>
 					</button>
 					<!-- 					cache para imagen del boton de login -->
-					<img id="loginImgCache" th:src="@{img/menu/lock_open.png}"
-						style="display: none"
-					/>
+					<img id="loginImgCache" th:src="@{img/menu/lock_open.png}" style="display: none" />
 				</form>
 			</div>
 			<div th:if="${userData} != null" class="loginMenu">
@@ -67,28 +55,19 @@
 					<button class="menuBtn" type="submit" th:title="#{login.form.config}"
 						th:onmouseover="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.gif}+'\''"
 						th:onmouseout="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.png}+'\''">
-						<img id="userConfigImg" th:src="@{img/menu/gear.png}" /> <label
-							th:text="#{login.form.settings}"
-						></label>
+						<img id="userConfigImg" th:src="@{img/menu/gear.png}" /> <label th:text="#{login.form.settings}"></label>
 						<!-- 					cache para imagen del boton de configuracion -->
-						<img id="logoutImgCache" th:src="@{img/menu/gear.gif}"
-							style="display: none"
-						/>
+						<img id="logoutImgCache" th:src="@{img/menu/gear.gif}" style="display: none" />
 					</button>
 				</form>
 				<form th:action="@{logout}" method="post">
 					<button class="menuBtn" type="submit"
 						th:onmouseover="'document.getElementById(\'logoutImg\').src=\''+@{img/menu/lock_open.png}+'\''"
-						th:onmouseout="'document.getElementById(\'logoutImg\').src=\''+@{img/menu/lock_closed.png}+'\''"
-					>
-						<img id="logoutImg" th:src="@{img/menu/lock_closed.png}" /> <label
-							th:text="#{login.form.logout}"
-						></label>
+						th:onmouseout="'document.getElementById(\'logoutImg\').src=\''+@{img/menu/lock_closed.png}+'\''">
+						<img id="logoutImg" th:src="@{img/menu/lock_closed.png}" /> <label th:text="#{login.form.logout}"></label>
 					</button>
 					<!-- 					cache para imagen del boton de login -->
-					<img id="logoutImgCache" th:src="@{img/menu/lock_open.png}"
-						style="display: none"
-					/>
+					<img id="logoutImgCache" th:src="@{img/menu/lock_open.png}" style="display: none" />
 				</form>
 			</div>
 		</div>

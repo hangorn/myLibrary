@@ -19,9 +19,7 @@
 <html>
 <div class="placesList" th:fragment="placesList">
 	<div th:replace="/places/placesMenu :: placesMenu"></div>
-	<div class="dataTable"
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>
 			<thead>
 				<tr>
@@ -30,26 +28,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="placeData,dataStat : ${data}"
-					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
-				>
-					<td th:text="${placeData.codigo}"
-						th:title="${placeData.codigo}"
-					></td>
-					<td th:text="${placeData.descripcion}"
-						th:title="${placeData.descripcion}"
-					></td>
+				<tr th:each="placeData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:text="${placeData.codigo}" th:title="${placeData.codigo}"></td>
+					<td th:text="${placeData.descripcion}" th:title="${placeData.descripcion}"></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div class="dataTable"
-		th:if="(${data} == null OR ${#lists.isEmpty(data)})"
-		th:text="#{places.table.empty}"
-	></div>
-	<div
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{places.table.empty}"></div>
+	<div th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<div th:replace="/places/placesMenu :: placesMenu"></div>
 	</div>
 	<div th:replace="/places/placesSearch :: placesSearch"></div>

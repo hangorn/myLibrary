@@ -19,58 +19,42 @@
 <html>
 <div class="searchContainer" th:fragment="authorsSearch">
 	<div class="searchIcon">
-		<img th:alt-title="#{menu.search.icon}"
-			th:src="@{img/searchmenu/search.png}"
-		/> <img th:alt-title="#{menu.search.icon}"
-			th:src="@{img/searchmenu/arrows.png}"
-		/>
+		<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/search.png}" /> <img
+			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
 	</div>
 	<div class="search">
 		<form th:action="@{/authorssearch}" th:object="${filter}" method="post">
 			<div class="searchField">
-				<label for="nombre" th:text="#{authors.field.name}"></label> <input
-					type="text" th:field="*{nombre}" th:errorclass="fieldError"
-				/>
+				<label for="nombre" th:text="#{authors.field.name}"></label> <input type="text" th:field="*{nombre}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label for="apellidos" th:text="#{authors.field.surname}"></label> <input
-					type="text" th:field="*{apellidos}" th:errorclass="fieldError"
-				/>
+				<label for="apellidos" th:text="#{authors.field.surname}"></label> <input type="text" th:field="*{apellidos}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label for="pais" th:text="#{authors.field.country}"></label> <input
-					type="text" th:field="*{pais}" th:errorclass="fieldError"
-				/>
+				<label for="pais" th:text="#{authors.field.country}"></label> <input type="text" th:field="*{pais}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label for="ciudad" th:text="#{authors.field.city}"></label> <input
-					type="text" th:field="*{ciudad}" th:errorclass="fieldError"
-				/>
+				<label for="ciudad" th:text="#{authors.field.city}"></label> <input type="text" th:field="*{ciudad}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label class="numberLabel" for="annoNacimiento"
-					th:text="#{authors.field.birthyear}"
-				></label> <input class="numberInput" type="number"
-					th:field="*{annoNacimiento}" th:errorclass="fieldError"
-				/>
+				<label class="numberLabel" for="annoNacimiento" th:text="#{authors.field.birthyear}"></label> <input
+					class="numberInput" type="number" th:field="*{annoNacimiento}" th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label class="numberLabel" for="annoFallecimiento"
-					th:text="#{authors.field.deathyear}"
-				></label> <input class="numberInput" type="number"
-					th:field="*{annoFallecimiento}" th:errorclass="fieldError"
-				/>
+				<label class="numberLabel" for="annoFallecimiento" th:text="#{authors.field.deathyear}"></label> <input
+					class="numberInput" type="number" th:field="*{annoFallecimiento}" th:errorclass="fieldError" />
 			</div>
 			<div class="searchReset">
-				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
-					th:src="@{img/searchmenu/reset.png}"
-				/>
+				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}" th:src="@{img/searchmenu/reset.png}" />
 			</div>
 			<div class="searchField searchSubmit">
 				<button type="submit" name="search">
-					<img th:alt-title="#{menu.search.icon}"
-						th:src="@{img/searchmenu/submit.png}"
-					/> <label th:text="#{menu.search.search}"></label>
+					<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/submit.png}" /> <label
+						th:text="#{menu.search.search}"></label>
 				</button>
 			</div>
 

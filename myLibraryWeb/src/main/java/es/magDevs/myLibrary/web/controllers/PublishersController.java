@@ -20,10 +20,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
-import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
@@ -32,7 +30,6 @@ import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
-import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -45,9 +42,10 @@ public class PublishersController extends AbstractController {
 	public PublishersController(MessageSource messageSource) {
 		super(messageSource);
 	}
-	
+
 	// LOG
-	private static final Logger log = Logger.getLogger(PublishersController.class);
+	private static final Logger log = Logger
+			.getLogger(PublishersController.class);
 
 	/* *****************************************
 	 * ********** IMPLEMENTACIONES *************
@@ -93,7 +91,8 @@ public class PublishersController extends AbstractController {
 	 * {@inheritDoc}
 	 */
 	protected boolean processNewData(Bean newData) {
-		return NewDataManager.processPublisher((Editorial) newData, messageSource);
+		return NewDataManager.processPublisher((Editorial) newData,
+				messageSource);
 	}
 
 	/* *****************************************
@@ -102,36 +101,34 @@ public class PublishersController extends AbstractController {
 	 */
 	@Override
 	public String read(Integer index, Model model) {
-		Editorial elementData = null;
-		List<Libro> publisherBooks = null;
-		String msg = "";
-		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
-			// Obtenemos todos los datos del libro seleccionado
-			EditorialDao dao = DaoFactory.getEditorialDao();
-			try {
-				elementData = (Editorial) dao.get(((Bean)data.get(index)).getId());
-				publisherBooks =  dao.getLibrosEditorial(((Bean)data.get(index)).getId());
-			} catch (Exception e) {
-				if (elementData == null) {
-					elementData = new Editorial();
-				}
-				publisherBooks = new ArrayList<Libro>();
-				msg = manageException("read", e);
-			}
-		} else {
-			// Creamos una editorial vacio, para que no de fallos al intentar acceder
-			// a algunos campos
-			elementData = new Editorial();
-			publisherBooks = new ArrayList<Libro>();
-			msg = messageSource.getMessage("publishers.menu.read.noIndexMsg", null,
-					LocaleContextHolder.getLocale());
+		super.read(index, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		EditorialDao dao = DaoFactory.getEditorialDao();
+		try {
+			books = dao.getLibrosEditorial(((Bean) data.get(index))
+					.getId());
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("read", e);
 		}
-		// Enlazamos fragmentos de plantillas
-		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ, getSection()));
-		model.addAttribute("elementData", elementData);
-		model.addAttribute("publisherBooks", publisherBooks);
-		model.addAttribute("currentURL", getSection().get());
+		model.addAttribute("publisherBooks", books);
+		return "commons/body";
+	}
+
+	@Override
+	public String readFromId(Integer id, Model model) {
+		super.readFromId(id, model);
+		List<Libro> books = null;
+		// Obtenemos todos los datos del libro seleccionado
+		EditorialDao dao = DaoFactory.getEditorialDao();
+		try {
+			books = dao.getLibrosEditorial(id);
+		} catch (Exception e) {
+			books = new ArrayList<Libro>();
+			manageException("readid", e);
+		}
+		model.addAttribute("publisherBooks", books);
 		return "commons/body";
 	}
 

@@ -22,12 +22,11 @@
 		<div class="crudForm">
 			<form th:action="@{/collections}" th:object="${elementData}" method="get">
 				<div th:replace="/collections/collectionsForm :: collectionsForm(false)"></div>
-	
+
 				<div class="crudButtons">
 					<button th:title="#{collections.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
-						<img th:alt-title="#{collections.crud.closeRead}"
-							th:src="@{img/searchmenu/reset.png}"
-						/> <label th:text="#{close}"></label>
+						<img th:alt-title="#{collections.crud.closeRead}" th:src="@{img/searchmenu/reset.png}" /> <label
+							th:text="#{close}"></label>
 					</button>
 				</div>
 			</form>

@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "pageSize"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "search"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "read"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "readid\\?readid=\\d+"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?language=[a-zA-Z]{2}"})).permitAll();
         }
         //Siempre se tendra acceso a formulario para entrar y salir, y a la pagina inicial

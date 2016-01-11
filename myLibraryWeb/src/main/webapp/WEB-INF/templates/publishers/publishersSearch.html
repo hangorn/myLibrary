@@ -19,34 +19,26 @@
 <html>
 <div class="searchContainer" th:fragment="publishersSearch">
 	<div class="searchIcon">
-		<img th:alt-title="#{menu.search.icon}"
-			th:src="@{img/searchmenu/search.png}"
-		/> <img th:alt-title="#{menu.search.icon}"
-			th:src="@{img/searchmenu/arrows.png}"
-		/>
+		<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/search.png}" /> <img
+			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
 	</div>
 	<div class="search">
 		<form th:action="@{/publisherssearch}" th:object="${filter}" method="post">
 			<div class="searchField">
-				<label for="nombre" th:text="#{publishers.field.name}"></label> <input
-					type="text" th:field="*{nombre}" th:errorclass="fieldError"
-				/>
+				<label for="nombre" th:text="#{publishers.field.name}"></label> <input type="text" th:field="*{nombre}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
-				<label for="ciudad" th:text="#{publishers.table.head.city}"></label> <input
-					type="text" th:field="*{ciudad}" th:errorclass="fieldError"
-				/>
+				<label for="ciudad" th:text="#{publishers.table.head.city}"></label> <input type="text" th:field="*{ciudad}"
+					th:errorclass="fieldError" />
 			</div>
 			<div class="searchReset">
-				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}"
-					th:src="@{img/searchmenu/reset.png}"
-				/>
+				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}" th:src="@{img/searchmenu/reset.png}" />
 			</div>
 			<div class="searchField searchSubmit">
 				<button type="submit" name="search">
-					<img th:alt-title="#{menu.search.icon}"
-						th:src="@{img/searchmenu/submit.png}"
-					/> <label th:text="#{menu.search.search}"></label>
+					<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/submit.png}" /> <label
+						th:text="#{menu.search.search}"></label>
 				</button>
 			</div>
 		</form>

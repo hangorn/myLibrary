@@ -17,20 +17,24 @@
 -->
 <!DOCTYPE html>
 <html>
-<div th:fragment="placesRead">
-	<div class="crudFormContainer">
-		<div class="crudForm">
-			<form th:action="@{/places}" th:object="${elementData}" method="get">
-				<div th:replace="/places/placesForm :: placesForm(false)"></div>
+<div th:fragment="readOnlySingleLink(text, link)">
+	<a th:if="${link} != null" th:text="${text}" th:title="${text}" th:href="${link}"></a>
+	<input th:if="${link} == null" th:disabled="true" type="text" />
+</div>
 
-				<div class="crudButtons">
-					<button th:title="#{places.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
-						<img th:alt-title="#{places.crud.closeRead}" th:src="@{img/searchmenu/reset.png}" /> <label
-							th:text="#{close}"></label>
-					</button>
-				</div>
-			</form>
-		</div>
+
+<div th:fragment="readOnlyBooksList(text, books)">
+	<label th:text="${text}"></label>
+	<div class="dataTable">
+		<table>
+			<tbody>
+				<tr th:each="book : ${books}">
+					<td class="button" onclick="this.children[0].click();" th:title="${book.titulo}">
+						<a th:text="${book.titulo}" th:href="@{/booksreadid?readid=}+${book.id}"></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
 </html>

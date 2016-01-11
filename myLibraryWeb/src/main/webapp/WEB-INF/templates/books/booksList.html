@@ -19,9 +19,7 @@
 <html>
 <div class="booksList" th:fragment="booksList">
 	<div th:replace="/books/booksMenu :: booksMenu"></div>
-	<div class="dataTable"
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>
 			<thead>
 				<tr>
@@ -33,42 +31,24 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="bookData,dataStat : ${data}"
-					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
-				>
-					<td
-						th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
-						th:title="${bookData.titulo}"
-					></td>
-					<td
-						th:if="(${bookData.autores} != null AND !${#lists.isEmpty(bookData.autores)})"
-						th:text="${#strings.setJoin(bookData.autores,', ')}"
-						th:title="${#strings.setJoin(bookData.autores,', ')}"
-					></td>
-					<td
-						th:if="(${bookData.autores} == null OR ${#lists.isEmpty(bookData.autores)})"
-						th:text="#{authors.anonymous}" th:title="#{authors.anonymous}"
-					></td>
-					<td
-						th:text="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
-						th:title="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
-					></td>
-					<td
-						th:text="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
-						th:title="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
-					></td>
-					<td
-						th:text="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
-						th:title="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
-					></td>
+				<tr th:each="bookData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
+						th:title="${bookData.titulo}"></td>
+					<td th:if="(${bookData.autores} != null AND !${#lists.isEmpty(bookData.autores)})"
+						th:text="${#strings.setJoin(bookData.autores,', ')}" th:title="${#strings.setJoin(bookData.autores,', ')}"></td>
+					<td th:if="(${bookData.autores} == null OR ${#lists.isEmpty(bookData.autores)})" th:text="#{authors.anonymous}"
+						th:title="#{authors.anonymous}"></td>
+					<td th:text="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
+						th:title="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"></td>
+					<td th:text="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
+						th:title="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"></td>
+					<td th:text="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
+						th:title="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div class="dataTable"
-		th:if="(${data} == null OR ${#lists.isEmpty(data)})"
-		th:text="#{books.table.empty}"
-	></div>
+	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{books.table.empty}"></div>
 	<div th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<div th:replace="/books/booksMenu :: booksMenu"></div>
 	</div>

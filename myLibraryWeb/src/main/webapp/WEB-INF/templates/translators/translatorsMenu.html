@@ -24,84 +24,65 @@
 				<ul>
 					<li th:if="${userData} != null"><a onclick="submit('crudForm','create',index)">
 							<div class="submenuitem">
-								<img th:alt-title="#{translators.menu.create}"
-									th:src="@{img/crudmenu/create.png}"
-								/>
+								<img th:alt-title="#{translators.menu.create}" th:src="@{img/crudmenu/create.png}" />
 							</div>
-					</a></li>
-					<li th:if="${userData} != null"><a th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{translators.menu.delete.noIndexMsg}+'&#34;)'">
+						</a></li>
+					<li th:if="${userData} != null"><a
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{translators.menu.delete.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{translators.menu.delete}"
-									th:src="@{img/crudmenu/delete.png}"
-								/>
+								<img th:alt-title="#{translators.menu.delete}" th:src="@{img/crudmenu/delete.png}" />
 							</div>
-					</a></li>
-					<li th:if="${userData} != null"><a th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{translators.menu.update.noIndexMsg}+'&#34;)'">
+						</a></li>
+					<li th:if="${userData} != null"><a
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{translators.menu.update.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{translators.menu.update}"
-									th:src="@{img/crudmenu/update.png}"
-								/>
+								<img th:alt-title="#{translators.menu.update}" th:src="@{img/crudmenu/update.png}" />
 							</div>
-					</a></li>
-					<li><a th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{translators.menu.read.noIndexMsg}+'&#34;)'">
+						</a></li>
+					<li><a
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{translators.menu.read.noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{translators.menu.read}"
-									th:src="@{img/crudmenu/read.png}"
-								/>
+								<img th:alt-title="#{translators.menu.read}" th:src="@{img/crudmenu/read.png}" />
 							</div>
-					</a></li>
+						</a></li>
 				</ul>
 			</nav>
 		</form>
 	</div>
 
-	<div class="pagmenu"
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="pagmenu" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<nav>
 			<ul>
 				<li><a th:href="@{/translatorsstart}">
 						<div class="submenuitem">
-							<img th:alt-title="#{menu.pag.start}"
-								th:src="@{img/pagmenu/start.png}"
-							/>
+							<img th:alt-title="#{menu.pag.start}" th:src="@{img/pagmenu/start.png}" />
 						</div>
-				</a></li>
+					</a></li>
 				<li><a th:href="@{/translatorsprevious}">
 						<div class="submenuitem">
-							<img th:alt-title="#{menu.pag.previous}"
-								th:src="@{img/pagmenu/previous.png}"
-							/>
+							<img th:alt-title="#{menu.pag.previous}" th:src="@{img/pagmenu/previous.png}" />
 						</div>
-				</a></li>
+					</a></li>
 				<li><div class="submenuitem">
 						<span th:text="#{menu.pag.of(${page},${pageCount})}"></span>
 					</div></li>
 				<li><a th:href="@{/translatorsnext}">
 						<div class="submenuitem">
-							<img th:alt-title="#{menu.pag.next}"
-								th:src="@{img/pagmenu/next.png}"
-							/>
+							<img th:alt-title="#{menu.pag.next}" th:src="@{img/pagmenu/next.png}" />
 						</div>
-				</a></li>
+					</a></li>
 				<li><a th:href="@{/translatorsend}">
 						<div class="submenuitem">
-							<img th:alt-title="#{menu.pag.end}"
-								th:src="@{img/pagmenu/end.png}"
-							/>
+							<img th:alt-title="#{menu.pag.end}" th:src="@{img/pagmenu/end.png}" />
 						</div>
-				</a></li>
+					</a></li>
 
 				<li><div class="submenuitem">
 						<form th:action="@{/translatorspageSize}" method="post">
 							<label for="pageSizeSelect" th:text="#{menu.pag.pageSize}"></label>
-							<select id="pageSizeSelect" name="pageSize"
-								onchange="this.form.submit()"
-							>
-								<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}"
-									th:text="${pageSize}"
-									th:selected="${selectedPageSize} == ${pageSize}"
-								></option>
+							<select id="pageSizeSelect" name="pageSize" onchange="this.form.submit()">
+								<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}" th:text="${pageSize}"
+									th:selected="${selectedPageSize} == ${pageSize}"></option>
 							</select>
 						</form>
 					</div></li>

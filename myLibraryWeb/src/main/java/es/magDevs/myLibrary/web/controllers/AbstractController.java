@@ -433,6 +433,24 @@ public abstract class AbstractController {
 		model.addAttribute("currentURL", getSection().get());
 		return "commons/body";
 	}
+	
+	public String readFromId(Integer id, Model model) {
+		Bean elementData = null;
+		String msg = "";
+		// Obtenemos todos los datos del elemento seleccionado
+		try {
+			elementData = getDao().get(id);
+		} catch (Exception e) {
+			elementData = getNewFilter();
+			msg = manageException("read", e);
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
+				getSection()));
+		model.addAttribute("elementData", elementData);
+		model.addAttribute("currentURL", getSection().get());
+		return "commons/body";
+	}
 
 	public String acceptCreation(Bean newElement, Model model) {
 		String msg = "";

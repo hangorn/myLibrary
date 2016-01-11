@@ -19,9 +19,7 @@
 <html>
 <div class="collectionsList" th:fragment="collectionsList">
 	<div th:replace="/collections/collectionsMenu :: collectionsMenu"></div>
-	<div class="dataTable"
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>
 			<thead>
 				<tr>
@@ -30,27 +28,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="collectionData,dataStat : ${data}"
-					onclick="setSelected(this)" th:id="'row_'+${dataStat.index}"
-				>
-					<td th:text="${collectionData.nombre}"
-						th:title="${collectionData.nombre}"
-					></td>
-					<td
-						th:text="${collectionData.editorial}!=null?${collectionData.editorial.nombre}:''"
-						th:title="${collectionData.editorial}!=null?${collectionData.editorial.nombre}:''"
-					></td>
+				<tr th:each="collectionData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:text="${collectionData.nombre}" th:title="${collectionData.nombre}"></td>
+					<td th:text="${collectionData.editorial}!=null?${collectionData.editorial.nombre}:''"
+						th:title="${collectionData.editorial}!=null?${collectionData.editorial.nombre}:''"></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div class="dataTable"
-		th:if="(${data} == null OR ${#lists.isEmpty(data)})"
-		th:text="#{collections.table.empty}"
-	></div>
-	<div
-		th:if="(${data} != null AND !${#lists.isEmpty(data)})"
-	>
+	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{collections.table.empty}"></div>
+	<div th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<div th:replace="/collections/collectionsMenu :: collectionsMenu"></div>
 	</div>
 	<div th:replace="/collections/collectionsSearch :: collectionsSearch"></div>
