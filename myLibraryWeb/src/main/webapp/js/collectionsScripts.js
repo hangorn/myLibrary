@@ -75,6 +75,7 @@ inputCollectionSearch.oninput = function() {
 document.getElementById("addNewCollection").onclick = function() {
 	document.getElementById("newCollectionName").className = "";
 	document.getElementById("newCollectionFormBackground").style.display = "inline";
+	document.getElementById("newCollectionFormBackground").getElementsByTagName('input')[0].focus();
 };
 
 // Registramos el evento para cuando se cree una nueva coleccion

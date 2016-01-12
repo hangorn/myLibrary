@@ -42,6 +42,9 @@ buttonQuitTranslator.onclick = function() {
 var buttonAddTranslator = document.getElementById("addTranslator");
 buttonAddTranslator.onclick = function() {
 	document.getElementById("addTranslatorFormBackground").style.display = "inline";
+	var input = document.getElementById('translatorSearch');
+	input.focus();
+	input.select();
 };
 
 // Registramos el evento de cancelar la asignacion de un traductor
@@ -130,6 +133,7 @@ document.getElementById("addNewTranslator").onclick = function() {
 	// Ocultamos el menu de busqueda y mostramos el de creacion
 	document.getElementById("addTranslatorFormBackground").style.display = "none";
 	document.getElementById("newTranslatorFormBackground").style.display = "inline";
+	document.getElementById("newTranslatorFormBackground").getElementsByTagName('input')[0].focus();
 };
 
 // Registramos el evento para cuando se cancele la creacion de un nuevo

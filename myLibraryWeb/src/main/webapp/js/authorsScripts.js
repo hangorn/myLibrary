@@ -42,6 +42,9 @@ buttonQuitAuthor.onclick = function() {
 var buttonAddAuthor = document.getElementById("addAuthor");
 buttonAddAuthor.onclick = function() {
 	document.getElementById("addAuthorFormBackground").style.display = "inline";
+	var input = document.getElementById('authorSearch');
+	input.focus();
+	input.select();
 };
 
 // Registramos el evento de cancelar la asignacion de un autor
@@ -136,6 +139,7 @@ document.getElementById("addNewAuthor").onclick = function() {
 	// Ocultamos el menu de busqueda y mostramos el de creacion
 	document.getElementById("addAuthorFormBackground").style.display = "none";
 	document.getElementById("newAuthorFormBackground").style.display = "inline";
+	document.getElementById("newAuthorFormBackground").getElementsByTagName('input')[0].focus();
 };
 
 // Registramos el evento para cuando se cancele la creacion de un nuevo autor

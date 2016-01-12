@@ -70,6 +70,7 @@ inputPublisherSearch.oninput = function() {
 document.getElementById("addNewPublisher").onclick = function() {
 	document.getElementById("newPublisherName").className = "";
 	document.getElementById("newPublisherFormBackground").style.display = "inline";
+	document.getElementById("newPublisherFormBackground").getElementsByTagName('input')[0].focus();
 };
 
 // Registramos el evento para cuando se cree una nueva editorial
