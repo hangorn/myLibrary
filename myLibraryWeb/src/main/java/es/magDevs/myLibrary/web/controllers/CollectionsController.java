@@ -188,9 +188,9 @@ public class CollectionsController extends AbstractController {
 
 		try {
 			// Iniciamos paginacion
-			pagManager = new PaginationManager(messageSource, dao.getCount());
+			pagManager = new PaginationManager(messageSource, dao.getCount(filter));
 			// Buscamos los datos
-			data = dao.getWithPag(pagManager.getPage() - 1,
+			data = dao.getWithPag(filter, pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
 			//filter = null;
@@ -253,9 +253,9 @@ public class CollectionsController extends AbstractController {
 
 		try {
 			// Iniciamos paginacion
-			pagManager = new PaginationManager(messageSource, dao.getCount());
+			pagManager = new PaginationManager(messageSource, dao.getCount(filter));
 			// Buscamos los datos
-			data = dao.getWithPag(pagManager.getPage() - 1,
+			data = dao.getWithPag(filter, pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
 			//filter = null;
