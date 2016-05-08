@@ -71,7 +71,7 @@ inputTranslatorSearch.oninput = function() {
 			}
 			// Si no tenemos datos no hacemos nada
 			if (!translatorsData || translatorsData.length == 0) {
-				list.innerHTML = "<tr class='translatorDataRow'><td>"
+				list.innerHTML = "<tr><td>"
 						+ messageNoTranslators + "</td></tr>";
 				return;
 			}
@@ -84,7 +84,6 @@ inputTranslatorSearch.oninput = function() {
 				tdID = translatorTxt;
 				// Creamos la estructura para la tabla
 				var tr = document.createElement("tr");
-				tr.className = "translatorDataRow";
 				var td = document.createElement("td");
 				td.innerHTML = translatorTxt;
 				td.title = translatorTxt;

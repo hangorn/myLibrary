@@ -16,8 +16,8 @@
 
 -->
 <!DOCTYPE html>
-<html>
-<div class="placesList" th:fragment="placesList">
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="placesList">
 	<div th:replace="/places/placesMenu :: placesMenu"></div>
 	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>

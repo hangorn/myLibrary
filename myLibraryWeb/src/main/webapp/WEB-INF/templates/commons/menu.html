@@ -16,7 +16,7 @@
 
 -->
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <div class="menu" th:fragment="menu(selected)">
 	<header>
 		<nav>
@@ -31,7 +31,7 @@
 		</nav>
 		<div class="rightMenu">
 			<div class="langMenu">
-				<ul class="langList">
+				<ul>
 					<li th:each="item,itemStat : ${languages}"><a th:href="@{${currentURL}+'?'+${item.link}}">
 							<div class="langMenuItem">
 								<img th:alt-title="${item.text}" th:src="@{${item.img}}" />

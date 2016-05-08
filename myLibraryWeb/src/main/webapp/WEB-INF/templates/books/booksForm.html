@@ -16,8 +16,8 @@
 
 -->
 <!DOCTYPE html>
-<html>
-<div class="booksFormContainer" th:fragment="booksForm(editable)">
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="booksForm(editable)">
 
 	<!-- formulario para los datos de los libros -->
 	<div class="booksForm">
@@ -166,7 +166,7 @@
 				<table>
 					<tbody>
 						<tr th:each="autor : *{autores}">
-							<td class="button" onclick="this.children[0].click();"
+							<td onclick="this.children[0].click();"
 								th:title="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}">
 								<a th:text="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
 									th:href="@{/authorsreadid?readid=}+${autor.id}"></a>
@@ -201,7 +201,7 @@
 				<table>
 					<tbody>
 						<tr th:each="traductor : *{traductores}">
-							<td class="button" onclick="this.children[0].click();" th:title="${traductor.nombre}">
+							<td onclick="this.children[0].click();" th:title="${traductor.nombre}">
 								<a th:text="${traductor.nombre}" th:href="@{/translatorsreadid?readid=}+${traductor.id}"></a>
 							</td>
 						</tr>
@@ -280,7 +280,7 @@
 							</tr>
 						</thead>
 						<tbody id="authorsDataTable">
-							<tr class="authorDataRow">
+							<tr>
 								<td th:text="#{books.crud.labelAuthorSearch}"></td>
 							</tr>
 						</tbody>
@@ -355,7 +355,7 @@
 							</tr>
 						</thead>
 						<tbody id="translatorsDataTable">
-							<tr class="translatorDataRow">
+							<tr>
 								<td th:text="#{books.crud.labelTranslatorSearch}"></td>
 							</tr>
 						</tbody>

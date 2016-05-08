@@ -16,7 +16,7 @@
 
 -->
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="readOnlySingleLink(text, link)">
 	<a th:if="${link} != null" th:text="${text}" th:title="${text}" th:href="${link}"></a>
 	<input th:if="${link} == null" th:disabled="true" type="text" />
@@ -29,7 +29,7 @@
 		<table>
 			<tbody>
 				<tr th:each="book : ${books}">
-					<td class="button" onclick="this.children[0].click();" th:title="${book.titulo}">
+					<td onclick="this.children[0].click();" th:title="${book.titulo}">
 						<a th:text="${book.titulo}" th:href="@{/booksreadid?readid=}+${book.id}"></a>
 					</td>
 				</tr>

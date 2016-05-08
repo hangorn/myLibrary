@@ -71,7 +71,7 @@ inputAuthorSearch.oninput = function() {
 			}
 			// Si no tenemos datos no hacemos nada
 			if (!authorsData || authorsData.length == 0) {
-				list.innerHTML = "<tr class='authorDataRow'><td>"
+				list.innerHTML = "<tr><td>"
 						+ messageNoAuthors + "</td></tr>";
 				return;
 			}
@@ -90,7 +90,6 @@ inputAuthorSearch.oninput = function() {
 						: "- " + authorData.annoNacimiento + " ";
 				// Creamos la estructura para la tabla
 				var tr = document.createElement("tr");
-				tr.className = "authorDataRow";
 				var td = document.createElement("td");
 				td.innerHTML = authorTxt;
 				td.title = authorTxt;
