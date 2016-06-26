@@ -106,6 +106,15 @@ public class NewDataManager {
 					.parseInt(messageSource.getMessage("ISBN_MAX_LENGHT", null,
 							null))));
 		}
+		
+		// Convertimos datos vacios a null
+		if(StringUtils.isBlank(libro.getIsbn())) {
+			libro.setIsbn(null);
+		}
+		if(StringUtils.isBlank(libro.getNotas())) {
+			libro.setNotas(null);
+		}
+		
 		return true;
 	}
 
@@ -141,6 +150,12 @@ public class NewDataManager {
 					Integer.parseInt(messageSource.getMessage(
 							"TEXT_MAX_LENGHT", null, null))));
 		}
+
+		// Convertimos datos vacios a null
+		if(StringUtils.isBlank(publisher.getCiudad())) {
+			publisher.setCiudad(null);
+		}
+		
 		return true;
 	}
 
@@ -194,34 +209,48 @@ public class NewDataManager {
 		author.setApellidos(StringUtils.upperCase(author.getApellidos()));
 		author.setPais(StringUtils.upperCase(author.getPais()));
 		author.setCiudad(StringUtils.upperCase(author.getCiudad()));
+		author.setNotas(StringUtils.upperCase(author.getNotas()));
 		// Cortamos los textos por el tamaño maximo
-		if (author.getNombre() != null
-				&& author.getNombre().length() > Integer.parseInt(messageSource
-						.getMessage("TITLE_MAX_LENGHT", null, null))) {
+		if (author.getNombre() != null && author.getNombre().length() > Integer
+				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
 			author.setNombre(StringUtils.substring(author.getNombre(), 0,
-					Integer.parseInt(messageSource.getMessage(
-							"TITLE_MAX_LENGHT", null, null))));
+					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
-		if (author.getApellidos().length() > Integer.parseInt(messageSource
-				.getMessage("TITLE_MAX_LENGHT", null, null))) {
+		if (author.getApellidos().length() > Integer
+				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
 			author.setApellidos(StringUtils.substring(author.getApellidos(), 0,
-					Integer.parseInt(messageSource.getMessage(
-							"TITLE_MAX_LENGHT", null, null))));
+					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
-		if (author.getPais() != null
-				&& author.getPais().length() > Integer.parseInt(messageSource
-						.getMessage("TITLE_MAX_LENGHT", null, null))) {
-			author.setPais(StringUtils.substring(author.getPais(), 0, Integer
-					.parseInt(messageSource.getMessage("TITLE_MAX_LENGHT",
-							null, null))));
+		if (author.getPais() != null && author.getPais().length() > Integer
+				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
+			author.setPais(StringUtils.substring(author.getPais(), 0,
+					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
-		if (author.getCiudad() != null
-				&& author.getCiudad().length() > Integer.parseInt(messageSource
-						.getMessage("TITLE_MAX_LENGHT", null, null))) {
+		if (author.getCiudad() != null && author.getCiudad().length() > Integer
+				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
 			author.setCiudad(StringUtils.substring(author.getCiudad(), 0,
-					Integer.parseInt(messageSource.getMessage(
-							"TITLE_MAX_LENGHT", null, null))));
+					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
+		if (author.getNotas() != null && author.getNotas().length() > Integer
+				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
+			author.setNotas(StringUtils.substring(author.getNotas(), 0,
+					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
+		}
+
+		// Convertimos datos vacios a null
+		if (StringUtils.isBlank(author.getNombre())) {
+			author.setNombre(null);
+		}
+		if (StringUtils.isBlank(author.getPais())) {
+			author.setPais(null);
+		}
+		if (StringUtils.isBlank(author.getCiudad())) {
+			author.setCiudad(null);
+		}
+		if (StringUtils.isBlank(author.getNotas())) {
+			author.setNotas(null);
+		}
+
 		return true;
 	}
 
@@ -301,6 +330,11 @@ public class NewDataManager {
 			place.setCodigo(StringUtils.substring(place.getCodigo(), 0, Integer
 					.parseInt(messageSource.getMessage("COD_MAX_LENGHT", null,
 							null))));
+		}
+
+		// Convertimos datos vacios a null
+		if (StringUtils.isBlank(place.getDescripcion())) {
+			place.setDescripcion(null);
 		}
 
 		return true;
