@@ -20,9 +20,10 @@
 <div th:fragment="translatorsRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/translators}" th:object="${elementData}" method="get">
+			<form th:object="${elementData}">
 				<div th:replace="/translators/translatorsForm :: translatorsForm(false)"></div>
-
+			</form>
+			<form th:action="@{/translators}" method="get">
 				<div class="crudButtons">
 					<button th:title="#{translators.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
 						<img th:alt-title="#{translators.crud.closeRead}" th:src="@{img/searchmenu/reset.png}" /> <label

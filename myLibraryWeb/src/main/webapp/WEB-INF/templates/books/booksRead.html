@@ -20,9 +20,10 @@
 <div th:fragment="booksRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/books}" th:object="${elementData}" method="get">
+			<form th:object="${elementData}">
 				<div th:replace="/books/booksForm :: booksForm(false)"></div>
-
+			</form>
+			<form th:action="@{/books}" method="get">
 				<div class="crudButtons">
 					<button th:title="#{books.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
 						<img th:alt-title="#{books.crud.closeRead}" th:src="@{img/searchmenu/reset.png}" /> <label

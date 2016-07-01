@@ -24,13 +24,13 @@
 		<!-- nombre -->
 		<div class="formField">
 			<label for="nombre" th:text="#{publishers.field.name}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text" th:field="*{nombre}" th:errorclass="fieldError "
+				class="bigTextFormField" th:readonly="!${editable}" type="text" th:field="*{nombre}" th:errorclass="fieldError "
 				th:title="${editable}?'':*{nombre}" />
 		</div>
 		<!-- ciudad -->
 		<div class="formField">
 			<label for="ciudad" th:text="#{publishers.field.city}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				th:disabled="!${editable}" type="text" th:field="*{ciudad}" th:errorclass="fieldError "
+				th:readonly="!${editable}" type="text" th:field="*{ciudad}" th:errorclass="fieldError "
 				th:title="${editable}?'':*{ciudad}" />
 		</div>
 		<!--  lista de libros -->

@@ -24,7 +24,7 @@
 		<!-- nombre -->
 		<div class="formField">
 			<label for="nombre" th:text="#{collections.field.name}"></label> <input required="required"
-				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
 				th:field="*{nombre}" th:errorclass="fieldError " th:title="${editable}?'':*{nombre}" />
 		</div>
 		<!-- editorial -->

@@ -24,48 +24,48 @@
 		<!-- titulo -->
 		<div class="formField">
 			<label for="titulo" th:text="#{books.field.title}"></label> <input required="required"
-				th:maxlength="#{TITLE_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:maxlength="#{TITLE_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
 				th:field="*{titulo}" th:errorclass="fieldError " th:title="${editable}?'':*{titulo}" />
 		</div>
 		<!-- año compra -->
 		<div class="formField">
 			<label for="annoCompra" th:text="#{books.field.purchaseYear}"></label> <input class="numberFormField" type="number"
-				th:field="*{annoCompra}" th:disabled="!${editable}" th:errorclass="fieldError"
+				th:field="*{annoCompra}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{annoCompra}" />
 		</div>
 		<!-- año copyright -->
 		<div class="formField">
 			<label for="annoCopyright" th:text="#{books.field.copyrightYear}"></label> <input class="numberFormField"
-				type="number" th:field="*{annoCopyright}" th:disabled="!${editable}" th:errorclass="fieldError"
+				type="number" th:field="*{annoCopyright}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{annoCopyright}" />
 		</div>
 		<!-- año publicacion -->
 		<div class="formField">
 			<label for="annoPublicacion" th:text="#{books.field.publicationYear}"></label> <input class="numberFormField"
-				type="number" th:field="*{annoPublicacion}" th:disabled="!${editable}" th:errorclass="fieldError"
+				type="number" th:field="*{annoPublicacion}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{annoPublicacion}" />
 		</div>
 		<!-- numero de paginas -->
 		<div class="formField">
 			<label for="numPaginas" th:text="#{books.field.pagNumber}"></label> <input class="numberFormField" type="number"
-				th:field="*{numPaginas}" th:disabled="!${editable}" th:errorclass="fieldError"
+				th:field="*{numPaginas}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{numPaginas}" />
 		</div>
 		<!-- numero de edicion -->
 		<div class="formField">
 			<label for="numEdicion" th:text="#{books.field.editionNumber}"></label> <input class="numberFormField" type="number"
-				th:field="*{numEdicion}" th:disabled="!${editable}" th:errorclass="fieldError"
+				th:field="*{numEdicion}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{numEdicion}" />
 		</div>
 		<!-- isbn -->
 		<div class="formField">
 			<label for="isbn" th:text="#{books.field.isbn}"></label> <input th:maxlength="#{ISBN_MAX_LENGHT}" type="text"
-				th:field="*{isbn}" th:disabled="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{isbn}" />
+				th:field="*{isbn}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{isbn}" />
 		</div>
 		<!-- notas -->
 		<div class="formField">
 			<label for="notas" th:text="#{books.field.notes}"></label> <input th:maxlength="#{NOTES_MAX_LENGHT}"
-				class="bigTextFormField" type="text" th:field="*{notas}" th:disabled="!${editable}" th:errorclass="fieldError"
+				class="bigTextFormField" type="text" th:field="*{notas}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{notas}" />
 		</div>
 		<!-- ubicacion -->
@@ -97,15 +97,15 @@
 		<!-- precio -->
 		<div class="formField">
 			<label for="precio" th:text="#{books.field.price}"></label> <input class="numberFormField" type="number" step="any"
-				th:field="*{precio}" th:disabled="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{precio}" />
+				th:field="*{precio}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{precio}" />
 		</div>
 		<!-- tomo -->
 		<div class="formField">
 			<label for="tomo" th:text="#{books.field.volume}"></label> <input class="numberFormField" type="number"
-				th:field="*{tomo}" th:disabled="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{tomo}" />
+				th:field="*{tomo}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{tomo}" />
 		</div>
 		<!-- editorial -->
-		<div class="formField searchFormField">
+		<div th:class="'formField'+(${editable}?'searchFormField':'')">
 			<label th:if="${editable}" for="publisherSearch" th:text="#{books.crud.labelPublishersSearch}"> </label> <input
 				th:if="${editable}" type="text" id="publisherSearch" autocomplete="off" class="searchInput" /><label
 				for="editorial.id" th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"></label>
@@ -125,7 +125,7 @@
 				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishersreadid?readid=}+*{editorial.id} : null)"></div>
 		</div>
 		<!-- coleccion -->
-		<div class="formField searchFormField">
+		<div th:class="'formField'+(${editable}?'searchFormField':'')">
 			<label th:if="${editable}" for="collectionSearch" th:text="#{books.crud.labelCollectionsSearch}"> </label> <input
 				th:if="${editable}" type="text" id="collectionSearch" autocomplete="off" class="searchInput" /><label
 				for="coleccion.id" th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"></label>
@@ -147,7 +147,7 @@
 				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collectionsreadid?readid=}+*{coleccion.id} : null)"></div>
 		</div>
 		<!-- autores -->
-		<div th:class="'formField searchFormField'+(!${editable} AND *{autores.size()}>1?' tableFormField')">
+		<div th:class="'formField'+(${editable}?'searchFormField':'')+(!${editable} AND *{autores.size()}>1?' tableFormField':'')">
 			<label for="authorsList" th:text="#{books.crud.labelAuthorsList}"></label>
 			<select id="authorsList" size="6" multiple="multiple" th:if="${editable}">
 				<option th:each="autor : *{autores}" th:if="${autor.id} != null AND ${autor.id} > 0"
@@ -181,7 +181,7 @@
 				th:href="@{/authorsreadid?readid=}+${autor.id}"></a>
 		</div>
 		<!-- traductores -->
-		<div th:class="'formField searchFormField'+(!${editable} AND *{traductores.size()}>1?' tableFormField')">
+		<div th:class="'formField'+(${editable}?'searchFormField':'')+(!${editable} AND *{traductores.size()}>1?' tableFormField':'')">
 			<label for="translatorsList" th:text="#{books.crud.labelTranslatorsList}"></label>
 			<select id="translatorsList" size="6" multiple="multiple" th:if="${editable}">
 				<option th:each="traductor : *{traductores}" th:if="${traductor.id} != null AND ${traductor.id} > 0"

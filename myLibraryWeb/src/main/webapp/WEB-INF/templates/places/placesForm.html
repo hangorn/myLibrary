@@ -24,13 +24,13 @@
 		<!-- codigo -->
 		<div class="formField">
 			<label for="codigo" th:text="#{places.field.code}"></label> <input required="required"
-				th:maxlength="#{COD_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:maxlength="#{COD_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
 				th:field="*{codigo}" th:errorclass="fieldError " th:title="${editable}?'':*{codigo}" />
 		</div>
 		<!-- descripcion -->
 		<div class="formField">
 			<label for="descripcion" th:text="#{places.field.description}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text" th:field="*{descripcion}"
+				class="bigTextFormField" th:readonly="!${editable}" type="text" th:field="*{descripcion}"
 				th:errorclass="fieldError " th:title="${editable}?'':*{descripcion}" />
 		</div>
 		<!--  lista de libros -->

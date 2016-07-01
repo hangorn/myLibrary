@@ -20,9 +20,10 @@
 <div th:fragment="typesRead">
 	<div class="crudFormContainer">
 		<div class="crudForm">
-			<form th:action="@{/types}" th:object="${elementData}" method="get">
+			<form th:object="${elementData}">
 				<div th:replace="/types/typesForm :: typesForm(false)"></div>
-
+			</form>
+			<form th:action="@{/types}" method="get">
 				<div class="crudButtons">
 					<button th:title="#{types.crud.closeRead}" type="submit" formnovalidate="formnovalidate" name="">
 						<img th:alt-title="#{types.crud.closeRead}" th:src="@{img/searchmenu/reset.png}" /> <label

@@ -19,7 +19,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="readOnlySingleLink(text, link)">
 	<a th:if="${link} != null" th:text="${text}" th:title="${text}" th:href="${link}"></a>
-	<input th:if="${link} == null" th:disabled="true" type="text" />
+	<input th:if="${link} == null" th:readonly="true" type="text" />
 </div>
 
 

@@ -24,37 +24,37 @@
 		<!-- nombre -->
 		<div class="formField">
 			<label for="nombre" th:text="#{authors.field.name}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				class="bigTextFormField" th:disabled="!${editable}" type="text" th:field="*{nombre}" th:errorclass="fieldError "
+				class="bigTextFormField" th:readonly="!${editable}" type="text" th:field="*{nombre}" th:errorclass="fieldError "
 				th:title="${editable}?'':*{nombre}" />
 		</div>
 		<!-- apellidos -->
 		<div class="formField">
 			<label for="apellidos" th:text="#{authors.field.surname}"></label> <input required="required"
-				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField" th:disabled="!${editable}" type="text"
+				th:maxlength="#{TEXT_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
 				th:field="*{apellidos}" th:errorclass="fieldError " th:title="${editable}?'':*{apellidos}" />
 		</div>
 		<!-- pais -->
 		<div class="formField">
 			<label for="pais" th:text="#{authors.field.country}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				th:disabled="!${editable}" type="text" th:field="*{pais}" th:errorclass="fieldError "
+				th:readonly="!${editable}" type="text" th:field="*{pais}" th:errorclass="fieldError "
 				th:title="${editable}?'':*{pais}" />
 		</div>
 		<!-- ciudad -->
 		<div class="formField">
 			<label for="ciudad" th:text="#{authors.field.city}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
-				th:disabled="!${editable}" type="text" th:field="*{ciudad}" th:errorclass="fieldError "
+				th:readonly="!${editable}" type="text" th:field="*{ciudad}" th:errorclass="fieldError "
 				th:title="${editable}?'':*{ciudad}" />
 		</div>
 		<!-- año nacimiento -->
 		<div class="formField">
 			<label for="annoNacimiento" th:text="#{authors.field.birthyear}"></label> <input class="numberFormField"
-				type="number" th:field="*{annoNacimiento}" th:disabled="!${editable}" th:errorclass="fieldError"
+				type="number" th:field="*{annoNacimiento}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{annoNacimiento}" />
 		</div>
 		<!-- año fallecimiento -->
 		<div class="formField">
 			<label for="annoFallecimiento" th:text="#{authors.field.deathyear}"></label> <input class="numberFormField"
-				type="number" th:field="*{annoFallecimiento}" th:disabled="!${editable}" th:errorclass="fieldError"
+				type="number" th:field="*{annoFallecimiento}" th:readonly="!${editable}" th:errorclass="fieldError"
 				th:title="${editable}?'':*{annoFallecimiento}" />
 		</div>
 		<!--  lista de libros -->
