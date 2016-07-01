@@ -27,25 +27,6 @@ body {
 	position: relative;
 }
 
-button {
-	cursor: pointer;
-}
-
-:disabled {
-	background-color: rgba(255, 249, 180, 1);
-	color: #000;
-}
-
-a {
-	color: #4078C0;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #800080;
-	text-decoration: underline;
-}
-
 /************************************
  Personalizacion del menu
  ************************************/
@@ -727,4 +708,40 @@ a:hover {
 	.subMenu {
 		height: 189px;
 	}
+}
+
+
+/************************************
+ Personalizacion de elmentos
+ ************************************/
+ /************************************
+ Botones
+ ************************************/
+button {
+	cursor: pointer;
+	background: #f9f9f9;
+	border: 3px solid #88c;
+	border-radius: 7px;
+}
+
+button:HOVER {
+	background: #69507c;
+	color: #ffcb00;
+	font-weight: bold;
+}
+
+button:ACTIVE {
+	background: #ababff;
+}
+/************************************
+ Links
+ ************************************/
+a {
+	color: #4078C0;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #800080;
+	text-decoration: underline;
 }

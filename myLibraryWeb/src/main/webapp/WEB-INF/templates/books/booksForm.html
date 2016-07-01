@@ -105,7 +105,7 @@
 				th:field="*{tomo}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{tomo}" />
 		</div>
 		<!-- editorial -->
-		<div th:class="'formField'+(${editable}?'searchFormField':'')">
+		<div th:class="'formField'+(${editable}?' searchFormField':'')">
 			<label th:if="${editable}" for="publisherSearch" th:text="#{books.crud.labelPublishersSearch}"> </label> <input
 				th:if="${editable}" type="text" id="publisherSearch" autocomplete="off" class="searchInput" /><label
 				for="editorial.id" th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"></label>
@@ -125,7 +125,7 @@
 				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishersreadid?readid=}+*{editorial.id} : null)"></div>
 		</div>
 		<!-- coleccion -->
-		<div th:class="'formField'+(${editable}?'searchFormField':'')">
+		<div th:class="'formField'+(${editable}?' searchFormField':'')">
 			<label th:if="${editable}" for="collectionSearch" th:text="#{books.crud.labelCollectionsSearch}"> </label> <input
 				th:if="${editable}" type="text" id="collectionSearch" autocomplete="off" class="searchInput" /><label
 				for="coleccion.id" th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"></label>
@@ -147,7 +147,7 @@
 				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collectionsreadid?readid=}+*{coleccion.id} : null)"></div>
 		</div>
 		<!-- autores -->
-		<div th:class="'formField'+(${editable}?'searchFormField':'')+(!${editable} AND *{autores.size()}>1?' tableFormField':'')">
+		<div th:class="'formField'+(${editable}?' searchFormField':'')+(!${editable} AND *{autores.size()}>1?' tableFormField':'')">
 			<label for="authorsList" th:text="#{books.crud.labelAuthorsList}"></label>
 			<select id="authorsList" size="6" multiple="multiple" th:if="${editable}">
 				<option th:each="autor : *{autores}" th:if="${autor.id} != null AND ${autor.id} > 0"
@@ -181,7 +181,7 @@
 				th:href="@{/authorsreadid?readid=}+${autor.id}"></a>
 		</div>
 		<!-- traductores -->
-		<div th:class="'formField'+(${editable}?'searchFormField':'')+(!${editable} AND *{traductores.size()}>1?' tableFormField':'')">
+		<div th:class="'formField'+(${editable}?' searchFormField':'')+(!${editable} AND *{traductores.size()}>1?' tableFormField':'')">
 			<label for="translatorsList" th:text="#{books.crud.labelTranslatorsList}"></label>
 			<select id="translatorsList" size="6" multiple="multiple" th:if="${editable}">
 				<option th:each="traductor : *{traductores}" th:if="${traductor.id} != null AND ${traductor.id} > 0"
