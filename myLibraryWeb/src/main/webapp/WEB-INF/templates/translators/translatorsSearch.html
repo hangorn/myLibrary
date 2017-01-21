@@ -23,7 +23,7 @@
 			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
 	</div>
 	<div class="search">
-		<form th:action="@{/translatorssearch}" th:object="${filter}" method="post">
+		<form th:action="@{/translators_search}" th:object="${filter}" method="post">
 			<div class="searchField">
 				<label for="nombre" th:text="#{translators.table.head.name}"></label> <input translator="text" th:field="*{nombre}"
 					th:errorclass="fieldError" />

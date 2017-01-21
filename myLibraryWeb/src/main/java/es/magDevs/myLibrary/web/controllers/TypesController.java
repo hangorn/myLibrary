@@ -129,4 +129,8 @@ public class TypesController extends AbstractController {
 		model.addAttribute("typeBooks", books);
 		return "commons/body";
 	}
+
+	public Class<Tipo> getBeanClass() {
+		return Tipo.class;
+	}
 }

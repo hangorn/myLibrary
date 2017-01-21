@@ -31,10 +31,10 @@ buttonQuitTranslator.onclick = function() {
 		// Creamos un peticion AJAX
 		var ajaxRequest = new XMLHttpRequest();
 		// Configuramos y enviamos la peticion
-		ajaxRequest.open("POST", booksLink+"quitTranslator", true);
+		ajaxRequest.open("POST", booksLink+"_related_quit_translators", true);
 		ajaxRequest.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded");
-		ajaxRequest.send("quitTranslator=" + translatorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
+		ajaxRequest.send("data=" + translatorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
 	}
 };
 
@@ -109,16 +109,16 @@ inputTranslatorSearch.oninput = function() {
 					// un traductor
 					var ajaxRequest = new XMLHttpRequest();
 					// Configuramos y enviamos la peticion
-					ajaxRequest.open("POST", booksLink+"addTranslator", true);
+					ajaxRequest.open("POST", booksLink+"_related_add_translators", true);
 					ajaxRequest.setRequestHeader("Content-type",
 							"application/x-www-form-urlencoded");
-					ajaxRequest.send("addTranslator=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
+					ajaxRequest.send("data=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
 				};
 			}
 		}
 	};
 	// Configuramos y enviamos la peticion
-	ajaxRequest.open("POST", translatorsLink+"getdata", true);
+	ajaxRequest.open("POST", translatorsLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
@@ -166,9 +166,9 @@ document.getElementById("acceptNewTranslator").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado un
 	// nuevo traductor
-	ajaxRequest.open("POST", booksLink + "newTranslator", true);
+	ajaxRequest.open("POST", booksLink + "_related_new_translators", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addTranslator;
-	ajaxRequest.send("json="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newTranslatorFormBackground").style.display = "none";
 };

@@ -30,9 +30,7 @@ public class PaginationManager {
 	private int elementsCount;
 
 	public PaginationManager(MessageSource messageSource, int elementsCount) {
-		if (getPage() < 1) {
-			setPage(1);
-		}
+		setPage(1);
 		if (getPageSize() < 1) {
 			try {
 				setPageSize(Integer.parseInt(messageSource.getMessage(
@@ -54,9 +52,7 @@ public class PaginationManager {
 	 *            numero total de elementos
 	 */
 	public void reset(int elementsCount) {
-		if (getPage() < 1) {
-			setPage(1);
-		}
+		setPage(1);
 		setElementsCount(elementsCount);
 		setPageCount((int) Math.ceil((double) getElementsCount()
 				/ (double) getPageSize()));

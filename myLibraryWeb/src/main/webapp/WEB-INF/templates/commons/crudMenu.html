@@ -17,32 +17,32 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="subMenu" th:fragment="publishersMenu">
+<div class="subMenu" th:fragment="crudMenu">
 	<div class="crudmenu">
-		<form th:action="@{/publishers}" method="post" id="crudForm">
+		<form th:action="@{'/'+${section}}" method="post" id="crudForm">
 			<nav>
 				<ul>
 					<li th:if="${userData} != null"><a onclick="submit('crudForm','create',index,'')">
 							<div class="submenuitem">
-								<img th:alt-title="#{publishers.menu.create}" th:src="@{img/crudmenu/create.png}" />
+								<img th:alt-title="#{${section}+'.menu.create'}" th:src="@{img/crudmenu/create.png}" />
 							</div>
 						</a></li>
-					<li th:if="${userData} != null"><a
-							th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+#{publishers.menu.delete.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.delete.noIndexMsg'}"
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+${noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{publishers.menu.delete}" th:src="@{img/crudmenu/delete.png}" />
+								<img th:alt-title="#{${section}+'.menu.delete'}" th:src="@{img/crudmenu/delete.png}" />
 							</div>
 						</a></li>
-					<li th:if="${userData} != null"><a
-							th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+#{publishers.menu.update.noIndexMsg}+'&#34;)'">
+					<li th:if="${userData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.update.noIndexMsg'}"
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+${noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{publishers.menu.update}" th:src="@{img/crudmenu/update.png}" />
+								<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" />
 							</div>
 						</a></li>
-					<li><a
-							th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+#{publishers.menu.read.noIndexMsg}+'&#34;)'">
+					<li><a th:with="noIndexMsg=#{${section}+'.menu.read.noIndexMsg'}"
+							th:onclick="'submit(&#34;crudForm&#34;,&#34;read&#34;,index,&#34;'+${noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
-								<img th:alt-title="#{publishers.menu.read}" th:src="@{img/crudmenu/read.png}" />
+								<img th:alt-title="#{${section}+'.menu.read'}" th:src="@{img/crudmenu/read.png}" />
 							</div>
 						</a></li>
 				</ul>
@@ -53,12 +53,12 @@
 	<div class="pagmenu" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<nav>
 			<ul>
-				<li><a th:href="@{/publishersstart}">
+				<li><a th:href="@{'/'+${section}+'_start'}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.start}" th:src="@{img/pagmenu/start.png}" />
 						</div>
 					</a></li>
-				<li><a th:href="@{/publishersprevious}">
+				<li><a th:href="@{'/'+${section}+'_previous'}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.previous}" th:src="@{img/pagmenu/previous.png}" />
 						</div>
@@ -66,19 +66,19 @@
 				<li><div class="submenuitem">
 						<span th:text="#{menu.pag.of(${page},${pageCount})}"></span>
 					</div></li>
-				<li><a th:href="@{/publishersnext}">
+				<li><a th:href="@{'/'+${section}+'_next'}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.next}" th:src="@{img/pagmenu/next.png}" />
 						</div>
 					</a></li>
-				<li><a th:href="@{/publishersend}">
+				<li><a th:href="@{'/'+${section}+'_end'}">
 						<div class="submenuitem">
 							<img th:alt-title="#{menu.pag.end}" th:src="@{img/pagmenu/end.png}" />
 						</div>
 					</a></li>
 
 				<li><div class="submenuitem">
-						<form th:action="@{/publisherspageSize}" method="post">
+						<form th:action="@{'/'+${section}+'_pageSize'}" method="post">
 							<label for="pageSizeSelect" th:text="#{menu.pag.pageSize}"></label>
 							<select id="pageSizeSelect" name="pageSize" onchange="this.form.submit()">
 								<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}" th:text="${pageSize}"

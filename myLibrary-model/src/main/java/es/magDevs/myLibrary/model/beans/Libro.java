@@ -53,7 +53,8 @@ public class Libro extends Bean {
 	public Libro(Integer id, String titulo, String isbn, Integer annoCompra,
 			Integer annoPublicacion, Integer annoCopyright, Integer numEdicion,
 			Integer numPaginas, Integer tomo, Float precio, String notas,
-			Tipo tipo, Set<Autor> autores) {
+			Editorial editorial, Coleccion coleccion, Tipo tipo, Ubicacion ubicacion,
+			Set<Autor> autores, Set<Traductor> traductores) {
 		super(id);
 		this.titulo = titulo;
 		this.isbn = isbn;
@@ -65,11 +66,12 @@ public class Libro extends Bean {
 		this.tomo = tomo;
 		this.precio = precio;
 		this.notas = notas;
+		this.editorial = editorial;;
+		this.coleccion = coleccion;
 		this.tipo = tipo;
-		if (autores != null) {
-			this.autores = new HashSet<Autor>();
-			this.autores.addAll(autores);
-		}
+		this.ubicacion = ubicacion;
+		this.autores = autores;
+		this.traductores = traductores;
 	}
 
 	public Libro(Libro bean) {
@@ -84,11 +86,12 @@ public class Libro extends Bean {
 		this.tomo = bean.getTomo();
 		this.precio = bean.getPrecio();
 		this.notas = bean.getNotas();
+		this.editorial = bean.getEditorial();
+		this.coleccion = bean.getColeccion();
 		this.tipo = bean.getTipo();
-		if (bean.getAutores() != null) {
-			this.autores = new HashSet<Autor>();
-			this.autores.addAll(bean.getAutores());
-		}
+		this.ubicacion = bean.getUbicacion();
+		this.autores = bean.getAutores();
+		this.traductores = bean.getTraductores();
 	}
 	
 	public Libro(Integer id, String titulo, String editorial, String tipo, String ubicacion, Integer tomo) {

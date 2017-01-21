@@ -23,9 +23,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.ACTION;
+import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
+import es.magDevs.myLibrary.web.controllers.main.Controller;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.PaginationManager;
 
@@ -35,7 +37,7 @@ import es.magDevs.myLibrary.web.gui.utils.PaginationManager;
  * @author javier.vaquero
  * 
  */
-public abstract class AbstractController {
+public abstract class AbstractController implements Controller {
 	public AbstractController(MessageSource messageSource) {
 		this.messageSource = messageSource;
 		this.pagManager = new PaginationManager(messageSource, 0);
@@ -540,5 +542,19 @@ public abstract class AbstractController {
 		// Fijamos variables para la vista
 		setModelData(model);
 		return "commons/body";
+	}
+
+	public String manageRelatedData(RELATED_ACTION action, String dataType, String data) {
+		return "FAIL";
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getData(String hint) {
+		return null;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public List getData(String hint, Integer id) {
+		return getData(hint);
 	}
 }

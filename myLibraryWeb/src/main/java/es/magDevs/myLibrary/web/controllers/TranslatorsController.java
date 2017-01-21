@@ -139,6 +139,7 @@ public class TranslatorsController extends AbstractController {
 	 * @param hint
 	 * @return
 	 */
+	@Override
 	public List<Traductor> getData(String hint) {
 		TraductorDao dao = DaoFactory.getTraductorDao();
 		try {
@@ -146,5 +147,9 @@ public class TranslatorsController extends AbstractController {
 		} catch (Exception e) {
 			return new ArrayList<Traductor>();
 		}
+	}
+
+	public Class<Traductor> getBeanClass() {
+		return Traductor.class;
 	}
 }

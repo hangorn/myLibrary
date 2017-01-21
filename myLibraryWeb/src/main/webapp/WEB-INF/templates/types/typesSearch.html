@@ -23,7 +23,7 @@
 			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
 	</div>
 	<div class="search">
-		<form th:action="@{/typessearch}" th:object="${filter}" method="post">
+		<form th:action="@{/types_search}" th:object="${filter}" method="post">
 			<div class="searchField">
 				<label for="descripcion" th:text="#{types.field.description}"></label> <input type="text" th:field="*{descripcion}"
 					th:errorclass="fieldError" />

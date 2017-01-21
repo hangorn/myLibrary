@@ -27,6 +27,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.ACTION;
+import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Autor;
@@ -240,7 +241,7 @@ public class BooksController extends AbstractController {
 
 	@Override
 	public String acceptCreation(Bean newElement, Model model) {
-		Libro newBook = (Libro) newElement;
+		Libro newBook = new Libro((Libro) newElement);
 		String msg = "";
 		// Iniciamos la transaccion para guardar el libro
 		LibroDao dao = DaoFactory.getLibroDao();
@@ -392,7 +393,7 @@ public class BooksController extends AbstractController {
 
 	@Override
 	public String acceptUpdate(Bean newElement, Model model) {
-		Libro newBook = (Libro) newElement;
+		Libro newBook = new Libro((Libro) newElement);
 		newBook.setId(modifiedElementId);
 		String msg = "";
 		// Iniciamos la transaccion para guardar el libro
@@ -529,6 +530,34 @@ public class BooksController extends AbstractController {
 		setModelData(model);
 		return "commons/body";
 	}
+	
+	@Override
+	public String manageRelatedData(RELATED_ACTION action, String dataType, String data) {
+		String result = "FAIL";
+		if(SECTION.PUBLISHERS.get().equals(dataType) && RELATED_ACTION.NEW.equals(action)) {
+			result = newPublisher(data);
+		} else if(SECTION.COLLECTIONS.get().equals(dataType) && RELATED_ACTION.NEW.equals(action)) {
+			result = newCollection(data);
+		} else if(SECTION.AUTHORS.get().equals(dataType)) {
+			if(RELATED_ACTION.NEW.equals(action)) {
+				result = newAuthor(data);
+			} else if(RELATED_ACTION.ADD.equals(action)) {
+				result = addAuthor(data);
+			} else if(RELATED_ACTION.DELETE.equals(action)) {
+				result = quitAuthor(data);
+			}
+		} else if(SECTION.TRANSLATORS.get().equals(dataType)) {
+			if(RELATED_ACTION.NEW.equals(action)) {
+				result = newTranslator(data);
+			} else if(RELATED_ACTION.ADD.equals(action)) {
+				result = addTranslator(data);
+			} else if(RELATED_ACTION.DELETE.equals(action)) {
+				result = quitTranslator(data);
+			}
+		}
+		return result;
+	}
+	
 
 	/**
 	 * Metodo que registra la creacion de una editorial, cada vez que se cree
@@ -537,7 +566,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String newPublisher(String requestBody) {
+	private String newPublisher(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Editorial
 			newPublisher = new ObjectMapper().readValue(requestBody,
@@ -556,7 +585,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String newCollection(String requestBody) {
+	private String newCollection(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Coleccion
 			newCollection = new ObjectMapper().readValue(requestBody,
@@ -574,9 +603,15 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String addAuthor(Integer authorId) {
-		if (!newAuthors.containsKey(authorId) && authorId > 0) {
-			newAuthors.put(authorId, null);
+	private String addAuthor(String author) {
+		try {
+			Integer authorId = Integer.valueOf(author);
+			if (!newAuthors.containsKey(authorId) && authorId > 0) {
+				newAuthors.put(authorId, null);
+			}
+		} catch (Exception e) {
+			log.error("", e);
+			return "FAIL";
 		}
 		return "OK";
 	}
@@ -587,7 +622,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String quitAuthor(String authorId) {
+	private String quitAuthor(String authorId) {
 		String[] ids = authorId.split(",");
 		for (int i = 0; i < ids.length; i++) {
 			try {
@@ -607,7 +642,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String newAuthor(String requestBody) {
+	private String newAuthor(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Autor
 			Autor tmpAutor = new ObjectMapper().readValue(requestBody,
@@ -628,9 +663,15 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String addTranslator(Integer translatorId) {
-		if (!newTranslators.containsKey(translatorId) && translatorId > 0) {
+	private String addTranslator(String translator) {
+		try {
+			Integer translatorId = Integer.valueOf(translator);
+			if (!newTranslators.containsKey(translatorId) && translatorId > 0) {
 			newTranslators.put(translatorId, null);
+		}
+		} catch (Exception e) {
+			log.error("", e);
+			return "FAIL";
 		}
 		return "OK";
 	}
@@ -641,7 +682,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String quitTranslator(String translatorId) {
+	private String quitTranslator(String translatorId) {
 		String[] ids = translatorId.split(",");
 		for (int i = 0; i < ids.length; i++) {
 			try {
@@ -661,7 +702,7 @@ public class BooksController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String newTranslator(String requestBody) {
+	private String newTranslator(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Traductor
 			Traductor tmpTraductor = new ObjectMapper().readValue(requestBody,
@@ -674,5 +715,9 @@ public class BooksController extends AbstractController {
 			return "FAIL";
 		}
 		return "OK";
+	}
+
+	public Class<BooksFilter> getBeanClass() {
+		return BooksFilter.class;
 	}
 }

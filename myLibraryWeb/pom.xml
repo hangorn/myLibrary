@@ -4,7 +4,7 @@
 	<groupId>es.magDevs.myLibrary</groupId>
 	<artifactId>myLibraryWeb</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.2</version>
+	<version>2.0.0</version>
 	<name>myLibraryWeb Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
@@ -206,7 +206,7 @@
 		<dependency>
 			<groupId>es.magDevs.myLibrary</groupId>
 			<artifactId>myLibrary-model</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

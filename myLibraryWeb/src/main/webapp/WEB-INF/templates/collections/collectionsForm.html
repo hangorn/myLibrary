@@ -45,7 +45,7 @@
 					th:text="#{books.crud.newPublisher}"></label>
 			</button>
 			<div th:if="!${editable}"
-				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishersreadid?readid=}+*{editorial.id} : null)"></div>
+				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishers_readid?readid=}+*{editorial.id} : null)"></div>
 		</div>
 		<!--  lista de libros -->
 		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField"

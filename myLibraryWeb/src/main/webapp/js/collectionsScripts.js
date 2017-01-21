@@ -61,13 +61,13 @@ inputCollectionSearch.oninput = function() {
 		}
 	};
 	// Configuramos y enviamos la peticion
-	ajaxRequest.open("POST", collectionsLink+"getdata", true);
+	ajaxRequest.open("POST", collectionsLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
 	var publishersList = document.getElementById("editorial.id");
 	var publisherId = publishersList.options[publishersList.selectedIndex].value;
-	ajaxRequest.send("getdata=" + inputCollectionSearch.value + "&publisherId="
+	ajaxRequest.send("getdata=" + inputCollectionSearch.value + "&id="
 			+ publisherId+"&"+csrfParameterName+"="+csrfToken);
 };
 
@@ -116,10 +116,10 @@ document.getElementById("acceptNewCollection").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado una
 	// nueva coleccion
-	ajaxRequest.open("POST", booksLink + "newCollection", true);
+	ajaxRequest.open("POST", booksLink + "_related_new_collections", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addCollection;
-	ajaxRequest.send("json="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newCollectionFormBackground").style.display = "none";
 };
 

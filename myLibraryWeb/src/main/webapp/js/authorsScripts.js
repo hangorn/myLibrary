@@ -31,10 +31,10 @@ buttonQuitAuthor.onclick = function() {
 		// Creamos un peticion AJAX
 		var ajaxRequest = new XMLHttpRequest();
 		// Configuramos y enviamos la peticion
-		ajaxRequest.open("POST", booksLink+"quitAuthor", true);
+		ajaxRequest.open("POST", booksLink+"_related_quit_authors", true);
 		ajaxRequest.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded");
-		ajaxRequest.send("quitAuthor=" + authorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
+		ajaxRequest.send("data=" + authorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
 	}
 };
 
@@ -115,16 +115,16 @@ inputAuthorSearch.oninput = function() {
 					// un autor
 					var ajaxRequest = new XMLHttpRequest();
 					// Configuramos y enviamos la peticion
-					ajaxRequest.open("POST", booksLink+"addAuthor", true);
+					ajaxRequest.open("POST", booksLink+"_related_add_authors", true);
 					ajaxRequest.setRequestHeader("Content-type",
 							"application/x-www-form-urlencoded");
-					ajaxRequest.send("addAuthor=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
+					ajaxRequest.send("data=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
 				};
 			}
 		}
 	};
 	// Configuramos y enviamos la peticion
-	ajaxRequest.open("POST", authorsLink+"getdata", true);
+	ajaxRequest.open("POST", authorsLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
@@ -183,9 +183,9 @@ document.getElementById("acceptNewAuthor").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado un
 	// nuevo autor
-	ajaxRequest.open("POST", booksLink+"newAuthor", true);
+	ajaxRequest.open("POST", booksLink+"_related_new_authors", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addAuthor;
-	ajaxRequest.send("json="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newAuthorFormBackground").style.display = "none";
 };

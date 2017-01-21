@@ -85,8 +85,11 @@ public class FragmentManager {
 		Map<String, Object> fragmentMapper = getCommonElements(msg);
 		
 		fragmentMapper.put("menuSelected", section.getOrder());
-		fragmentMapper.put("mainTemplate", section.get()+"/"+section.get()+action.get());
-		fragmentMapper.put("mainFragment", section.get()+action.get());
+
+		fragmentMapper.put("mainTemplate", "/commons/"+action.get());
+		fragmentMapper.put("mainFragment", action.get());
+		fragmentMapper.put("section", section.get());
+		fragmentMapper.put("action", action.get());
 		
 		return fragmentMapper;
 	}

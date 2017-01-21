@@ -46,10 +46,10 @@ public class Constants {
 	 *
 	 */
 	public enum ACTION {
-		LIST("List"),
-		CREATE("Create"),
-		UPDATE("Update"),
-		READ("Read");
+		LIST("list"),
+		CREATE("create"),
+		UPDATE("update"),
+		READ("read");
 		
 		String value;
 		private ACTION(String s) {
@@ -96,6 +96,76 @@ public class Constants {
 		}
 		public int getOrder() {
 			return order;
+		}
+	}
+	
+	/**
+	 * Controladores disponibles
+	 * @author javier.vaquero
+	 *
+	 */
+	public enum CONTROLLER {
+		BOOKS("books"),
+		AUTHORS("authors"),
+		PUBLISHERS("publishers"),
+		COLLECTIONS("collections"),
+		TYPES("types"),
+		PLACES("places"),
+		TRANSLATORS("translators");
+		
+		private static Map<String, CONTROLLER> instances;
+		private static void saveInstance(String s,CONTROLLER c) {
+			if(instances == null) {
+				instances = new HashMap<String,CONTROLLER>();
+			}
+			instances.put(s, c);
+		}
+		private String value;
+		public String get() {
+			return value;
+		}
+		private CONTROLLER(String s) {
+			value = s;
+			saveInstance(s, this);
+		}
+		/**
+		 * Obtiene el controlador asociado
+		 * @param controller
+		 * @return
+		 */
+		public static CONTROLLER getController(String controller) {
+			return instances.get(controller);
+		}
+	}
+	
+	/**
+	 * Acciones que se pueden realizar para los datos asociados a un elemento
+	 */
+	public enum RELATED_ACTION {
+		ADD("add"),NEW("new"),DELETE("delete");
+		
+		private static Map<String, RELATED_ACTION> instances;
+		private static void saveInstance(String s,RELATED_ACTION a) {
+			if(instances == null) {
+				instances = new HashMap<String,RELATED_ACTION>();
+			}
+			instances.put(s, a);
+		}
+		private String value;
+		public String get() {
+			return value;
+		}
+		private RELATED_ACTION(String s) {
+			value = s;
+			saveInstance(s, this);
+		}
+		/**
+		 * Obtiene la accion indicada
+		 * @param action
+		 * @return
+		 */
+		public static RELATED_ACTION getAction(String action) {
+			return instances.get(action);
 		}
 	}
 }

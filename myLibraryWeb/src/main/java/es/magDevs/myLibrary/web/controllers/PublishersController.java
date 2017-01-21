@@ -148,4 +148,8 @@ public class PublishersController extends AbstractController {
 			return new ArrayList<Editorial>();
 		}
 	}
+
+	public Class<Editorial> getBeanClass() {
+		return Editorial.class;
+	}
 }

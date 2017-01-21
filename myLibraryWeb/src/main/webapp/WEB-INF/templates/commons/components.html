@@ -30,7 +30,7 @@
 			<tbody>
 				<tr th:each="book : ${books}">
 					<td onclick="this.children[0].click();" th:title="${book.titulo}">
-						<a th:text="${book.titulo}" th:href="@{/booksreadid?readid=}+${book.id}"></a>
+						<a th:text="${book.titulo}" th:href="@{/books_readid?readid=}+${book.id}"></a>
 					</td>
 				</tr>
 			</tbody>

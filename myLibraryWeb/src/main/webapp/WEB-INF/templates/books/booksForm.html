@@ -79,7 +79,7 @@
 					th:selected="*{ubicacion.id} == ${dataPlace.id}"></option>
 			</select>
 			<div th:if="!${editable}"
-				th:include="commons/components::readOnlySingleLink(*{ubicacion} != null ?  *{ubicacion.codigo}+' '+*{#strings.defaultString(ubicacion.descripcion,'')}:null, *{ubicacion} != null ?  @{/placesreadid?readid=}+*{ubicacion.id} : null)"></div>
+				th:include="commons/components::readOnlySingleLink(*{ubicacion} != null ?  *{ubicacion.codigo}+' '+*{#strings.defaultString(ubicacion.descripcion,'')}:null, *{ubicacion} != null ?  @{/places_readid?readid=}+*{ubicacion.id} : null)"></div>
 		</div>
 		<!-- tipo -->
 		<div class="formField">
@@ -92,7 +92,7 @@
 					th:selected="*{tipo.id} == ${dataType.id}"></option>
 			</select>
 			<div th:if="!${editable}"
-				th:include="commons/components::readOnlySingleLink(*{tipo} != null ? *{tipo.descripcion} : null, *{tipo} != null ? @{/typesreadid?readid=}+*{tipo.id} : null)"></div>
+				th:include="commons/components::readOnlySingleLink(*{tipo} != null ? *{tipo.descripcion} : null, *{tipo} != null ? @{/types_readid?readid=}+*{tipo.id} : null)"></div>
 		</div>
 		<!-- precio -->
 		<div class="formField">
@@ -122,7 +122,7 @@
 					th:text="#{books.crud.newPublisher}"></label>
 			</button>
 			<div th:if="!${editable}"
-				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishersreadid?readid=}+*{editorial.id} : null)"></div>
+				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishers_readid?readid=}+*{editorial.id} : null)"></div>
 		</div>
 		<!-- coleccion -->
 		<div th:class="'formField'+(${editable}?' searchFormField':'')">
@@ -144,7 +144,7 @@
 					th:text="#{books.crud.newCollection}"></label>
 			</button>
 			<div th:if="!${editable}"
-				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collectionsreadid?readid=}+*{coleccion.id} : null)"></div>
+				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collections_readid?readid=}+*{coleccion.id} : null)"></div>
 		</div>
 		<!-- autores -->
 		<div th:class="'formField'+(${editable}?' searchFormField':'')+(!${editable} AND *{autores.size()}>1?' tableFormField':'')">
@@ -169,7 +169,7 @@
 							<td onclick="this.children[0].click();"
 								th:title="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}">
 								<a th:text="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
-									th:href="@{/authorsreadid?readid=}+${autor.id}"></a>
+									th:href="@{/authors_readid?readid=}+${autor.id}"></a>
 							</td>
 						</tr>
 					</tbody>
@@ -178,7 +178,7 @@
 			<a th:if="!${editable} AND *{autores.size()} == 1" th:each="autor : *{autores}"
 				th:text="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
 				th:title="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}"
-				th:href="@{/authorsreadid?readid=}+${autor.id}"></a>
+				th:href="@{/authors_readid?readid=}+${autor.id}"></a>
 		</div>
 		<!-- traductores -->
 		<div th:class="'formField'+(${editable}?' searchFormField':'')+(!${editable} AND *{traductores.size()}>1?' tableFormField':'')">
@@ -202,14 +202,14 @@
 					<tbody>
 						<tr th:each="traductor : *{traductores}">
 							<td onclick="this.children[0].click();" th:title="${traductor.nombre}">
-								<a th:text="${traductor.nombre}" th:href="@{/translatorsreadid?readid=}+${traductor.id}"></a>
+								<a th:text="${traductor.nombre}" th:href="@{/translators_readid?readid=}+${traductor.id}"></a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<a th:if="!${editable} AND *{traductores.size()} == 1" th:each="traductor : *{traductores}"
-				th:text="${traductor.nombre}" th:title="${traductor.nombre}" th:href="@{/translatorsreadid?readid=}+${traductor.id}"></a>
+				th:text="${traductor.nombre}" th:title="${traductor.nombre}" th:href="@{/translators_readid?readid=}+${traductor.id}"></a>
 		</div>
 	</div>
 

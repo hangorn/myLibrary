@@ -59,7 +59,7 @@ inputPublisherSearch.oninput = function() {
 		}
 	};
 	// Configuramos y enviamos la peticion
-	ajaxRequest.open("POST", publishersLink+"getdata", true);
+	ajaxRequest.open("POST", publishersLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
@@ -113,10 +113,10 @@ document.getElementById("acceptNewPublisher").onclick = function() {
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado una
 	// nueva editorial
-	ajaxRequest.open("POST", currentSectionLink + "newPublisher", true);
+	ajaxRequest.open("POST", currentSectionLink + "_related_new_publishers", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addPublisher;
-	ajaxRequest.send("json="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newPublisherFormBackground").style.display = "none";
 };
 

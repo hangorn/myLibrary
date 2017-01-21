@@ -25,6 +25,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.ACTION;
+import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
@@ -276,6 +277,7 @@ public class CollectionsController extends AbstractController {
 	 * @param hint
 	 * @return
 	 */
+	@Override
 	public List<Coleccion> getData(String hint, Integer publisherId) {
 		ColeccionDao dao = DaoFactory.getColeccionDao();
 		try {
@@ -286,6 +288,15 @@ public class CollectionsController extends AbstractController {
 			return new ArrayList<Coleccion>();
 		}
 	}
+	
+	@Override
+	public String manageRelatedData(RELATED_ACTION action, String dataType, String data) {
+		String result = "FAIL";
+		if(SECTION.PUBLISHERS.get().equals(dataType) && RELATED_ACTION.NEW.equals(action)) {
+			result = newPublisher(data);
+		}
+		return result;
+	}
 
 	/**
 	 * Metodo que registra la creacion de una editorial, cada vez que se cree
@@ -294,7 +305,7 @@ public class CollectionsController extends AbstractController {
 	 * @param requestBody
 	 * @return
 	 */
-	public String newPublisher(String requestBody) {
+	private String newPublisher(String requestBody) {
 		try {
 			// Tranformamos los datos JSON recibidos en el objeto Editorial
 			newPublisher = new ObjectMapper().readValue(requestBody,
@@ -306,5 +317,9 @@ public class CollectionsController extends AbstractController {
 			return "FAIL";
 		}
 		return "OK";
+	}
+
+	public Class<Coleccion> getBeanClass() {
+		return Coleccion.class;
 	}
 }

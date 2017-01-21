@@ -129,4 +129,8 @@ public class PlacesController extends AbstractController {
 		model.addAttribute("placeBooks", books);
 		return "commons/body";
 	}
+
+	public Class<Ubicacion> getBeanClass() {
+		return Ubicacion.class;
+	}
 }

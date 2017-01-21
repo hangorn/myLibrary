@@ -65,14 +65,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //Para todas las secciones, siempre se tendra acceso a listar, consultar y cambiar de idioma
         for (Constants.SECTION section : Constants.SECTION.values()) {
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get()})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "next"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "previous"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "start"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "end"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "pageSize"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "search"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "read"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "readid\\?readid=\\d+"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_next"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_previous"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_start"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_end"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_pageSize"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_search"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_read"})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_readid\\?readid=\\d+"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?language=[a-zA-Z]{2}"})).permitAll();
         }
         //Siempre se tendra acceso a formulario para entrar y salir, y a la pagina inicial

@@ -147,4 +147,8 @@ public class AuthorsController extends AbstractController {
 			return new ArrayList<Autor>();
 		}
 	}
+
+	public Class<Autor> getBeanClass() {
+		return Autor.class;
+	}
 }

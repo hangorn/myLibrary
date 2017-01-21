@@ -18,7 +18,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="booksList">
-	<div th:replace="/books/booksMenu :: booksMenu"></div>
 	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>
 			<thead>
@@ -49,9 +48,5 @@
 		</table>
 	</div>
 	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{books.table.empty}"></div>
-	<div th:if="(${data} != null AND !${#lists.isEmpty(data)})">
-		<div th:replace="/books/booksMenu :: booksMenu"></div>
-	</div>
-	<div th:replace="/books/booksSearch :: booksSearch"></div>
 </div>
 </html>
