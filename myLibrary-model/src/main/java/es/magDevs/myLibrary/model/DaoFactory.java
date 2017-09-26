@@ -16,6 +16,7 @@
 package es.magDevs.myLibrary.model;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -51,6 +52,10 @@ import es.magDevs.myLibrary.model.dao.hib.HibUsuarioDao;
 public class DaoFactory {
 	private static Boolean init = Boolean.FALSE;
 	private static final int HIBERNATE = 1;
+	
+	private static final String ENVVAR_USER = "MYLIB_DB_USER";
+	private static final String ENVVAR_PASS = "MYLIB_DB_PASSWORD";
+	private static final String ENVVAR_URL = "MYLIB_DB_URL";
 
 	private static Logger log = LoggerFactory.getLogger(DaoFactory.class);
 	private static int dataAccessType;
@@ -63,15 +68,25 @@ public class DaoFactory {
 				conf = new Properties();
 				try {
 					// Obtemos el properties de la configuracion
-					conf.load(Thread.currentThread().getContextClassLoader()
-							.getResourceAsStream("configuration.properties"));
+					conf.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("configuration.properties"));
 					// Obtemos el properties de credenciales
-					conf.load(Thread.currentThread().getContextClassLoader()
-							.getResourceAsStream("credentials.properties"));
+					InputStream credentialsProperties = Thread.currentThread().getContextClassLoader().getResourceAsStream("credentials.properties");
+					if (credentialsProperties != null) {
+						conf.load(credentialsProperties);
+					} else {
+						// Si no tenemos properties, intentamos sacar las credenciasles de la variables de entorno
+						String user = System.getenv(ENVVAR_USER);
+						String pass = System.getenv(ENVVAR_PASS);
+						String url = System.getenv(ENVVAR_URL);
+						if(user == null || pass == null) {
+							throw new ExceptionInInitializerError("No se han configurado los datos de conexion a la base de datos");
+						}
+						conf.setProperty("username", user);
+						conf.setProperty("password", pass);
+						conf.setProperty("url", url);
+					}
 				} catch (IOException e) {
-					log.error(
-							"No se ha podido obtener el fichero de configuracion.",
-							e);
+					log.error("No se ha podido obtener el fichero de configuracion.", e);
 					throw new ExceptionInInitializerError(e);
 				}
 				String dataAccess = conf.getProperty("dataAccess");
@@ -97,12 +112,9 @@ public class DaoFactory {
 						.configure(conf
 								.getProperty("hibernate.configurationFile"));
 				// Cargamos las credenciales del fichero correspondiente
-				hibernateConfiguration.getProperties().setProperty(
-						"hibernate.connection.password",
-						conf.getProperty("password"));
-				hibernateConfiguration.getProperties().setProperty(
-						"hibernate.connection.username",
-						conf.getProperty("username"));
+				setHibernateProperty(hibernateConfiguration, "hibernate.connection.password", conf.getProperty("password"));
+				setHibernateProperty(hibernateConfiguration, "hibernate.connection.username", conf.getProperty("username"));
+				setHibernateProperty(hibernateConfiguration, "hibernate.connection.url", conf.getProperty("url"));
 				// Creamos una factorias de sesiones
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 						.applySettings(hibernateConfiguration.getProperties()).build();
@@ -116,6 +128,22 @@ public class DaoFactory {
 			}
 		} else {
 			return null;
+		}
+	}
+	
+	/**
+	 * Fija una propiedad de configuracion de Hibernate
+	 * 
+	 * @param configuration de Hibernate
+	 * @param key
+	 *            clave de la propiedad de configuracion de Hibernate
+	 * @param value
+	 *            valor de la propiedad de configuracion de Hibernate, si es
+	 *            <code>null</code> no se realizara ninguna operacion
+	 */
+	private static void setHibernateProperty(Configuration configuration, String key, String value) {
+		if(value != null) {
+			configuration.getProperties().setProperty(key, value);
 		}
 	}
 
