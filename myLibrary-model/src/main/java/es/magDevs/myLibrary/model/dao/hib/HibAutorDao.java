@@ -16,6 +16,7 @@
 package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,5 +188,41 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Autor vie = (Autor) viejo, nue = (Autor) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		
+		if (StringUtils.isNotEmpty(nue.getNombre()) && !vie.getNombre().equals(nue.getNombre())) {
+			cambios.put("nombre", vie.getNombre());
+			vie.setNombre(nue.getNombre());
+		}
+		if (StringUtils.isNotEmpty(nue.getApellidos()) && !vie.getApellidos().equals(nue.getApellidos())) {
+			cambios.put("apellidos", vie.getApellidos());
+			vie.setApellidos(nue.getApellidos());
+		}
+		if (StringUtils.isNotEmpty(nue.getPais()) && !vie.getPais().equals(nue.getPais())) {
+			cambios.put("pais", vie.getPais());
+			vie.setPais(nue.getPais());
+		}
+		if (StringUtils.isNotEmpty(nue.getCiudad()) && !vie.getCiudad().equals(nue.getCiudad())) {
+			cambios.put("ciudad", vie.getCiudad());
+			vie.setCiudad(nue.getCiudad());
+		}
+		if (nue.getAnnoNacimiento() != null && !vie.getAnnoNacimiento().equals(nue.getAnnoNacimiento())) {
+			cambios.put("anno_nacimiento", vie.getAnnoNacimiento()==null?null:""+vie.getAnnoNacimiento());
+			vie.setAnnoNacimiento(nue.getAnnoNacimiento());
+		}
+		if (nue.getAnnoFallecimiento() != null && !vie.getAnnoFallecimiento().equals(nue.getAnnoFallecimiento())) {
+			cambios.put("anno_fallecimiento", vie.getAnnoFallecimiento()==null?null:""+vie.getAnnoFallecimiento());
+			vie.setAnnoFallecimiento(nue.getAnnoFallecimiento());
+		}
+		if (StringUtils.isNotEmpty(nue.getNotas()) && !vie.getNotas().equals(nue.getNotas())) {
+			cambios.put("notas", vie.getNotas());
+			vie.setNotas(nue.getNotas());
+		}
+		return cambios;
 	}
 }

@@ -15,6 +15,8 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,6 +62,7 @@ public abstract class AbstractController implements Controller {
 		model.addAttribute("pageCount", pagManager.getPageCountLabel());
 		model.addAttribute("filter", filter == null ? getNewFilter() : filter);
 		model.addAttribute("currentURL", getSection().get());
+		model.addAttribute("multiUpdateDisabled", isMultiUpdateDisabled());
 	}
 
 	/**
@@ -150,6 +153,8 @@ public abstract class AbstractController implements Controller {
 	protected Bean filter;
 	// ID del elemento que se esta modificando
 	protected Integer modifiedElementId;
+	// IDs de los elementos que se estan modificando a la vez
+	protected List<Integer> modifiedElementsIds;
 
 	/* *****************************************
 	 * ************* ACCIONES ******************
@@ -317,6 +322,42 @@ public abstract class AbstractController implements Controller {
 		setModelData(model);
 		return "commons/body";
 	}
+	
+	public String multiupdate(Model model) {
+		String msg = "";
+		try {
+			AbstractDao dao = getDao();
+			data = dao.getWithPag(filter, 0, Integer.MAX_VALUE);
+		} catch (Exception e) {
+			msg = manageException("end", e);
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
+		// Fijamos variables para la vista
+		setModelData(model);
+		model.addAttribute("multiselect", true);
+		return "commons/body";
+	}
+	
+	public String multiupdate(Bean f, Model model) {
+		String msg = "";
+		try {
+			// Guardamos el filtro
+			filter = processFilter(f);
+			AbstractDao dao = getDao();
+			data = dao.getWithPag(filter, 0, Integer.MAX_VALUE);
+		} catch (Exception e) {
+			msg = manageException("end", e);
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
+		// Fijamos variables para la vista
+		setModelData(model);
+		model.addAttribute("multiselect", true);
+		return "commons/body";
+	}
 
 	public String create(Integer index, Model model) {
 		Bean elementData = null;
@@ -380,13 +421,21 @@ public abstract class AbstractController implements Controller {
 	}
 
 	public String update(Integer index, Model model) {
+		Integer id = null;
+		if (index != null && index >= 0 && data != null) {
+			id = ((Bean) data.get(index)).getId();
+		}
+		return updateFromId(id, model);
+	}
+
+	public String updateFromId(Integer id, Model model) {
 		Bean elementData = null;
 		String msg = "";
 		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
+		if (id != null && id >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del elemento seleccionado
-				elementData = getDao().get(((Bean) data.get(index)).getId());
+				elementData = getDao().get(id);
 			} catch (Exception e) {
 				elementData = getNewFilter();
 				msg = manageException("update", e);
@@ -543,9 +592,82 @@ public abstract class AbstractController implements Controller {
 		setModelData(model);
 		return "commons/body";
 	}
+	
+	public String acceptMultiupdateSelection(Collection<Integer> index, Model model) {
+		Bean elementData = null;
+		String msg = "";
+		// Si tenemos un indice valido
+		if (index != null && !index.isEmpty() && data != null) {
+			try {
+				// Obtenemos todos los datos seleccionados
+				modifiedElementsIds = new ArrayList<>(index.size());
+				for (Integer i : index) {
+					Bean seleccionado = (Bean) data.get(i);
+					modifiedElementsIds.add(seleccionado.getId());
+				}
+				elementData = getNewFilter();
+			} catch (Exception e) {
+				elementData = getNewFilter();
+				msg = manageException("acceptMultiupdateSelection", e);
+			}
+		} else {
+			// Creamos un elemento vacio, para que no de fallos al intentar
+			// acceder a algunos campos
+			elementData = getNewFilter();
+			msg = messageSource.getMessage(getSection().get()
+					+ ".menu.multiupdate.noIndexMsg", null,
+					LocaleContextHolder.getLocale());
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.MULTIUPDATE,
+				getSection()));
 
+		model.addAttribute("confirmMsg", messageSource.getMessage("multiUpdateConfirmMessage", null, LocaleContextHolder.getLocale())+index.size()+" "+
+				messageSource.getMessage("menu."+getSection().get()+".text", null, LocaleContextHolder.getLocale())+"?");
+		model.addAttribute("elementData", elementData);
+		model.addAttribute("currentURL", getSection().get());
+		return "commons/body";
+	}
+
+	protected boolean isMultiUpdateDisabled() {
+		return false;
+	}
+	
 	public String manageRelatedData(RELATED_ACTION action, String dataType, String data) {
 		return "FAIL";
+	}
+	
+	public String acceptMultiupdate(Bean newElement, Model model) {
+		AbstractDao dao = getDao();
+		String msg = "";
+		try {
+			dao.beginTransaction();
+			processNewData(newElement);
+			// Guardamos el dato
+			dao.multiupdate(newElement, modifiedElementsIds);
+			dao.commitTransaction();
+		} catch (Exception e) {
+			dao.rollbackTransaction();
+			msg = manageException("acceptUpdate, modificando el dato", e);
+		}
+
+		try {
+			// Iniciamos paginacion
+			pagManager.reset(dao.getCount(filter));
+			// Buscamos los datos
+			data = dao.getWithPag(filter, pagManager.getPage() - 1,
+					pagManager.getPageSize());
+			// Reiniciamos el filtro de busqueda
+			//filter = null;
+		} catch (Exception e) {
+			msg = manageException("acceptUpdate, cargando los datos", e);
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
+		// Fijamos variables para la vista
+		setModelData(model);
+		return "commons/body";
 	}
 
 	@SuppressWarnings("rawtypes")

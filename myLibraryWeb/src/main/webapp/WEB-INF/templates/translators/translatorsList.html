@@ -22,11 +22,13 @@
 		<table>
 			<thead>
 				<tr>
+					<th style="width: 10px" th:if="${multiselect}"></th>
 					<th th:text="#{translators.table.head.name}"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="translatorData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
 					<td th:text="${translatorData.nombre}" th:title="${translatorData.nombre}"></td>
 				</tr>
 			</tbody>

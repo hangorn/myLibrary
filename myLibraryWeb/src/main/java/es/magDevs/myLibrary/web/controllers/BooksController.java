@@ -180,7 +180,7 @@ public class BooksController extends AbstractController {
 	}
 
 	@Override
-	public String update(Integer index, Model model) {
+	public String updateFromId(Integer id, Model model) {
 		Libro bookData = null;
 		// Creamos un hashmap para guardar los autores que se le asignaran al
 		// libro
@@ -199,11 +199,10 @@ public class BooksController extends AbstractController {
 
 		// Si tenemos un indice valido
 		String msg = "";
-		if (index >= 0 && data != null) {
+		if (id >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				bookData = (Libro) getDao().get(
-						((Bean) data.get(index)).getId());
+				bookData = (Libro) getDao().get(id);
 				// Guardamos los autores que ya tiene asignados el nuevo libro
 				if (bookData.getAutores() != null
 						&& bookData.getAutores().size() > 0) {

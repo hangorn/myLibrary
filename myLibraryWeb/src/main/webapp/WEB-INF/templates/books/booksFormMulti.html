@@ -1,0 +1,194 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="booksFormMulti(editable)">
+
+	<!-- formulario para los datos de los libros -->
+	<div class="booksForm">
+		<!-- año compra -->
+		<div class="formField">
+			<label for="annoCompra" th:text="#{books.field.purchaseYear}"></label> <input class="numberFormField" type="number"
+				th:field="*{annoCompra}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{annoCompra}" />
+		</div>
+		<!-- año copyright -->
+		<div class="formField">
+			<label for="annoCopyright" th:text="#{books.field.copyrightYear}"></label> <input class="numberFormField"
+				type="number" th:field="*{annoCopyright}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{annoCopyright}" />
+		</div>
+		<!-- año publicacion -->
+		<div class="formField">
+			<label for="annoPublicacion" th:text="#{books.field.publicationYear}"></label> <input class="numberFormField"
+				type="number" th:field="*{annoPublicacion}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{annoPublicacion}" />
+		</div>
+		<!-- numero de paginas -->
+		<div class="formField">
+			<label for="numPaginas" th:text="#{books.field.pagNumber}"></label> <input class="numberFormField" type="number"
+				th:field="*{numPaginas}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{numPaginas}" />
+		</div>
+		<!-- numero de edicion -->
+		<div class="formField">
+			<label for="numEdicion" th:text="#{books.field.editionNumber}"></label> <input class="numberFormField" type="number"
+				th:field="*{numEdicion}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{numEdicion}" />
+		</div>
+		<!-- ubicacion -->
+		<div class="formField">
+			<label for="ubicacion.id" th:text="#{places.field.code}"></label>
+			<select th:field="*{ubicacion.id}" th:if="${editable}" th:errorclass="fieldError"
+				th:title="*{ubicacion} == null OR *{#strings.isEmpty(ubicacion.codigo)}?'':(*{ubicacion.codigo}+' '+*{#strings.defaultString(ubicacion.descripcion,'')})">
+				<option th:if="${editable}" th:text="#{places.search.combo}" value=""></option>
+				<option th:each="dataPlace : ${dataPlaces}" th:if="${editable} OR *{ubicacion.id} == ${dataPlace.id}"
+					th:value="${dataPlace.id}" th:text="${dataPlace.codigo}+' '+${#strings.defaultString(dataPlace.descripcion,'')}"
+					th:selected="*{ubicacion.id} == ${dataPlace.id}"></option>
+			</select>
+			<div th:if="!${editable}"
+				th:include="commons/components::readOnlySingleLink(*{ubicacion} != null ?  *{ubicacion.codigo}+' '+*{#strings.defaultString(ubicacion.descripcion,'')}:null, *{ubicacion} != null ?  @{/places_readid?readid=}+*{ubicacion.id} : null)"></div>
+		</div>
+		<!-- tipo -->
+		<div class="formField">
+			<label for="tipo.id" th:text="#{types.field.description}"></label>
+			<select th:field="*{tipo.id}" th:if="${editable}" th:errorclass="fieldError"
+				th:title="*{tipo} == null OR *{#strings.isEmpty(tipo.descripcion)}?'':*{tipo.descripcion}">
+				<option th:if="${editable}" th:text="#{types.search.combo}" value=""></option>
+				<option th:each="dataType : ${dataTypes}" th:value="${dataType.id}"
+					th:if="${editable} OR *{tipo.id} == ${dataType.id}" th:text="${dataType.descripcion}"
+					th:selected="*{tipo.id} == ${dataType.id}"></option>
+			</select>
+			<div th:if="!${editable}"
+				th:include="commons/components::readOnlySingleLink(*{tipo} != null ? *{tipo.descripcion} : null, *{tipo} != null ? @{/types_readid?readid=}+*{tipo.id} : null)"></div>
+		</div>
+		<!-- editorial -->
+		<div th:class="'formField'+(${editable}?' searchFormField':'')">
+			<label th:if="${editable}" for="publisherSearch" th:text="#{books.crud.labelPublishersSearch}"> </label> <input
+				th:if="${editable}" type="text" id="publisherSearch" autocomplete="off" class="searchInput" /><label
+				for="editorial.id" th:text="${editable}?#{books.crud.labelPublishersList}:#{books.crud.labelPublishers}"></label>
+			<select th:field="*{editorial.id}" th:if="${editable}" th:errorclass="fieldError"
+				th:title="*{editorial} == null OR *{#strings.isEmpty(editorial.nombre)}?'':*{editorial.nombre}">
+				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '" id="emptyPublisher" value="0"
+					selected="selected"></option>
+				<option th:if="*{editorial.id} != null AND *{editorial.id} > 0 AND !*{#strings.isEmpty(editorial.nombre)}"
+					th:text="*{editorial.nombre}" th:title="*{editorial.nombre}" th:value="*{editorial.id}" id="defaultPublisher"></option>
+			</select>
+			<button th:if="${editable}" id="addNewPublisher" class="addQuitButton" th:title="#{books.crud.newPublisher}"
+				type="button">
+				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.newPublisher}"></label>
+			</button>
+			<div th:if="!${editable}"
+				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, *{editorial.id} != null ? @{/publishers_readid?readid=}+*{editorial.id} : null)"></div>
+		</div>
+		<!-- coleccion -->
+		<div th:class="'formField'+(${editable}?' searchFormField':'')">
+			<label th:if="${editable}" for="collectionSearch" th:text="#{books.crud.labelCollectionsSearch}"> </label> <input
+				th:if="${editable}" type="text" id="collectionSearch" autocomplete="off" class="searchInput" /><label
+				for="coleccion.id" th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"></label>
+			<select th:field="*{coleccion.id}" th:if="${editable}" th:errorclass="fieldError"
+				th:title="*{coleccion} == null OR *{#strings.isEmpty(coleccion.nombre)}?'':*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'">
+				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '" id="emptyCollection" value="0"
+					selected="selected"></option>
+				<option th:if="*{coleccion.id} != null AND *{coleccion.id} > 0 AND !*{#strings.isEmpty(coleccion.nombre)}"
+					th:text="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
+					th:title="*{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')'"
+					th:value="*{coleccion.id}" id="defaultCollection"></option>
+			</select>
+			<button th:if="${editable}" id="addNewCollection" class="addQuitButton" th:title="#{books.crud.newCollection}"
+				type="button">
+				<img th:alt-title="#{books.crud.newCollection}" th:src="@{img/crudmenu/add.png}" /> <label
+					th:text="#{books.crud.newCollection}"></label>
+			</button>
+			<div th:if="!${editable}"
+				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collections_readid?readid=}+*{coleccion.id} : null)"></div>
+		</div>
+	</div>
+
+	<!-- dialogo para añadir una nueva editorial -->
+	<div th:if="${editable}" id="newPublisherFormBackground" class="background" style="display: none;">
+		<div id="newPublisherFormContainer" class="dataFormContainer">
+			<div id="newPublisherForm" class="dataForm">
+				<div class="dataFormField">
+					<label for="newPublisherName" th:text="#{publishers.field.name}"> </label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+						type="text" id="newPublisherName"></input>
+				</div>
+				<div class="dataFormField">
+					<label for="newPublisherCity" th:text="#{publishers.field.city}"> </label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+						type="text" id="newPublisherCity"></input>
+				</div>
+				<div class="dataFormButtons">
+					<button th:title="#{books.crud.acceptNewPublisher}" type="button" id="acceptNewPublisher">
+						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{add}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelNewPublisher">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- dialogo para añadir una nueva coleccion -->
+	<div th:if="${editable}" id="newCollectionFormBackground" class="background" style="display: none;">
+		<div id="newCollectionFormContainer" class="dataFormContainer">
+			<div id="newCollectionForm" class="dataForm">
+				<div class="dataFormField">
+					<label for="newCollectionName" th:text="#{collections.field.name}"> </label> <input
+						th:maxlength="#{TEXT_MAX_LENGHT}" type="text" id="newCollectionName"></input>
+				</div>
+				<div class="dataFormButtons">
+					<button th:title="#{books.crud.acceptNewCollection}" type="button" id="acceptNewCollection">
+						<img th:alt-title="#{books.crud.acceptNewCollection}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{add}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelNewCollection">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	    messagePublisherEmpty = /*[[#{publishers.empty}]]*/;
+	    messageCollectionEmpty = /*[[#{collections.empty}]]*/;
+	    messageAuthorEmpty = /*[[#{authors.empty}]]*/;
+	    messageTranslatorEmpty = /*[[#{translators.empty}]]*/;
+	    messageNoAuthors = /*[[#{authors.table.empty}]]*/;
+	    messageNoTranslators = /*[[#{translators.table.empty}]]*/;
+	    
+	    booksLink = /*[[@{/books}]]*/;
+	    publishersLink = /*[[@{/publishers}]]*/;
+	    collectionsLink = /*[[@{/collections}]]*/;
+	    authorsLink = /*[[@{/authors}]]*/;
+	    translatorsLink = /*[[@{/translators}]]*/;
+	    currentSectionLink = booksLink;
+	    
+	    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+	    csrfToken=/*[[${_csrf.token}]]*/;
+	/*]]>*/
+	</script>
+	<script th:if="${editable}" th:src="@{#{js.publishersScripts}}" type="text/javascript"></script>
+	<script th:if="${editable}" th:src="@{#{js.collectionsScripts}}" type="text/javascript"></script>
+</div>
+</html>

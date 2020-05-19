@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.hibernate.criterion.Restrictions;
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
+import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 
@@ -146,5 +148,25 @@ public class HibColeccionDao extends HibAbstractDao implements ColeccionDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Coleccion vie = (Coleccion) viejo, nue = (Coleccion) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+
+		if (StringUtils.isNotEmpty(nue.getNombre()) && !vie.getNombre().equals(nue.getNombre())) {
+			cambios.put("nombre", vie.getNombre());
+			vie.setNombre(nue.getNombre());
+		}
+		if (nue.getEditorial() != null && nue.getEditorial().getId() != null &&
+				(vie.getEditorial() == null || !nue.getEditorial().getId().equals(vie.getEditorial().getId()))) {
+			if (vie.getEditorial() == null) {
+				vie.setEditorial(new Editorial());
+			}
+			cambios.put("editorial", vie.getEditorial().getId() != null ? ""+vie.getEditorial().getId() : null);
+			vie.setEditorial(nue.getEditorial().clone());
+		}
+		return cambios;
 	}
 }

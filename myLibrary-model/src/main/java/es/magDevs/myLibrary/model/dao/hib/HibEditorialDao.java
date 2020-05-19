@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,5 +115,20 @@ public class HibEditorialDao extends HibAbstractDao implements EditorialDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Editorial vie = (Editorial) viejo, nue = (Editorial) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		if (StringUtils.isNotEmpty(nue.getNombre()) && !vie.getNombre().equals(nue.getNombre())) {
+			cambios.put("nombre", vie.getNombre());
+			vie.setNombre(nue.getNombre());
+		}
+		if (StringUtils.isNotEmpty(nue.getCiudad()) && !vie.getCiudad().equals(nue.getCiudad())) {
+			cambios.put("ciudad", vie.getCiudad());
+			vie.setCiudad(nue.getCiudad());
+		}
+		return cambios;
 	}
 }

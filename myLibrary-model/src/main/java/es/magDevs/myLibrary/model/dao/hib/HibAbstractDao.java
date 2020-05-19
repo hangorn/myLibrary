@@ -15,6 +15,9 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Modificacion;
+import es.magDevs.myLibrary.model.beans.ModificacionCampo;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 
 /**
@@ -205,5 +210,46 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public void multiupdate(Bean data, List<Integer> ids) throws Exception {
+		Session session = getSession();
+		if (!session.isOpen() || session.getTransaction() == null) {
+			return;
+		}
+		String fecha = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+		for (Integer id : ids) {
+			Bean originalBean = (Bean) session.createQuery("FROM " + table + " WHERE id=:id").setParameter("id", id).uniqueResult();
+			Map<String, String> cambios = getCambios(originalBean, data);
+			if (!cambios.isEmpty()) {
+				session.update(originalBean);
+				Modificacion modificacion = new Modificacion(null, id, table, fecha);
+				session.save(modificacion);
+				for (Entry<String, String> cambio : cambios.entrySet()) {
+					session.save(new ModificacionCampo(modificacion.getId(), cambio.getKey(), cambio.getValue()));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Metodo que debe calcular los cambios realizados entre dos datos, para
+	 * guardar antiguos en un historico. Ademas debe rellenar el bean viejo con
+	 * los datos nuevos para actualizarlo
+	 * 
+	 * @param viejo
+	 *            datos originales antes del cambio
+	 * @param nuevo
+	 *            datos nuevo que se guardaran
+	 * @return mapa con los datos antiguos que se han modificado, como clave la
+	 *         columna y como valor el dato
+	 */
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		return new HashMap<>();
 	}
 }

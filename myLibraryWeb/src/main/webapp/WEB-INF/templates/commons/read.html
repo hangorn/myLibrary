@@ -23,14 +23,21 @@
 			<form th:object="${elementData}">
 				<div th:replace="'/'+${section}+'/'+${section}+'Form' :: ${section}+'Form'(false)"></div>
 			</form>
-			<form th:action="@{'/'+${section}}" method="get">
-				<div class="crudButtons">
+			<div class="crudButtons">
+				<form th:if="${userData} != null" th:action="@{'/'+${section}+'_updateid'}" method="get">
+					<input type="hidden" th:value="${elementData.id}" name="update"/>
+					<button th:title="#{${section}+'.menu.update'}" type="submit" formnovalidate="formnovalidate">
+						<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" /> <label
+							th:text="#{modify}"></label>
+					</button>
+				</form>
+				<form th:action="@{'/'+${section}}" method="get">
 					<button th:title="#{${section}+'.crud.closeRead'}" type="submit" formnovalidate="formnovalidate" name="">
 						<img th:alt-title="#{${section}+'.crud.closeRead'}" th:src="@{img/searchmenu/reset.png}" /> <label
 							th:text="#{close}"></label>
 					</button>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

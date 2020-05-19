@@ -22,5 +22,6 @@
   <mapping resource="hibernate/mappings/Ubicacion.hbm.xml"/>
   <mapping resource="hibernate/mappings/Traductor.hbm.xml"/>
   <mapping resource="hibernate/mappings/Usuario.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Modificacion.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>

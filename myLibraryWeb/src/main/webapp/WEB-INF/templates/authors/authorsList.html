@@ -22,6 +22,9 @@
 		<table>
 			<thead>
 				<tr>
+					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
+						<input type="checkbox" onclick="setAllChecked(this, event)" />
+					</th>
 					<th th:text="#{authors.table.head.name}"></th>
 					<th th:text="#{authors.table.head.surname}"></th>
 					<th th:text="#{authors.table.head.country}"></th>
@@ -30,6 +33,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="authorData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
 					<td th:text="${authorData.nombre}" th:title="${authorData.nombre}"></td>
 					<td th:text="${authorData.apellidos}" th:title="${authorData.apellidos}"></td>
 					<td th:text="${authorData.pais}" th:title="${authorData.pais}"></td>

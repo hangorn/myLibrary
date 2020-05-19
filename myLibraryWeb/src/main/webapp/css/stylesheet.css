@@ -221,6 +221,13 @@ body {
 	cursor: pointer;
 }
 
+.crudmenu button label {
+	margin-left: 15px;
+	float: right;
+	height: 32px;
+	line-height: 32px;
+}
+
 .submenuitem {
 	line-height: 32px;
 	font-weight: bold;
@@ -406,6 +413,10 @@ body {
 	border-bottom-left-radius: 40px;
 	border-bottom-right-radius: 40px;
 	padding-bottom: 10px;
+}
+
+.crudButtons form {
+	display: inline;
 }
 
 .crudButtons button {
@@ -751,4 +762,28 @@ a {
 a:hover {
 	color: #800080;
 	text-decoration: underline;
+}
+
+/************************************
+ Carga
+ ************************************/
+#loadingBall {
+	margin-left: 30px;
+	height: 50px;
+	width: 50px;
+	border-radius: 100%;
+	background-color: red;
+	box-shadow: 5px 5px darkred;
+	animation-duration: 2s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-name: "loadingBallAni";
+}
+
+@keyframes loadingBallAni {
+	0% {
+		transform:scale(2.0) translateY(0);
+	} 80% {
+		transform: scale(0.5) translateY(-400px);
+	}
 }

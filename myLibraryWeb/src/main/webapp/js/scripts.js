@@ -14,18 +14,64 @@
  * under the License.
  */
 index = -1;
+multiindex = [];
+lastChecked = -1;
 window.onload = initSearchDialog;
 
 // Metodo para fijar un fila como seleccionada
-function setSelected(domElement) {
-	// Primero buscamos la fila anteriormente seleccionada
-	var rows = document.getElementsByClassName("selectedRow");
-	for (var i = 0; i < rows.length; i++) {
-		rows[i].className = "";
+function setSelected(domElement, event) {
+	if(multiselect) {
+		domElement.children[0].children[0].click();
+	} else {
+		// Primero buscamos la fila anteriormente seleccionada
+		var rows = document.getElementsByClassName("selectedRow");
+		for (var i = 0; i < rows.length; i++) {
+			rows[i].className = "";
+		}
+		// Añadimos la clase al elemento
+		domElement.className += " selectedRow";
+		index = domElement.id.split("_")[1];
 	}
-	// Añadimos la clase al elemento
-	domElement.className += " selectedRow";
-	index = domElement.id.split("_")[1];
+}
+
+//Metodo para fijar un fila como seleccionada/deseleccion al hacer click en el check
+function setChecked(domElement, event) {
+	if(multiselect) {
+		var tr = domElement.parentNode.parentNode;
+		var i = tr.id.split("_")[1];
+		if(domElement.checked) {
+			if(lastChecked != -1 && event.shiftKey) {
+				var min = Math.min(i,lastChecked), max = Math.max(i,lastChecked);
+				for (var j = min+1; j < max; j++) {
+					tr.parentNode.children[j].click();
+				}
+			}
+			lastChecked = i;
+			multiindex.push(i);
+			tr.className += " selectedRow";
+		} else {
+			var j = multiindex.indexOf(i);
+			multiindex.splice(j,1);
+			tr.className = "";
+		}
+	}
+	event.stopPropagation();
+}
+
+//Metodo para seleccionar/deseleccionar todas las filas de la tabla
+function setAllChecked(domElement, event) {
+	if(multiselect) {
+		var tbody = domElement.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("tbody")[0];
+		var trs = tbody.getElementsByTagName("tr");
+		for(var i = 0; i < trs.length; i++) {
+			var check = trs[i].children[0].children[0];
+			if(domElement.checked != check.checked) {
+				check.checked = domElement.checked;
+				check.onclick(event);
+			}
+		}
+	}
+	event.stopPropagation();
 }
 
 // submit the specified form with the params
@@ -33,9 +79,16 @@ function submit(formID, paramName, paramValue, msg) {
 	// Si no tenemos un mensaje que mostrar no comprobamos si el indice es
 	// valido
 	if (msg && msg != '') {
-		if (index < 0) {
-			alert(msg);
-			return;
+		if(multiselect) {
+			if (multiindex.length == 0) {
+				alert(msg);
+				return;
+			}
+		} else {
+			if (index < 0) {
+				alert(msg);
+				return;
+			}
 		}
 	}
 	// Si se trata de una eliminacion pedimos confirmacion antes de proceder
@@ -133,4 +186,27 @@ function initSearchDialog() {
 	
 	// Registramos el evento de mover el raton sobre el dialogo de busqueda
 	container.onmouseenter = showSearch;
+}
+// Muestra una pantalla de cargando
+function showLoading() {
+	var loadingScreen = document.createElement('div');
+	document.body.appendChild(loadingScreen);
+	loadingScreen.style.width='100%';
+	loadingScreen.style.height='100%';
+	loadingScreen.style.backgroundColor = '#000000aa';
+	loadingScreen.style.position = 'fixed';
+	loadingScreen.style.top = '0';
+	loadingScreen.style.display = 'flex';
+	loadingScreen.style.alignItems = 'center';
+	loadingScreen.style.justifyContent = 'center';
+	var loadingText = document.createElement('div');
+	loadingScreen.appendChild(loadingText);
+	loadingText.append('Cargando ...');
+	loadingText.style.fontSize = '100px';
+	loadingText.style.color = 'gold';
+	loadingText.style.top = '50%';
+	var loadingBall= document.createElement('div');
+	loadingScreen.appendChild(loadingBall);
+	loadingBall.id = 'loadingBall';
+	
 }

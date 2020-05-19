@@ -49,6 +49,7 @@ public class Constants {
 		LIST("list"),
 		CREATE("create"),
 		UPDATE("update"),
+		MULTIUPDATE("multiupdate"),
 		READ("read");
 		
 		String value;

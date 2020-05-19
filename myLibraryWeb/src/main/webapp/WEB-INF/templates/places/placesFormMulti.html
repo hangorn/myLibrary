@@ -17,21 +17,16 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="list">
-	<div th:replace="/commons/crudMenu :: crudMenu"></div>
-	<div th:if="${multiselect}" style="margin-top: 73px;">
-		<div th:replace="${section}+'/'+${section}+'List' :: ${section}+'List'"></div>
+<div th:fragment="placesFormMulti(editable)">
+
+	<!-- formulario para los datos de las ubicaciones -->
+	<div class="booksForm">
+		<!-- descripcion -->
+		<div class="formField">
+			<label for="descripcion" th:text="#{places.field.description}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+				class="bigTextFormField" th:readonly="!${editable}" type="text" th:field="*{descripcion}"
+				th:errorclass="fieldError " th:title="${editable}?'':*{descripcion}" />
+		</div>
 	</div>
-	<div th:if="!${multiselect}">
-		<div th:replace="${section}+'/'+${section}+'List' :: ${section}+'List'"></div>
-	</div>
-	<div th:if="!${multiselect}" th:replace="/commons/crudMenu :: crudMenu"></div>
-	<div th:replace="${section}+'/'+${section}+'Search' :: ${section}+'Search'"></div>
-	
-	<script th:inline="javascript">
-	/*<![CDATA[*/
-    multiselect = /*[[${multiselect}]]*/;
-	/*]]>*/
-	</script>
 </div>
 </html>

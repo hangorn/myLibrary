@@ -133,4 +133,9 @@ public class TypesController extends AbstractController {
 	public Class<Tipo> getBeanClass() {
 		return Tipo.class;
 	}
+	
+	@Override
+	protected boolean isMultiUpdateDisabled() {
+		return true;
+	}
 }

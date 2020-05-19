@@ -23,7 +23,7 @@
 			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
 	</div>
 	<div class="search">
-		<form th:action="@{/places_search}" th:object="${filter}" method="post">
+		<form th:action="@{${multiselect} ? '/places_multisearch' : '/places_search'}" th:object="${filter}" method="post">
 			<div class="searchField">
 				<label for="codigo" th:text="#{places.field.code}"></label> <input place="text" th:field="*{codigo}"
 					th:errorclass="fieldError" />

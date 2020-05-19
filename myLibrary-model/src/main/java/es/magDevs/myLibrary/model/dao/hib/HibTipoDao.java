@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,5 +91,16 @@ public class HibTipoDao extends HibAbstractDao implements TipoDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Tipo vie = (Tipo) viejo, nue = (Tipo) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		if (StringUtils.isNotEmpty(nue.getDescripcion()) && !vie.getDescripcion().equals(nue.getDescripcion())) {
+			cambios.put("descripcion", vie.getDescripcion());
+			vie.setDescripcion(nue.getDescripcion());
+		}
+		return cambios;
 	}
 }

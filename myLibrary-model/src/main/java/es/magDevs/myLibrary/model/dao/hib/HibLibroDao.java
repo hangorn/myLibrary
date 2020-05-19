@@ -16,6 +16,7 @@
 package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
@@ -225,5 +227,86 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 			}
 		}
 		return c;
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Libro vie = (Libro) viejo, nue = (Libro) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		
+		if (StringUtils.isNotEmpty(nue.getTitulo()) && !vie.getTitulo().equals(nue.getTitulo())) {
+			cambios.put("titulo", vie.getTitulo());
+			vie.setTitulo(nue.getTitulo());
+		}
+		if (StringUtils.isNotEmpty(nue.getIsbn()) && !vie.getIsbn().equals(nue.getIsbn())) {
+			cambios.put("isbn", vie.getIsbn());
+			vie.setIsbn(nue.getIsbn());
+		}
+		if (nue.getAnnoCompra() != null && !vie.getAnnoCompra().equals(nue.getAnnoCompra())) {
+			cambios.put("anno_compra", vie.getAnnoCompra()==null?null:""+vie.getAnnoCompra());
+			vie.setAnnoCompra(nue.getAnnoCompra());
+		}
+		if (nue.getAnnoPublicacion() != null && !vie.getAnnoPublicacion().equals(nue.getAnnoPublicacion())) {
+			cambios.put("anno_publicacion", vie.getAnnoPublicacion()==null?null:""+vie.getAnnoPublicacion());
+			vie.setAnnoPublicacion(nue.getAnnoPublicacion());
+		}
+		if (nue.getAnnoCopyright() != null && !vie.getAnnoCopyright().equals(nue.getAnnoCopyright())) {
+			cambios.put("anno_copyright", vie.getAnnoCopyright()==null?null:""+vie.getAnnoCopyright());
+			vie.setAnnoCopyright(nue.getAnnoCopyright());
+		}
+		if (nue.getNumEdicion() != null && !vie.getNumEdicion().equals(nue.getNumEdicion())) {
+			cambios.put("num_edicion", vie.getNumEdicion()==null?null:""+vie.getNumEdicion());
+			vie.setNumEdicion(nue.getNumEdicion());
+		}
+		if (nue.getNumPaginas() != null && !vie.getNumPaginas().equals(nue.getNumPaginas())) {
+			cambios.put("num_paginas", vie.getNumPaginas()==null?null:""+vie.getNumPaginas());
+			vie.setNumPaginas(nue.getNumPaginas());
+		}
+		if (nue.getTomo() != null && !vie.getTomo().equals(nue.getTomo())) {
+			cambios.put("tomo", vie.getTomo()==null?null:""+vie.getTomo());
+			vie.setTomo(nue.getTomo());
+		}
+		if (nue.getPrecio() != null && !vie.getPrecio().equals(nue.getPrecio())) {
+			cambios.put("precio", vie.getPrecio()==null?null:""+vie.getPrecio());
+			vie.setPrecio(nue.getPrecio());
+		}
+		if (StringUtils.isNotEmpty(nue.getNotas()) && !vie.getNotas().equals(nue.getNotas())) {
+			cambios.put("notas", vie.getNotas());
+			vie.setNotas(nue.getNotas());
+		}
+		if (nue.getEditorial() != null && nue.getEditorial().getId() != null &&
+				(vie.getEditorial() == null || !nue.getEditorial().getId().equals(vie.getEditorial().getId()))) {
+			if (vie.getEditorial() == null) {
+				vie.setEditorial(new Editorial());
+			}
+			cambios.put("editorial", vie.getEditorial().getId() != null ? ""+vie.getEditorial().getId() : null);
+			vie.setEditorial(nue.getEditorial().clone());
+		}
+		if (nue.getColeccion() != null && nue.getColeccion().getId() != null &&
+				(vie.getColeccion() == null || !nue.getColeccion().getId().equals(vie.getColeccion().getId()))) {
+			if (vie.getColeccion() == null) {
+				vie.setColeccion(new Coleccion());
+			}
+			cambios.put("coleccion", vie.getColeccion().getId() != null ? ""+vie.getColeccion().getId() : null);
+			vie.setColeccion(nue.getColeccion().clone());
+		}
+		if (nue.getTipo() != null && nue.getTipo().getId() != null &&
+				(vie.getTipo() == null || !nue.getTipo().getId().equals(vie.getTipo().getId()))) {
+			if (vie.getTipo() == null) {
+				vie.setTipo(new Tipo());
+			}
+			cambios.put("tipo", vie.getTipo().getId() != null ? ""+vie.getTipo().getId() : null);
+			vie.setTipo(nue.getTipo().clone());
+		}
+		if (nue.getUbicacion() != null && nue.getUbicacion().getId() != null &&
+				(vie.getUbicacion() == null || !nue.getUbicacion().getId().equals(vie.getUbicacion().getId()))) {
+			if (vie.getUbicacion() == null) {
+				vie.setUbicacion(new Ubicacion());
+			}
+			cambios.put("ubicacion", vie.getUbicacion().getId() != null ? ""+vie.getUbicacion().getId() : null);
+			vie.setUbicacion(nue.getUbicacion().clone());
+		}
+		
+		return cambios;
 	}
 }

@@ -22,6 +22,9 @@
 		<table>
 			<thead>
 				<tr>
+					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
+						<input type="checkbox" onclick="setAllChecked(this, event)" />
+					</th>
 					<th th:text="#{books.table.head.title}"></th>
 					<th th:text="#{books.table.head.author}"></th>
 					<th th:text="#{books.table.head.publisher}"></th>
@@ -31,6 +34,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="bookData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
 					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
 						th:title="${bookData.titulo}"></td>
 					<td th:if="(${bookData.autores} != null AND !${#lists.isEmpty(bookData.autores)})"

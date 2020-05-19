@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.web.controllers.main;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.ui.Model;
@@ -131,6 +132,60 @@ public interface Controller {
 	public String update(Integer index, Model model);
 
 	/**
+	 * Accion para mostrar el dialogo de modificacion del elemento indicado
+	 * 
+	 * @param id
+	 *            id de base de datos del elemento a modificar
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @return
+	 */
+	public String updateFromId(Integer id, Model model);
+
+	/**
+	 * Accion para mostrar el listado para seleccionar los elementos a modificar
+	 * 
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @return
+	 */
+	public String multiupdate(Model model);
+
+	/**
+	 * Accion para mostrar el listado para seleccionar los elementos a modificar
+	 * 
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @param filter
+	 *            datos por lo que filtrar el listado
+	 * @return
+	 */
+	public String multiupdate(Bean filter, Model model);
+
+	/**
+	 * Accion para mostrar el dialogo de modificacion una vez seleccionados
+	 * varios elementos
+	 * 
+	 * @param index
+	 *            lista de indices de los elementos a modificar
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @return
+	 */
+	public String acceptMultiupdateSelection(Collection<Integer> index, Model model);
+
+	/**
+	 * Accion para confirmar la modificacion varios elementos simultaneamente
+	 * 
+	 * @param newData
+	 *            datos del elemento a modificar
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @return
+	 */
+	public String acceptMultiupdate(Bean newData, Model model);
+
+	/**
 	 * Accion para mostrar el dialgo de informacion del elemento indicado
 	 * 
 	 * @param index
@@ -146,7 +201,7 @@ public interface Controller {
 	 * de base de datos
 	 * 
 	 * @param index
-	 *            id de base de datos del elemento del listado a mostrar
+	 *            id de base de datos del elemento a mostrar
 	 * @param model
 	 *            modelo de datos de SPRING
 	 * @return

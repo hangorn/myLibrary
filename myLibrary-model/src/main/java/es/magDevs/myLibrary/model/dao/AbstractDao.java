@@ -130,4 +130,13 @@ public interface AbstractDao {
 	 * @throws Exception 
 	 */
 	public int getCount(Bean filter) throws Exception;
+
+	/**
+	 * Modifica un conjunto de datos de la base de datos
+	 * 
+	 * @param data
+	 *            objeto con los datos a modificar
+	 * @param ids lista de identificadores de las filas que se modificaran
+	 */
+	public void multiupdate(Bean data, List<Integer> ids) throws Exception;
 }

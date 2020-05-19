@@ -44,10 +44,11 @@ public class NewDataManager {
 	 * @return {@code true} si los datos son validos
 	 */
 	public static boolean processBook(Libro libro, MessageSource messageSource) {
-		// Si el libro es null o no tenemos titulo los datos no son validos
-		if (libro == null || StringUtils.isBlank(libro.getTitulo())) {
+		// Si el libro es null los datos no son validos
+		if (libro == null) {
 			return false;
 		}
+		
 		// Si el libro tiene una coleccion pero no una editorial, los datos no
 		// son validos
 		if (libro.getColeccion() != null
@@ -79,6 +80,11 @@ public class NewDataManager {
 				&& (libro.getColeccion().getId() == null || libro
 						.getColeccion().getId() <= 0)) {
 			libro.setColeccion(null);
+		}
+		
+		// Si no tenemos titulo los datos no son validos
+		if (StringUtils.isBlank(libro.getTitulo())) {
+			return false;
 		}
 
 		// Convertimos todos los textos a mayusculas
@@ -127,33 +133,25 @@ public class NewDataManager {
 	 */
 	public static boolean processPublisher(Editorial publisher,
 			MessageSource messageSource) {
-		// Si no tenemos el nombre de la editorial
-		if (StringUtils.isBlank(publisher.getNombre())) {
-			return false;
-		}
 		// Convertimos los textos a mayusculas
 		publisher.setNombre(StringUtils.upperCase(publisher.getNombre()));
 		publisher.setCiudad(StringUtils.upperCase(publisher.getCiudad()));
 
 		// Cortamos los textos por el tamaño maximo
-		if (publisher.getNombre().length() > Integer.parseInt(messageSource
-				.getMessage("TEXT_MAX_LENGHT", null, null))) {
-			publisher.setNombre(StringUtils.substring(publisher.getNombre(), 0,
-					Integer.parseInt(messageSource.getMessage(
-							"TEXT_MAX_LENGHT", null, null))));
+		if (publisher.getNombre() != null && publisher.getNombre().length() > Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
+			publisher.setNombre(StringUtils.substring(publisher.getNombre(), 0, Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
-		if (publisher.getCiudad() != null
-				&& publisher.getCiudad().length() > Integer
-						.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT",
-								null, null))) {
-			publisher.setCiudad(StringUtils.substring(publisher.getCiudad(), 0,
-					Integer.parseInt(messageSource.getMessage(
-							"TEXT_MAX_LENGHT", null, null))));
+		if (publisher.getCiudad() != null && publisher.getCiudad().length() > Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
+			publisher.setCiudad(StringUtils.substring(publisher.getCiudad(), 0, Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
 
 		// Convertimos datos vacios a null
 		if(StringUtils.isBlank(publisher.getCiudad())) {
 			publisher.setCiudad(null);
+		}
+		// Si no tenemos el nombre de la editorial
+		if (StringUtils.isBlank(publisher.getNombre())) {
+			return false;
 		}
 		
 		return true;
@@ -168,26 +166,24 @@ public class NewDataManager {
 	 */
 	public static boolean processCollection(Coleccion collection,
 			MessageSource messageSource) {
-		// Si no tenemos el nombre de la coleccion
-		if (StringUtils.isBlank(collection.getNombre())) {
-			return false;
-		}
 		// Convertimos los textos a mayusculas
 		collection.setNombre(StringUtils.upperCase(collection.getNombre()));
 
 		// Para los datos relacionados, si no tenemos una relacion valida,
 		// ponemos a null su valor para que no de fallos Hibernate
-		if (collection.getEditorial() != null
-				&& (collection.getEditorial().getId() == null || collection
-						.getEditorial().getId() <= 0)) {
+		if (collection.getEditorial() != null && (collection.getEditorial().getId() == null || collection.getEditorial().getId() <= 0)) {
 			collection.setEditorial(null);
 		}
 		// Cortamos los textos por el tamaño maximo
-		if (collection.getNombre().length() > Integer.parseInt(messageSource
+		if (collection.getNombre() != null && collection.getNombre().length() > Integer.parseInt(messageSource
 				.getMessage("TEXT_MAX_LENGHT", null, null))) {
 			collection.setNombre(StringUtils.substring(collection.getNombre(),
 					0, Integer.parseInt(messageSource.getMessage(
 							"TEXT_MAX_LENGHT", null, null))));
+		}
+		// Si no tenemos el nombre de la coleccion
+		if (StringUtils.isBlank(collection.getNombre())) {
+			return false;
 		}
 		return true;
 	}
@@ -201,9 +197,6 @@ public class NewDataManager {
 	 */
 	public static boolean processAuthor(Autor author,
 			MessageSource messageSource) {
-		if (StringUtils.isBlank(author.getApellidos())) {
-			return false;
-		}
 		// Convertimos los textos a mayusculas
 		author.setNombre(StringUtils.upperCase(author.getNombre()));
 		author.setApellidos(StringUtils.upperCase(author.getApellidos()));
@@ -216,7 +209,7 @@ public class NewDataManager {
 			author.setNombre(StringUtils.substring(author.getNombre(), 0,
 					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
 		}
-		if (author.getApellidos().length() > Integer
+		if (author.getApellidos() != null && author.getApellidos().length() > Integer
 				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
 			author.setApellidos(StringUtils.substring(author.getApellidos(), 0,
 					Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))));
@@ -251,6 +244,9 @@ public class NewDataManager {
 			author.setNotas(null);
 		}
 
+		if (StringUtils.isBlank(author.getApellidos())) {
+			return false;
+		}
 		return true;
 	}
 
@@ -319,7 +315,7 @@ public class NewDataManager {
 		place.setDescripcion(StringUtils.upperCase(place.getDescripcion()));
 		place.setCodigo(StringUtils.upperCase(place.getCodigo()));
 		// Cortamos los textos por el tamaño maximo
-		if (place.getDescripcion().length() > Integer.parseInt(messageSource
+		if (place.getDescripcion() != null && place.getDescripcion().length() > Integer.parseInt(messageSource
 				.getMessage("TITLE_MAX_LENGHT", null, null))) {
 			place.setDescripcion(StringUtils.substring(place.getDescripcion(),
 					0, Integer.parseInt(messageSource.getMessage(

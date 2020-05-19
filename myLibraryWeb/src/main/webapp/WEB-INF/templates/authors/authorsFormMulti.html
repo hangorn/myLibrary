@@ -1,0 +1,50 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="authorsFormMulti(editable)">
+
+	<!-- formulario para los datos de los autores -->
+	<div class="booksForm">
+		<!-- pais -->
+		<div class="formField">
+			<label for="pais" th:text="#{authors.field.country}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+				th:readonly="!${editable}" type="text" th:field="*{pais}" th:errorclass="fieldError "
+				th:title="${editable}?'':*{pais}" />
+		</div>
+		<!-- ciudad -->
+		<div class="formField">
+			<label for="ciudad" th:text="#{authors.field.city}"></label> <input th:maxlength="#{TEXT_MAX_LENGHT}"
+				th:readonly="!${editable}" type="text" th:field="*{ciudad}" th:errorclass="fieldError "
+				th:title="${editable}?'':*{ciudad}" />
+		</div>
+		<!-- año nacimiento -->
+		<div class="formField">
+			<label for="annoNacimiento" th:text="#{authors.field.birthyear}"></label> <input class="numberFormField"
+				type="number" th:field="*{annoNacimiento}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{annoNacimiento}" />
+		</div>
+		<!-- año fallecimiento -->
+		<div class="formField">
+			<label for="annoFallecimiento" th:text="#{authors.field.deathyear}"></label> <input class="numberFormField"
+				type="number" th:field="*{annoFallecimiento}" th:readonly="!${editable}" th:errorclass="fieldError"
+				th:title="${editable}?'':*{annoFallecimiento}" />
+		</div>
+	</div>
+</div>
+</html>

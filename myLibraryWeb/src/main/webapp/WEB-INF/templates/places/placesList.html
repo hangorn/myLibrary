@@ -22,12 +22,16 @@
 		<table>
 			<thead>
 				<tr>
+					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
+						<input type="checkbox" onclick="setAllChecked(this, event)" />
+					</th>
 					<th th:text="#{places.table.head.code}"></th>
 					<th th:text="#{places.table.head.description}"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="placeData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
+					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
 					<td th:text="${placeData.codigo}" th:title="${placeData.codigo}"></td>
 					<td th:text="${placeData.descripcion}" th:title="${placeData.descripcion}"></td>
 				</tr>

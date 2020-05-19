@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,5 +110,16 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Traductor vie = (Traductor) viejo, nue = (Traductor) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		if (StringUtils.isNotEmpty(nue.getNombre()) && !vie.getNombre().equals(nue.getNombre())) {
+			cambios.put("nombre", vie.getNombre());
+			vie.setNombre(nue.getNombre());
+		}
+		return cambios;
 	}
 }

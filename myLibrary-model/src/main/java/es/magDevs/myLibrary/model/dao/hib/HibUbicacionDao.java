@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,5 +96,20 @@ public class HibUbicacionDao extends HibAbstractDao implements UbicacionDao {
 			s.getTransaction().rollback();
 			throw e;
 		}
+	}
+	
+	@Override
+	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
+		Ubicacion vie = (Ubicacion) viejo, nue = (Ubicacion) nuevo;
+		Map<String, String> cambios = new HashMap<>();
+		if (StringUtils.isNotEmpty(nue.getCodigo()) && !vie.getCodigo().equals(nue.getCodigo())) {
+			cambios.put("codigo", vie.getCodigo());
+			vie.setCodigo(nue.getCodigo());
+		}
+		if (StringUtils.isNotEmpty(nue.getDescripcion()) && !vie.getDescripcion().equals(nue.getDescripcion())) {
+			cambios.put("descripcion", vie.getDescripcion());
+			vie.setDescripcion(nue.getDescripcion());
+		}
+		return cambios;
 	}
 }

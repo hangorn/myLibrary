@@ -152,4 +152,9 @@ public class TranslatorsController extends AbstractController {
 	public Class<Traductor> getBeanClass() {
 		return Traductor.class;
 	}
+	
+	@Override
+	protected boolean isMultiUpdateDisabled() {
+		return true;
+	}
 }

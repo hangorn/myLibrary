@@ -17,8 +17,8 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="subMenu" th:fragment="crudMenu">
-	<div class="crudmenu">
+<div th:style="${multiselect} ? 'position: fixed;' : '' " class="subMenu" th:fragment="crudMenu">
+	<div th:if="!${multiselect}" class="crudmenu">
 		<form th:action="@{'/'+${section}}" method="post" id="crudForm">
 			<nav>
 				<ul>
@@ -45,12 +45,18 @@
 								<img th:alt-title="#{${section}+'.menu.read'}" th:src="@{img/crudmenu/read.png}" />
 							</div>
 						</a></li>
+					
+					<li th:if="${userData} != null AND !${multiUpdateDisabled}"><a onclick="showLoading();submit('crudForm','multiupdate',index,'');this.onclick=null;">
+							<div class="submenuitem">
+								<img th:alt-title="#{${section}+'.menu.multiupdate'}" th:src="@{img/crudmenu/multiUpdate.png}" />
+							</div>
+						</a></li>
 				</ul>
 			</nav>
 		</form>
 	</div>
 
-	<div class="pagmenu" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
+	<div class="pagmenu" th:if="(${data} != null AND !${#lists.isEmpty(data)} AND !${multiselect})">
 		<nav>
 			<ul>
 				<li><a th:href="@{'/'+${section}+'_start'}">
@@ -86,6 +92,40 @@
 							</select>
 						</form>
 					</div></li>
+			</ul>
+		</nav>
+	</div>
+
+	<div th:if="${multiselect}" class="crudmenu">
+		<nav>
+			<ul>
+				<li th:with="noIndexMsg=#{${section}+'.menu.multiupdate.noIndexMsg'}" th:onclick="'submit(&#34;crudForm&#34;,&#34;acceptMultiupdateSelection&#34;,multiindex,&#34;'+${noIndexMsg}+'&#34;)'">
+					<form th:action="@{'/'+${section}}" th:object="${elementData}" method="post" id="crudForm">
+						<button th:title="#{${section}+'.menu.acceptMultiupdateSelection'}" type="button" name="acceptUpdate">
+							<img th:alt-title="#{${section}+'.menu.acceptMultiupdateSelection'}" th:src="@{img/crudmenu/create.png}" />
+							<label th:text="#{accept}"></label>
+						</button>
+					</form>
+				</li>
+				<li>
+					<form th:action="@{'/'+${section}+'_acceptMultiupdateSelection'}" th:object="${elementData}" method="post"
+						id="crudForm">
+						<button th:title="#{cancel}" type="submit" formnovalidate="formnovalidate" name="">
+							<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /><label th:text="#{cancel}"></label>
+						</button>
+					</form>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div th:if="${multiselect}" class="pagmenu">
+		<nav>
+			<ul>
+				<li>
+					<div class="submenuitem">
+						<span class="submenuitem" th:text="#{${section}+'.menu.multiupdate.selection'}+':'"></span>
+					</div>
+				</li>
 			</ul>
 		</nav>
 	</div>
