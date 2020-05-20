@@ -23,9 +23,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +41,7 @@ import es.magDevs.myLibrary.model.Constants;
  * 
  */
 @Configuration
-@EnableWebMvcSecurity
+@EnableWebSecurity
 @ComponentScan(value={"es.magDevs.myLibrary.*"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //Para todas las secciones, siempre se tendra acceso a listar, consultar y cambiar de idioma
         for (Constants.SECTION section : Constants.SECTION.values()) {
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get()})).permitAll();
+            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_next"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_previous"})).permitAll();
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_start"})).permitAll();
@@ -77,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
         //Siempre se tendra acceso a formulario para entrar y salir, y a la pagina inicial
         ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm"})).permitAll();
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(new String[]{"/login?logout"})).permitAll();
+        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm\\?"})).permitAll();
         ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/"})).permitAll();
         //Siempre se tendra acceso a los fichero de recursos (imagenes, scripts y css)
         ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/img/**"})).permitAll();

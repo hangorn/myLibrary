@@ -44,6 +44,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @EnableWebMvc @Configuration
 @ComponentScan(value={"es.magDevs.myLibrary.*"})
 public class Config extends WebMvcConfigurerAdapter {
+	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	//Establece directorios de recursos
         registry.addResourceHandler(new String[]{"/img/**"}).addResourceLocations(new String[]{"/img/"});
@@ -51,6 +52,7 @@ public class Config extends WebMvcConfigurerAdapter {
         registry.addResourceHandler(new String[]{"/css/**"}).addResourceLocations(new String[]{"/css/"});
     }
 
+	@Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }

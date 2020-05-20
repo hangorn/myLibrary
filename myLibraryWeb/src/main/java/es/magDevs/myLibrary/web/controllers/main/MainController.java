@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -220,8 +221,7 @@ public class MainController implements InitializingBean, Serializable {
 	 */
 	@ModelAttribute("userData")
 	Authentication getUserData() {
-		 Authentication authentication =
-			      SecurityContextHolder.getContext().getAuthentication();
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 if(authentication == null){
 			 return null;
 		 }
@@ -247,7 +247,7 @@ public class MainController implements InitializingBean, Serializable {
 	 * @throws IllegalAccessException
 	 */
 	@ModelAttribute(CTL_NAME)
-	public Bean getControllerBean(@PathVariable(CTL_NAME) String controllerName) throws InstantiationException, IllegalAccessException {
+	public Bean getControllerBean(@PathVariable(name =CTL_NAME, required=false) String controllerName) throws InstantiationException, IllegalAccessException {
 		es.magDevs.myLibrary.web.controllers.main.Controller c = getController(controllerName);
 		if(c != null) {
 			return c.getBeanClass().newInstance();
@@ -372,7 +372,7 @@ public class MainController implements InitializingBean, Serializable {
 		return getController(controllerName).readFromId(id, model);
 	}
 	
-	@RequestMapping(value = CTL_PATH_VAR+"_getdata", method = RequestMethod.POST)
+	@RequestMapping(value = CTL_PATH_VAR+"_getdata", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<Bean> getData2(@RequestParam("getdata") String hint, @RequestParam(value="id", required=false) Integer id, @PathVariable(CTL_NAME) String controllerName) {
 		return getController(controllerName).getData(hint, id);
 	}
