@@ -31,6 +31,7 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.web.controllers.main.Controller;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
+import es.magDevs.myLibrary.web.gui.utils.MailManager;
 import es.magDevs.myLibrary.web.gui.utils.PaginationManager;
 
 /**
@@ -76,12 +77,9 @@ public abstract class AbstractController implements Controller {
 	 * @return mensaje a mostrar al usuario
 	 */
 	protected String manageException(String param, Exception e) {
-		getLog().error(
-				"Error en el controlador '" + getSection().get()
-						+ "' para la ruta /" + getSection().get() + "?" + param,
-				e);
-		return messageSource.getMessage("error", null,
-				LocaleContextHolder.getLocale());
+		getLog().error("Error en el controlador '" + getSection().get() + "' para la ruta /" + getSection().get() + "?" + param, e);
+		MailManager.enviarError(e, userAgent);
+		return messageSource.getMessage("error", null, LocaleContextHolder.getLocale());
 	}
 
 	/* *****************************************
@@ -155,6 +153,11 @@ public abstract class AbstractController implements Controller {
 	protected Integer modifiedElementId;
 	// IDs de los elementos que se estan modificando a la vez
 	protected List<Integer> modifiedElementsIds;
+	// Informacion del navegador del usuario
+	private String userAgent;
+	public void setUserAgent(String userAgent) {
+		this.userAgent=userAgent;
+	}
 
 	/* *****************************************
 	 * ************* ACCIONES ******************

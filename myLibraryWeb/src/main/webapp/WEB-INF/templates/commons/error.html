@@ -18,5 +18,11 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="empty"></div>
+	<div th:fragment="error">
+		<div class="errorContainer">
+			<h3 th:text="#{error.title(${url})}" class="errorTitle"></h3>
+			<h4 th:text="#{error.detalis}" class="errorTitle"></h4>
+			<div class="errorDetails" th:text="${exception}"></div>
+		</div>
+	</div>
 </html>

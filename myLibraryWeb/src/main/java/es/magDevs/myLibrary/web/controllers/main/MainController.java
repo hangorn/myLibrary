@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,6 +62,7 @@ import es.magDevs.myLibrary.model.dao.UbicacionDao;
 import es.magDevs.myLibrary.web.controllers.LoginController;
 import es.magDevs.myLibrary.web.gui.beans.MenuItem;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
+import es.magDevs.myLibrary.web.gui.utils.MailManager;
 
 @SuppressWarnings({ "unchecked", "serial" })
 @Controller
@@ -80,6 +85,21 @@ public class MainController implements InitializingBean, Serializable {
 	public void afterPropertiesSet() throws Exception {
 		DaoFactory.init();
 		factory = new ControllerFactory(messageSource, passwordEncoder);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public String handleError(Model model, HttpServletRequest req, Exception ex) {
+		log.error("Error interno al URL="+req.getRequestURI(), ex);
+		MailManager.enviarError(ex, req.getHeader("user-agent"));
+
+		model.addAttribute("exception", MailManager.getStackTrace(ex));
+		model.addAttribute("url", req.getRequestURL());
+		model.addAllAttributes(FragmentManager.getErrorBody());
+		model.addAttribute("menuItems", getMenuItems());
+		model.addAttribute("languages", getLanguages());
+		model.addAttribute("userData", getUserData());
+		
+		return "commons/body";
 	}
 
 	// Spring Message Source
@@ -247,8 +267,8 @@ public class MainController implements InitializingBean, Serializable {
 	 * @throws IllegalAccessException
 	 */
 	@ModelAttribute(CTL_NAME)
-	public Bean getControllerBean(@PathVariable(name =CTL_NAME, required=false) String controllerName) throws InstantiationException, IllegalAccessException {
-		es.magDevs.myLibrary.web.controllers.main.Controller c = getController(controllerName);
+	public Bean getControllerBean(@PathVariable(name =CTL_NAME, required=false) String controllerName, @RequestHeader("user-agent") String userAgent) throws InstantiationException, IllegalAccessException {
+		es.magDevs.myLibrary.web.controllers.main.Controller c = getController(controllerName, userAgent);
 		if(c != null) {
 			return c.getBeanClass().newInstance();
 		}
@@ -261,8 +281,10 @@ public class MainController implements InitializingBean, Serializable {
 	 * @param controllerName
 	 * @return instancia del controlador deseado
 	 */
-	private es.magDevs.myLibrary.web.controllers.main.Controller getController(String controllerName) {
-		return factory.getController(CONTROLLER.getController(controllerName));
+	private es.magDevs.myLibrary.web.controllers.main.Controller getController(String controllerName, String userAgent) {
+		es.magDevs.myLibrary.web.controllers.main.Controller controller = factory.getController(CONTROLLER.getController(controllerName));
+		controller.setUserAgent(userAgent);
+		return controller;
 	}
 	
 	/* *****************************************
@@ -289,128 +311,128 @@ public class MainController implements InitializingBean, Serializable {
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR)
-	public String list(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).list(model);
+	public String list(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).list(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_next")
-	public String listNext(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).listNext(model);
+	public String listNext(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listNext(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_previous")
-	public String listPrevious(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).listPrevious(model);
+	public String listPrevious(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listPrevious(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_start")
-	public String listStart(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).listStart(model);
+	public String listStart(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listStart(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_end")
-	public String listEnd(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).listEnd(model);
+	public String listEnd(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listEnd(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_pageSize")
-	public String listPageSize(@RequestParam("pageSize") String pageSize, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).listPageSize(pageSize, model);
+	public String listPageSize(@RequestParam("pageSize") String pageSize, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listPageSize(pageSize, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_search")
-	public String listSearch(@ModelAttribute(CTL_NAME) Bean filter, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).filter(filter, model);
+	public String listSearch(@ModelAttribute(CTL_NAME) Bean filter, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).filter(filter, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_create")
-	public String create(@RequestParam("create") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).create(index, model);
+	public String create(@RequestParam("create") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).create(index, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptCreation", params = {"acceptCreation"})
-	public String acceptCreation(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).acceptCreation(newData, model);
+	public String acceptCreation(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).acceptCreation(newData, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptCreation")
-	public String cancelCreation(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).list(model);
+	public String cancelCreation(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).list(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_update")
-	public String update(@RequestParam("update") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).update(index, model);
+	public String update(@RequestParam("update") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).update(index, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_updateid")
-	public String updateId(@RequestParam("update") Integer id, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).updateFromId(id, model);
+	public String updateId(@RequestParam("update") Integer id, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).updateFromId(id, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptUpdate", params = {"acceptUpdate"})
-	public String acceptUpdate(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).acceptUpdate(newData, model);
+	public String acceptUpdate(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).acceptUpdate(newData, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptUpdate")
-	public String cancelUpdate(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).list(model);
+	public String cancelUpdate(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).list(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_delete")
-	public String delete(@RequestParam("delete") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).delete(index, model);
+	public String delete(@RequestParam("delete") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).delete(index, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_read")
-	public String read(@RequestParam("read") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).read(index, model);
+	public String read(@RequestParam("read") Integer index, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).read(index, model);
 	}
 	@RequestMapping(value = CTL_PATH_VAR+"_readid")
-	public String readId(@RequestParam("readid") Integer id, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).readFromId(id, model);
+	public String readId(@RequestParam("readid") Integer id, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).readFromId(id, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_getdata", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<Bean> getData2(@RequestParam("getdata") String hint, @RequestParam(value="id", required=false) Integer id, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).getData(hint, id);
+	public @ResponseBody List<Bean> getData2(@RequestParam("getdata") String hint, @RequestParam(value="id", required=false) Integer id, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).getData(hint, id);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_related"+RELATED_DATA_PATH_VAR, method = RequestMethod.POST)
-	public @ResponseBody String manageRelatedData(@RequestParam("data") String data, @PathVariable(CTL_NAME) String controllerName,
+	public @ResponseBody String manageRelatedData(@RequestParam("data") String data, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent,
 			@PathVariable(RELATED_ACTION_NAME) String action, @PathVariable(RELATED_DATA_TYPE) String dataType) {
-		return getController(controllerName).manageRelatedData(RELATED_ACTION.getAction(action), dataType, data);
+		return getController(controllerName, userAgent).manageRelatedData(RELATED_ACTION.getAction(action), dataType, data);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_multiupdate")
-	public String multiupdate(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).multiupdate(model);
+	public String multiupdate(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).multiupdate(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_multisearch")
-	public String listMultiSearch(@ModelAttribute(CTL_NAME) Bean filter, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).multiupdate(filter, model);
+	public String listMultiSearch(@ModelAttribute(CTL_NAME) Bean filter, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).multiupdate(filter, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptMultiupdateSelection", params = {"acceptMultiupdateSelection"})
-	public String acceptMultiupdateSelection(@RequestParam("acceptMultiupdateSelection") Collection<Integer> index, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).acceptMultiupdateSelection(index, model);
+	public String acceptMultiupdateSelection(@RequestParam("acceptMultiupdateSelection") Collection<Integer> index, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).acceptMultiupdateSelection(index, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptMultiupdateSelection")
-	public String cancelMultiupdateSelection(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).list(model);
+	public String cancelMultiupdateSelection(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).list(model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptMultiupdate", params = {"acceptUpdate"})
-	public String acceptMultiupdate(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).acceptMultiupdate(newData, model);
+	public String acceptMultiupdate(@ModelAttribute(CTL_NAME) Bean  newData, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).acceptMultiupdate(newData, model);
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_acceptMultiupdate")
-	public String cancelMultiupdate(Model model, @PathVariable(CTL_NAME) String controllerName) {
-		return getController(controllerName).multiupdate(model);
+	public String cancelMultiupdate(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).multiupdate(model);
 	}
 	
 	

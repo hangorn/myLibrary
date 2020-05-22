@@ -787,3 +787,25 @@ a:hover {
 		transform: scale(0.5) translateY(-400px);
 	}
 }
+
+/************************************
+ Pantalla de error
+ ************************************/
+.errorContainer {
+	background-color: #db403d;
+	color: white;
+	margin: 20px;
+	padding: 30px;
+	border-radius: 10px;
+	border: 1px solid darkred;
+	overflow-y: auto;
+	height: 100%;
+}
+
+.errorTitle {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+.errorDetails {
+	white-space: pre;
+}

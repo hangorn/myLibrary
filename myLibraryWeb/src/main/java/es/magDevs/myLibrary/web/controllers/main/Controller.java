@@ -272,4 +272,6 @@ public interface Controller {
 	 * @return
 	 */
 	public Class<? extends Bean> getBeanClass();
+	
+	public void setUserAgent(String userAgent);
 }

@@ -64,6 +64,19 @@ public class FragmentManager {
 	}
 
 	/**
+	 * Cuerpo vacio. Fijara el menu y el pie unicamente
+	 * 
+	 * @return
+	 */
+	public static Map<String, Object> getErrorBody() {
+		Map<String, Object> fragmentMapper = getCommonElements(null);
+		// Fragmento vacio
+		fragmentMapper.put("mainTemplate", "commons/error");
+		fragmentMapper.put("mainFragment", "error");
+		return fragmentMapper;
+	}
+
+	/**
 	 * Obtiene el mapeo con los elementos comunes (menu, pie de pagina y
 	 * mensaje), para la operacion (Listar, Crear, Modificar o Consultar) y la
 	 * seccion indicada (Libros, Autores, Colecciones, ...)

@@ -10,6 +10,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+   		<maven.compiler.target>1.8</maven.compiler.target>
 		<spring.version>4.3.27.RELEASE</spring.version>
 		<spring.security.version>4.2.16.RELEASE</spring.security.version>
 	</properties>
@@ -88,8 +90,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -99,7 +101,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -205,15 +207,25 @@
 			<version>1.7.7</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>es.magDevs.myLibrary</groupId>
 			<artifactId>myLibrary-model</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+
+		<!-- JSON -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.11.0</version>
+		</dependency>
+
+		<!-- MAIL -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
 		</dependency>
 	</dependencies>
 
