@@ -15,6 +15,8 @@
  */
 package es.magDevs.myLibrary.web.gui.beans;
 
+import java.util.List;
+
 /**
  * Bean para todos los datos de una entrada del menu (texto, imagen, link, ...)
  * 
@@ -25,6 +27,25 @@ public class MenuItem {
 	private String text;
 	private String img;
 	private String link;
+	private List<MenuItem> submenu;
+	private Integer index;
+	
+	public boolean isSelected(Integer index) {
+		if (index == null) {
+			return false;
+		}
+		if (this.index != null) {
+			return this.index == index;
+		}
+		if (submenu != null) {
+			for (MenuItem item : submenu) {
+				if (item.isSelected(index)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public String getText() {
 		return text;
@@ -48,6 +69,22 @@ public class MenuItem {
 
 	public void setLink(String link) {
 		this.link = link;
+	}
+
+	public List<MenuItem> getSubmenu() {
+		return submenu;
+	}
+
+	public void setSubmenu(List<MenuItem> submenu) {
+		this.submenu = submenu;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 }

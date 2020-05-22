@@ -21,12 +21,27 @@
 	<header>
 		<nav>
 			<ul>
-				<li th:each="item,itemStat : ${menuItems}"><a th:href="@{${item.link}}">
-						<div
-							th:class="((${itemStat.index}==${selected})?menuitemselected:menuitem)+' '+${itemStat.index}+' '+${selected}+' '+(${itemStat.index}==${itemStat.index})">
+				<li th:each="item,itemStat : ${menuItems}">
+					<a th:if="${item.submenu} == null" th:href="@{${item.link}}">
+						<div th:class="(${item.isSelected(selected)}) ? menuitemselected : menuitem">
 							<img th:alt-title="${item.text}" th:src="@{${item.img}}" /> <span th:text="${item.text}"></span>
 						</div>
-					</a></li>
+					</a>
+					<div th:if="${item.submenu} != null" class="drop-down">
+						<div th:class="((${item.isSelected(selected)}) ? menuitemselected : menuitem) + ' menu-drop-down'">
+							<svg style="pointer-events: none; display: block; width: 100%; height: 100%;" viewBox="0 0 16 16" preserveAspectRatio="xMidYMid meet" focusable="false">
+								<g><path d="M12 8l-6.32-6.32-1.68 1.67 4.65 4.65-4.65 4.65 1.68 1.67 6.32-6.32z"></path></g>
+							</svg>
+						</div>
+						<div class="drop-down-content">
+							<a th:each="subitem : ${item.submenu}" th:href="@{${subitem.link}}">
+								<div th:class="(${subitem.isSelected(selected)}) ? menuitemselected : menuitem">
+									<img th:alt-title="${subitem.text}" th:src="@{${subitem.img}}" /> <span th:text="${subitem.text}"></span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</li>
 			</ul>
 		</nav>
 		<div class="rightMenu">

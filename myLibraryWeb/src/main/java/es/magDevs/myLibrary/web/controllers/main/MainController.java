@@ -149,15 +149,25 @@ public class MainController implements InitializingBean, Serializable {
 				return -1;
 			}
 		});
+		String submenuItems = messageSource.getMessage("menu.items.submenu", null, null);
+		MenuItem subMenu = null;
 		for (int i = 0; i < items.length; i++) {
 			MenuItem item = new MenuItem();
-			item.setText(messageSource.getMessage("menu." + items[i] + ".text",
-					null, locale));
-			item.setImg(messageSource.getMessage("menu." + items[i] + ".img",
-					null, null));
-			item.setLink(messageSource.getMessage("menu." + items[i] + ".link",
-					null, null));
-			menuItems.get(locale).add(item);
+			item.setText(messageSource.getMessage("menu." + items[i] + ".text", null, locale));
+			item.setImg(messageSource.getMessage("menu." + items[i] + ".img", null, null));
+			item.setLink(messageSource.getMessage("menu." + items[i] + ".link", null, null));
+			item.setIndex(SECTION.getOrder(items[i]));
+			if (submenuItems != null && submenuItems.contains(items[i])) {
+				if (subMenu == null) {
+					subMenu = new MenuItem();
+					subMenu.setSubmenu(new ArrayList<MenuItem>());
+					menuItems.get(locale).add(subMenu);
+				}
+				subMenu.getSubmenu().add(item);
+			} else {
+				subMenu = null;
+				menuItems.get(locale).add(item);
+			}
 		}
 		return menuItems.get(locale);
 	}

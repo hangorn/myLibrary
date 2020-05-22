@@ -92,6 +92,19 @@ body {
 	overflow: hidden;
 }
 
+.drop-down-content {
+}
+
+.drop-down-content>* {
+	margin: 0px 5px 10px 5px;
+	display: inline-block;
+	float: left;
+}
+
+.menu-drop-down {
+	display: none;
+}
+
 /**********************************************************
  Personalizacion del menu derecho (idiomas y login)
  **********************************************************/
@@ -612,7 +625,7 @@ body {
 /************************************
  CSS responsive
  ************************************/
-@media only screen and (max-width: 1050px) {
+@media only screen and (max-width: 1210px) {
 	.menu {
 		height: 250px;
 		position: relative;
@@ -628,13 +641,13 @@ body {
 	}
 }
 
-@media only screen and (max-width: 624px) {
+@media only screen and (max-width: 876px) {
 	.menu {
 		height: 375px;
 	}
 }
 
-@media only screen and (max-width: 486px) {
+@media only screen and (max-width: 746px) {
 	.menu {
 		height: 500px;
 	}
@@ -708,4 +721,26 @@ a:hover {
 	} 80% {
 		transform: scale(0.5) translateY(-400px);
 	}
+}
+
+/************************************
+ Pantalla de error
+ ************************************/
+.errorContainer {
+	background-color: #db403d;
+	color: white;
+	margin: 20px;
+	padding: 30px;
+	border-radius: 10px;
+	border: 1px solid darkred;
+	overflow-y: auto;
+	height: 100%;
+}
+
+.errorTitle {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+.errorDetails {
+	white-space: pre;
 }
