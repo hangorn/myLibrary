@@ -283,7 +283,9 @@ public class MainController implements InitializingBean, Serializable {
 	 */
 	private es.magDevs.myLibrary.web.controllers.main.Controller getController(String controllerName, String userAgent) {
 		es.magDevs.myLibrary.web.controllers.main.Controller controller = factory.getController(CONTROLLER.getController(controllerName));
-		controller.setUserAgent(userAgent);
+		if (controller != null) {
+			controller.setUserAgent(userAgent);
+		}
 		return controller;
 	}
 	
