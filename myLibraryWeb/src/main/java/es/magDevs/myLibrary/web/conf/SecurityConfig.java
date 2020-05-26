@@ -25,7 +25,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.AuthorizedUrl;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,31 +62,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @SuppressWarnings("rawtypes")
 	protected void configure(HttpSecurity http) throws Exception {
-        ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry r = http.authorizeRequests();
+        ExpressionInterceptUrlRegistry r = http.authorizeRequests();
         //Para todas las secciones, siempre se tendra acceso a listar, consultar y cambiar de idioma
         for (Constants.SECTION section : Constants.SECTION.values()) {
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get()})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_next"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_previous"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_start"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_end"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_pageSize"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_search"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_read"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_readid\\?readid=\\d+"})).permitAll();
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?language=[a-zA-Z]{2}"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get()})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_next"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_previous"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_start"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_end"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_pageSize"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_search"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_read"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_readid\\?readid=\\d+"})).permitAll();
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "\\?language=[a-zA-Z]{2}"})).permitAll();
         }
         //Siempre se tendra acceso a formulario para entrar y salir, y a la pagina inicial
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm"})).permitAll();
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm\\?"})).permitAll();
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/"})).permitAll();
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm"})).permitAll();
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/loginForm\\?"})).permitAll();
+        ((AuthorizedUrl)r.antMatchers(new String[]{"/"})).permitAll();
         //Siempre se tendra acceso a los fichero de recursos (imagenes, scripts y css)
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/img/**"})).permitAll();
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/js/**"})).permitAll();
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/css/**"})).permitAll();
-        //Para todo lo demas se necesita rol de usuario registrado
-        ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)r.antMatchers(new String[]{"/**"})).hasRole("USER");
+        ((AuthorizedUrl)r.antMatchers(new String[]{"/img/**"})).permitAll();
+        ((AuthorizedUrl)r.antMatchers(new String[]{"/js/**"})).permitAll();
+        ((AuthorizedUrl)r.antMatchers(new String[]{"/css/**"})).permitAll();
+
+        // Para usuario normal
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/passwordChange\\??"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/passwordacceptChange\\??"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/logout\\??"})).hasRole(Constants.ROLE_USER);
+        //Para todo lo demas se necesita rol de usuario administrador
+        ((AuthorizedUrl)r.antMatchers(new String[]{"/**"})).hasRole(Constants.ROLE_ADMIN);
         
         //Cuando un usuario entre, se redirige a la seccion de libros
         http.formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/books", false);

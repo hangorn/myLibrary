@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.Constants.CONTROLLER;
 import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
@@ -255,18 +256,34 @@ public class MainController implements InitializingBean, Serializable {
 		 if(authentication == null){
 			 return null;
 		 }
-		 boolean auth = false;
 		 for (GrantedAuthority authority : authentication.getAuthorities()) {
 			String a = authority.getAuthority();
-			if(a != null && (a.equals("ROLE_USER") || a.equals("ROLE_ADMIN"))) {
-				auth=true;
-				break;
+			if(a != null && (a.equals(Constants.ROLE_ROLE_USER) || a.equals(Constants.ROLE_ROLE_ADMIN))) {
+				return authentication;
 			}
 		}
-		if(!auth) {
-			return null;
+		return null;
+	}
+
+	/**
+	 * Datos del administrador autenticado, si lo esta, <code>null</code> en caso de
+	 * que no haya un administrador autenticado
+	 * 
+	 * @return datos del usuario
+	 */
+	@ModelAttribute("adminData")
+	Authentication getAdminData() {
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 if(authentication == null){
+			 return null;
+		 }
+		 for (GrantedAuthority authority : authentication.getAuthorities()) {
+			String a = authority.getAuthority();
+			if(a != null && a.equals(Constants.ROLE_ROLE_ADMIN)) {
+				return authentication;
+			}
 		}
-		return authentication;
+		return null;
 	}
 	
 	/**

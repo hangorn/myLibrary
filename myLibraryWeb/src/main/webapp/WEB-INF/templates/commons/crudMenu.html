@@ -22,18 +22,18 @@
 		<form th:action="@{'/'+${section}}" method="post" id="crudForm">
 			<nav>
 				<ul>
-					<li th:if="${userData} != null"><a onclick="submit('crudForm','create',index,'')">
+					<li th:if="${adminData} != null"><a onclick="submit('crudForm','create',index,'')">
 							<div class="submenuitem">
 								<img th:alt-title="#{${section}+'.menu.create'}" th:src="@{img/crudmenu/create.png}" />
 							</div>
 						</a></li>
-					<li th:if="${userData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.delete.noIndexMsg'}"
+					<li th:if="${adminData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.delete.noIndexMsg'}"
 							th:onclick="'submit(&#34;crudForm&#34;,&#34;delete&#34;,index,&#34;'+${noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{${section}+'.menu.delete'}" th:src="@{img/crudmenu/delete.png}" />
 							</div>
 						</a></li>
-					<li th:if="${userData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.update.noIndexMsg'}"
+					<li th:if="${adminData} != null"><a th:with="noIndexMsg=#{${section}+'.menu.update.noIndexMsg'}"
 							th:onclick="'submit(&#34;crudForm&#34;,&#34;update&#34;,index,&#34;'+${noIndexMsg}+'&#34;)'">
 							<div class="submenuitem">
 								<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" />
@@ -46,7 +46,7 @@
 							</div>
 						</a></li>
 					
-					<li th:if="${userData} != null AND !${multiUpdateDisabled}"><a onclick="showLoading();submit('crudForm','multiupdate',index,'');this.onclick=null;">
+					<li th:if="${adminData} != null AND !${multiUpdateDisabled}"><a onclick="showLoading();submit('crudForm','multiupdate',index,'');this.onclick=null;">
 							<div class="submenuitem">
 								<img th:alt-title="#{${section}+'.menu.multiupdate'}" th:src="@{img/crudmenu/multiUpdate.png}" />
 							</div>

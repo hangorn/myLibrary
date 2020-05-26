@@ -24,7 +24,7 @@
 				<div th:replace="'/'+${section}+'/'+${section}+'Form' :: ${section}+'Form'(false)"></div>
 			</form>
 			<div class="crudButtons">
-				<form th:if="${userData} != null" th:action="@{'/'+${section}+'_updateid'}" method="get">
+				<form th:if="${adminData} != null" th:action="@{'/'+${section}+'_updateid'}" method="get">
 					<input type="hidden" th:value="${elementData.id}" name="update"/>
 					<button th:title="#{${section}+'.menu.update'}" type="submit" formnovalidate="formnovalidate">
 						<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" /> <label
