@@ -48,8 +48,8 @@ buttonAddTranslator.onclick = function() {
 };
 
 // Registramos el evento de cancelar la asignacion de un traductor
-var buttonAddTranslator = document.getElementById("closeButtonTranslators");
-buttonAddTranslator.onclick = function() {
+var buttonCloseTranslator = document.getElementById("closeButtonTranslators");
+buttonCloseTranslator.onclick = function() {
 	document.getElementById("addTranslatorFormBackground").style.display = "none";
 };
 

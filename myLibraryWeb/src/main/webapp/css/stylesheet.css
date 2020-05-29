@@ -759,11 +759,13 @@ body {
  Botones
  ************************************/
 button {
-	cursor: pointer;
 	background: #f9f9f9;
 	border: 2px solid #88c;
 	border-radius: 10px;
 	box-shadow: inset 0 2px #ababff;
+}
+button, button label {
+	cursor: pointer;
 }
 
 button:HOVER {

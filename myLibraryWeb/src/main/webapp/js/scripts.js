@@ -188,25 +188,33 @@ function initSearchDialog() {
 	container.onmouseenter = showSearch;
 }
 // Muestra una pantalla de cargando
+var loadingScreen;
 function showLoading() {
-	var loadingScreen = document.createElement('div');
+	if (loadingScreen == null) {
+		loadingScreen = document.createElement('div');
+		loadingScreen.style.width='100%';
+		loadingScreen.style.height='100%';
+		loadingScreen.style.backgroundColor = '#000000aa';
+		loadingScreen.style.position = 'fixed';
+		loadingScreen.style.top = '0';
+		loadingScreen.style.display = 'flex';
+		loadingScreen.style.alignItems = 'center';
+		loadingScreen.style.justifyContent = 'center';
+		var loadingText = document.createElement('div');
+		loadingScreen.appendChild(loadingText);
+		loadingText.append('Cargando ...');
+		loadingText.style.fontSize = '100px';
+		loadingText.style.color = 'gold';
+		loadingText.style.top = '50%';
+		var loadingBall= document.createElement('div');
+		loadingScreen.appendChild(loadingBall);
+		loadingBall.id = 'loadingBall';
+	}
 	document.body.appendChild(loadingScreen);
-	loadingScreen.style.width='100%';
-	loadingScreen.style.height='100%';
-	loadingScreen.style.backgroundColor = '#000000aa';
-	loadingScreen.style.position = 'fixed';
-	loadingScreen.style.top = '0';
-	loadingScreen.style.display = 'flex';
-	loadingScreen.style.alignItems = 'center';
-	loadingScreen.style.justifyContent = 'center';
-	var loadingText = document.createElement('div');
-	loadingScreen.appendChild(loadingText);
-	loadingText.append('Cargando ...');
-	loadingText.style.fontSize = '100px';
-	loadingText.style.color = 'gold';
-	loadingText.style.top = '50%';
-	var loadingBall= document.createElement('div');
-	loadingScreen.appendChild(loadingBall);
-	loadingBall.id = 'loadingBall';
-	
+}
+
+function hideLoading() {
+	if (loadingScreen != null && loadingScreen.parentElement == document.body) {
+		document.body.removeChild(loadingScreen);
+	}
 }

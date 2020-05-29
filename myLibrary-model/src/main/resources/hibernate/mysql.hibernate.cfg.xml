@@ -23,5 +23,6 @@
   <mapping resource="hibernate/mappings/Traductor.hbm.xml"/>
   <mapping resource="hibernate/mappings/Usuario.hbm.xml"/>
   <mapping resource="hibernate/mappings/Modificacion.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Prestamo.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>

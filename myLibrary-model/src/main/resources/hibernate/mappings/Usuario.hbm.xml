@@ -14,6 +14,9 @@
 		<property generated="never" name="email" type="java.lang.String">
 			<column length="150" name="email" unique="true" />
 		</property>
+		<property generated="never" name="nombre" type="java.lang.String">
+			<column length="60" name="nombre" unique="false" />
+		</property>
 		<property generated="never" name="enabled" type="java.lang.Boolean">
 			<column name="enabled" not-null="true" />
 		</property>

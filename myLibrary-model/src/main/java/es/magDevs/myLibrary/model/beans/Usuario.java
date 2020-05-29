@@ -24,10 +24,11 @@ import org.hibernate.Hibernate;
  * 
  */
 
-public class Usuario {
+public class Usuario extends Bean {
 	private String username;
 	private String password;
 	private String email;
+	private String nombre;
 	private Boolean enabled;
 	private Boolean admin;
 
@@ -41,15 +42,17 @@ public class Usuario {
 		this.username = usuario.getUsername();
 		this.password = usuario.getPassword();
 		this.email = usuario.getEmail();
+		this.nombre = usuario.getNombre();
 		this.enabled = usuario.getEnabled();
 		this.admin = usuario.getAdmin();
 	}
 
-	public Usuario(String username, String password, String email,
+	public Usuario(String username, String password, String email, String nombre,
 			Boolean enabled, Boolean admin) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.nombre = nombre;
 		this.enabled = enabled;
 		this.admin = admin;
 	}
@@ -76,6 +79,14 @@ public class Usuario {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getNombre() {
+		return this.nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public Boolean getEnabled() {

@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
+import es.magDevs.myLibrary.model.Constants;
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
 
@@ -38,9 +39,9 @@ import es.magDevs.myLibrary.model.dao.UsuarioDao;
  *
  */
 @SuppressWarnings("unchecked")
-public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
+public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 	public HibUsuarioDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory, Constants.USERS_TABLE);
 	}
 
 	/**
@@ -53,7 +54,8 @@ public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
 	 *         ordenar como clave, y un boleano para saber si el orden es
 	 *         ascendente o no
 	 */
-	private Map<String, Boolean> getOrders() {
+	@Override
+	protected Map<String, Boolean> getOrders() {
 		LinkedHashMap<String, Boolean> orders = new LinkedHashMap<String, Boolean>();
 		orders.put("username", true);
 		return orders;
@@ -67,7 +69,9 @@ public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
 	 *            bean con los campos a filtrar
 	 * @return
 	 */
-	private Criteria getFilters(Session session, Usuario filter) {
+	@Override
+	protected Criteria getFilters(Session session, Bean f) {
+		Usuario filter = (Usuario) f;
 		Criteria c = session.createCriteria(Usuario.class);
 		if (filter == null) {
 			return c;
@@ -80,6 +84,10 @@ public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
 		if (!StringUtils.isBlank(filter.getEmail())) {
 			c.add(Restrictions.like("email", "%" + filter.getEmail() + "%"));
 		}
+		// Nombre
+		if (!StringUtils.isBlank(filter.getEmail())) {
+			c.add(Restrictions.like("nombre", "%" + filter.getNombre() + "%"));
+		}
 		// Activo
 		if (filter.getEnabled() != null) {
 			c.add(Restrictions.eq("enabled", filter.getEnabled()));
@@ -89,46 +97,6 @@ public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
 			c.add(Restrictions.eq("admin", filter.getAdmin()));
 		}
 		return c;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<Usuario> getWithPag(int page, int pageSize) throws Exception {
-		return getWithPag(null, page, pageSize);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<Usuario> getWithPag(Usuario filter, int page, int pageSize)
-			throws Exception {
-		Session s = null;
-		try {
-			s = getSession();
-			s.beginTransaction();
-			// Obtenemos el filtro
-			Criteria query = getFilters(s, filter);
-			// Fijamos las opciones de paginacion
-			if (pageSize > 0) {
-				query.setMaxResults(pageSize);
-			}
-			query.setFirstResult(page * pageSize);
-			// Ordenamos por los ordenes indicados
-			for (Map.Entry<String, Boolean> orderData : getOrders()
-					.entrySet()) {
-				Property field = Property.forName((String) orderData.getKey());
-				Order order = orderData.getValue() != false ? field.asc()
-						: field.desc();
-				query.addOrder(order);
-			}
-			List<Usuario> l = query.list();
-			s.getTransaction().commit();
-			return l;
-		} catch (Exception e) {
-			s.getTransaction().rollback();
-			throw e;
-		}
 	}
 
 	/**
@@ -208,5 +176,29 @@ public class HibUsuarioDao extends HibBasicDao implements UsuarioDao {
 			data.setEnabled(new Boolean(true));
 		}
 		return (String) session.save(data);
+	}
+
+	@Override
+	public List<Usuario> getUsers(String start) throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			List<Object[]> l;
+			if (StringUtils.isNotBlank(start)) {
+				l = s.createQuery("SELECT username, nombre FROM Usuario WHERE nombre LIKE :nombre ORDER BY nombre").setParameter("nombre", start + "%").list();
+			} else {
+				l = s.createQuery("SELECT username, nombre FROM Usuario ORDER BY nombre").list();
+			}
+			List<Usuario> list = new ArrayList<>(l.size());
+			for (Object[] result : l) {
+				list.add(new Usuario((String)result[0], null, null, (String)result[1], null, null));
+			}
+			s.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
 	}
 }

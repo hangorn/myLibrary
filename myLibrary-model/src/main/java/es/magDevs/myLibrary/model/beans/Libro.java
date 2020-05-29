@@ -45,6 +45,8 @@ public class Libro extends Bean {
 
 	private Set<Autor> autores;
 	private Set<Traductor> traductores;
+	
+	private Usuario prestamo;
 
 	public Libro() {
 		super();
@@ -92,6 +94,7 @@ public class Libro extends Bean {
 		this.ubicacion = bean.getUbicacion();
 		this.autores = bean.getAutores();
 		this.traductores = bean.getTraductores();
+		this.prestamo = bean.getPrestamo();
 	}
 	
 	public Libro(Integer id, String titulo, String editorial, String tipo, String ubicacion, Integer tomo) {
@@ -231,6 +234,14 @@ public class Libro extends Bean {
 
 	public void setTraductores(Set<Traductor> traductores) {
 		this.traductores = traductores;
+	}
+
+	public Usuario getPrestamo() {
+		return prestamo;
+	}
+
+	public void setPrestamo(Usuario prestamo) {
+		this.prestamo = prestamo;
 	}
 
 	public String toString() {

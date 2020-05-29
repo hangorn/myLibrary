@@ -16,13 +16,22 @@
 package es.magDevs.myLibrary.web.gui.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
+import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
+import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
+import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 
 /**
@@ -198,6 +207,54 @@ public class FilterManager {
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
 		if (StringUtils.isBlank(filter.getNombre())) {
+			return null;
+		}
+		return filter;
+	}
+
+	public static Bean processLendsFilter(Prestamo filter) {
+		boolean isAdmin = false, isUser = false;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			for (GrantedAuthority authority : authentication.getAuthorities()) {
+				String a = authority.getAuthority();
+				if (a != null && a.equals(Constants.ROLE_ROLE_ADMIN)) {
+					isAdmin = true;
+				}
+				if (a != null && a.equals(Constants.ROLE_ROLE_USER)) {
+					isUser = true;
+				}
+			}
+		}
+		if (filter != null) {
+			filter.setLibro(null);
+		}
+		if (isAdmin)  {
+			// Si es administrador y no hay filtros, no filtramos por nada
+			if (filter == null || ((filter.getLibro() == null || StringUtils.isBlank(filter.getLibro().getTitulo())) && 
+					(filter.getUsuario() == null || StringUtils.isBlank(filter.getUsuario().getNombre())))) {
+				return null;
+			}
+		} else if (isUser) {
+			// Si es usuario normal, añadimos el filtro para que solo muetre los pretamos al usuario
+			if (filter == null) {
+				filter = new Prestamo();
+			}
+			if (filter.getUsuario() == null) {
+				filter.setUsuario(new Usuario());
+			}
+			filter.getUsuario().setUsername(((User) authentication.getPrincipal()).getUsername());
+		} else {
+			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
+			filter = new Prestamo(null, new Libro(), null, null);
+			filter.getLibro().setId(-1);
+		}
+		return filter;
+	}
+
+	public static Bean processUsersFilter(Usuario filter) {
+		if (filter == null || (StringUtils.isBlank(filter.getUsername()) && StringUtils.isBlank(filter.getNombre()) && 
+				StringUtils.isBlank(filter.getEmail()))) {
 			return null;
 		}
 		return filter;

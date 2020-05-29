@@ -15,9 +15,9 @@
  */
 package es.magDevs.myLibrary.model.dao;
 
-import es.magDevs.myLibrary.model.beans.Usuario;
-
 import java.util.List;
+
+import es.magDevs.myLibrary.model.beans.Usuario;
 
 /**
  * Interfaz para el acceso a los datos de usuarios
@@ -25,49 +25,7 @@ import java.util.List;
  * @author javier.vaquero
  * 
  */
-public interface UsuarioDao {
-	/**
-	 * Inicia una transaccion
-	 */
-	public void beginTransaction();
-
-	/**
-	 * Finaliza una transaccion
-	 */
-	public void commitTransaction();
-
-	/**
-	 * Cancela una transaccion
-	 */
-	public void rollbackTransaction();
-
-	/**
-	 * * Obtiene una lista de datos paginada con las opiones indicadas
-	 * 
-	 * @param page
-	 *            numero de pagina
-	 * @param pageSize
-	 *            tamaño de la pagina
-	 * @return
-	 * @throws Exception 
-	 */
-	public List<Usuario> getWithPag(int page, int pageSize) throws Exception;
-
-	/**
-	 * Obtiene una lista de datos, filtrados por los criterios indicados y
-	 * paginada
-	 * 
-	 * @param filter
-	 *            criterios de busqueda
-	 * @param page
-	 *            numero de pagina
-	 * @param pageSize
-	 *            tamaño de pagina
-	 * @return
-	 * @throws Exception 
-	 */
-	public List<Usuario> getWithPag(Usuario filter, int page, int pageSize)
-			throws Exception;
+public interface UsuarioDao extends AbstractDao {
 
 	/**
 	 * Actualiza la contraseña del usuario indicado con la nueva contraseña
@@ -103,4 +61,14 @@ public interface UsuarioDao {
 	 * @return
 	 */
 	public String insert(Usuario data);
+	
+	/**
+	 * Obtiene una lista de las usuarios cuyo nombre empieza por la
+	 * sugenrencia indicada
+	 * 
+	 * @param start
+	 * @return
+	 * @throws Exception 
+	 */
+	public List<Usuario> getUsers(String start) throws Exception;
 }

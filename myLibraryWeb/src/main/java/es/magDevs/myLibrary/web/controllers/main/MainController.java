@@ -20,10 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -114,8 +112,6 @@ public class MainController implements InitializingBean, Serializable {
 	
 	// LOG
 	private static final Logger log = Logger.getLogger(MainController.class);
-	//Cache para elementos del menu
-	private Map<Locale, List<MenuItem>> menuItems = new HashMap<Locale, List<MenuItem>>();
 
 	/* *****************************************
 	 * ********** DATOS DEL MODELO *************
@@ -130,13 +126,15 @@ public class MainController implements InitializingBean, Serializable {
 	@ModelAttribute("menuItems")
 	List<MenuItem> getMenuItems() {
 		Locale locale = LocaleContextHolder.getLocale();
-        if (menuItems.containsKey(locale)) {
-            return menuItems.get(locale);
-        }
-        menuItems.put(locale, new ArrayList<MenuItem>());
+        List<MenuItem> menuItems = new ArrayList<MenuItem>();
 		// Obtenemos los elementos del menu
 		String[] items = messageSource.getMessage("menu.items", null, null)
 				.split(" ");
+		// Si hay usuario registrado, mostrarmo el menu de prestamos
+		if (getUserData() != null) {
+			items = Arrays.copyOf(items, items.length+1);
+			items[items.length-1] = "lends";
+		}
 		//Ordenamos 
 		Arrays.sort(items, new Comparator<String>() {
 			public int compare(String o1, String o2) {
@@ -162,15 +160,15 @@ public class MainController implements InitializingBean, Serializable {
 				if (subMenu == null) {
 					subMenu = new MenuItem();
 					subMenu.setSubmenu(new ArrayList<MenuItem>());
-					menuItems.get(locale).add(subMenu);
+					menuItems.add(subMenu);
 				}
 				subMenu.getSubmenu().add(item);
 			} else {
 				subMenu = null;
-				menuItems.get(locale).add(item);
+				menuItems.add(item);
 			}
 		}
-		return menuItems.get(locale);
+		return menuItems;
 	}
 
 	/**

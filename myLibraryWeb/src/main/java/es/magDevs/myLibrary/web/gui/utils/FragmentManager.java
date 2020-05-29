@@ -15,7 +15,9 @@
  */
 package es.magDevs.myLibrary.web.gui.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import es.magDevs.myLibrary.model.Constants.ACTION;
@@ -103,6 +105,7 @@ public class FragmentManager {
 		fragmentMapper.put("mainFragment", action.get());
 		fragmentMapper.put("section", section.get());
 		fragmentMapper.put("action", action.get());
+		fragmentMapper.put("sectionsNoCrud", new HashSet<>(Arrays.asList(SECTION.LENDS.get())));
 		
 		return fragmentMapper;
 	}

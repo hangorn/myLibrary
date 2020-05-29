@@ -80,5 +80,13 @@
 			<many-to-many column="traductor"
 				class="es.magDevs.myLibrary.model.beans.Traductor" />
 		</set>
+		
+		<join table="prestamos" optional="true" fetch="join" >
+			<key column="libro" ></key>
+			<many-to-one class="es.magDevs.myLibrary.model.beans.Usuario" lazy="false" name="prestamo" fetch="join" insert="false" update="false">
+				<column name="usuario" />
+			
+			</many-to-one>
+		</join>
 	</class>
 </hibernate-mapping>

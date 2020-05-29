@@ -25,10 +25,12 @@ import es.magDevs.myLibrary.model.Constants.CONTROLLER;
 import es.magDevs.myLibrary.web.controllers.AuthorsController;
 import es.magDevs.myLibrary.web.controllers.BooksController;
 import es.magDevs.myLibrary.web.controllers.CollectionsController;
+import es.magDevs.myLibrary.web.controllers.LendsController;
 import es.magDevs.myLibrary.web.controllers.PlacesController;
 import es.magDevs.myLibrary.web.controllers.PublishersController;
 import es.magDevs.myLibrary.web.controllers.TranslatorsController;
 import es.magDevs.myLibrary.web.controllers.TypesController;
+import es.magDevs.myLibrary.web.controllers.UsersController;
 
 /**
  * Factoria para instanciar los posibles controladores
@@ -48,6 +50,8 @@ public class ControllerFactory {
 		controllers.put(CONTROLLER.COLLECTIONS, new CollectionsController(messageSource));
 		controllers.put(CONTROLLER.BOOKS, new BooksController(messageSource));
 		controllers.put(CONTROLLER.AUTHORS, new AuthorsController(messageSource));
+		controllers.put(CONTROLLER.LENDS, new LendsController(messageSource));
+		controllers.put(CONTROLLER.USERS, new UsersController(messageSource));
 	}
 
 	/**

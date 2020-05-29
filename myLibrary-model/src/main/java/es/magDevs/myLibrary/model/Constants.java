@@ -33,6 +33,7 @@ public class Constants {
 	public static final String TRANSLATORS_TABLE = "Traductor";
 	public static final String PLACES_TABLE = "Ubicacion";
     public static final String USERS_TABLE = "Usuario";
+    public static final String PRESTAMOS_TABLE = "Prestamo";
     
     //Roles
     public static final String ROLE_USER = "USER";
@@ -73,7 +74,9 @@ public class Constants {
 		COLLECTIONS("collections",3),
 		TYPES("types",4),
 		PLACES("places",5),
-		TRANSLATORS("translators",6);
+		TRANSLATORS("translators",6),
+		LENDS("lends",7),
+		USERS("users",8);
 		
 		private String value;
 		private Integer order;
@@ -112,7 +115,9 @@ public class Constants {
 		COLLECTIONS("collections"),
 		TYPES("types"),
 		PLACES("places"),
-		TRANSLATORS("translators");
+		TRANSLATORS("translators"),
+		LENDS("lends"),
+		USERS("users");
 		
 		private static Map<String, CONTROLLER> instances;
 		private static void saveInstance(String s,CONTROLLER c) {

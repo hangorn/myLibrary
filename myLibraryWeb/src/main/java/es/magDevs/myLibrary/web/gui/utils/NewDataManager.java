@@ -15,6 +15,9 @@
  */
 package es.magDevs.myLibrary.web.gui.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 
@@ -22,9 +25,11 @@ import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
+import es.magDevs.myLibrary.model.beans.Usuario;
 
 /**
  * Realizara diversas operaciones sobre los datos a introducir en la base de
@@ -333,6 +338,42 @@ public class NewDataManager {
 			place.setDescripcion(null);
 		}
 
+		return true;
+	}
+
+	public static boolean processLend(Prestamo lend, MessageSource messageSource) {
+		if (lend.getUsuario() == null || lend.getUsuario().getUsername() == null ||
+				lend.getLibro() == null || lend.getLibro().getId() == null) {
+			return false;
+		}
+		if (StringUtils.isBlank(lend.getFecha())) {
+			lend.setFecha(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+		}
+		return true;
+	}
+
+	public static boolean processUser(Usuario newData, MessageSource messageSource) {
+		if (StringUtils.isBlank(newData.getNombre()) && StringUtils.isBlank(newData.getUsername())) {
+			return false;
+		}
+		if (StringUtils.isBlank(newData.getUsername())) {
+			newData.setUsername(StringUtils.substring(newData.getNombre().toLowerCase().replaceAll(" ", ""), 0, 50));
+		}
+		if (StringUtils.isBlank(newData.getNombre())) {
+			newData.setNombre(newData.getUsername());
+		}
+		if (StringUtils.isBlank(newData.getPassword())) {
+			newData.setPassword("-1");
+		}
+		if (newData.getNombre() != null && newData.getNombre().length() > 60) {
+			newData.setNombre(StringUtils.substring(newData.getNombre(), 0, 60));
+		}
+		if (newData.getUsername() != null && newData.getUsername().length() > 50) {
+			newData.setUsername(StringUtils.substring(newData.getUsername(), 0, 50));
+		}
+		if (newData.getEmail() != null && newData.getEmail().length() > 150) {
+			newData.setEmail(StringUtils.substring(newData.getEmail(), 0, 50));
+		}
 		return true;
 	}
 }

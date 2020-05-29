@@ -30,6 +30,7 @@ import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
+import es.magDevs.myLibrary.model.dao.PrestamoDao;
 import es.magDevs.myLibrary.model.dao.TipoDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
 import es.magDevs.myLibrary.model.dao.UbicacionDao;
@@ -38,6 +39,7 @@ import es.magDevs.myLibrary.model.dao.hib.HibAutorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibColeccionDao;
 import es.magDevs.myLibrary.model.dao.hib.HibEditorialDao;
 import es.magDevs.myLibrary.model.dao.hib.HibLibroDao;
+import es.magDevs.myLibrary.model.dao.hib.HibPrestamoDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTipoDao;
 import es.magDevs.myLibrary.model.dao.hib.HibTraductorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibUbicacionDao;
@@ -252,6 +254,19 @@ public class DaoFactory {
 	public static UsuarioDao getUsuarioDao() {
 		if (dataAccessType == 1) {
 			return new HibUsuarioDao(sessionFactory);
+		}
+		return null;
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de los
+	 * usuarios
+	 * 
+	 * @return
+	 */
+	public static PrestamoDao getPrestamoDao() {
+		if (dataAccessType == 1) {
+			return new HibPrestamoDao(sessionFactory);
 		}
 		return null;
 	}

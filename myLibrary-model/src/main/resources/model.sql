@@ -98,3 +98,24 @@ CREATE TABLE modificaciones_campos (
 	CONSTRAINT pk_modificaciones PRIMARY KEY(id_modificacion, columna),
 	CONSTRAINT fk_modificaciones_campos_modificaciones FOREIGN KEY (id_modificacion) REFERENCES modificaciones(id)
 );
+
+CREATE TABLE usuarios (
+  username varchar(50) NOT NULL,
+  password varchar(60) NOT NULL,
+  email varchar(150) DEFAULT NULL,
+  nombre varchar(60),
+  enabled tinyint(4) NOT NULL DEFAULT '1',
+  admin tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (username),
+  UNIQUE KEY uk_email (email)
+)
+
+CREATE TABLE prestamos (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	libro INTEGER NOT NULL,
+	usuario varchar(50) NOT NULL,
+	fecha varchar(10) NOT NULL,
+	CONSTRAINT pk_prestamos PRIMARY KEY(id),
+	CONSTRAINT fk_prestamos_libros FOREIGN KEY (libro) REFERENCES libros(id),
+	CONSTRAINT fk_prestamos_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
+);

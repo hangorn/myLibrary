@@ -21,6 +21,7 @@
 
 	<!-- formulario para los datos de los libros -->
 	<div class="booksForm">
+		<input type="hidden" th:field="*{id}" id="bookId"></input>
 		<!-- titulo -->
 		<div class="formField">
 			<label for="titulo" th:text="#{books.field.title}"></label> <input required="required"
@@ -211,6 +212,17 @@
 			<a th:if="!${editable} AND *{traductores.size()} == 1" th:each="traductor : *{traductores}"
 				th:text="${traductor.nombre}" th:title="${traductor.nombre}" th:href="@{/translators_readid?readid=}+${traductor.id}"></a>
 		</div>
+		<!-- botones de acccion para libros: prestar, marcar como leido, ... -->
+		<div>
+			<div class="crudButtons">
+				<button th:if="${adminData} != null AND *{prestamo} == null" th:title="#{lend}" type="button" id="lendBookButton">
+					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <label th:text="#{lend}"></label>
+				</button>
+				<button th:if="${adminData} != null AND *{prestamo} != null" th:title="#{return(*{prestamo.nombre})}" type="button" id="returnBookButton">
+					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/return.png}" /> <label th:text="#{return(*{prestamo.nombre})}"></label>
+				</button>
+			</div>
+		</div>
 	</div>
 
 	<!-- dialogo para añadir una nueva editorial -->
@@ -386,6 +398,68 @@
 		</div>
 	</div>
 
+	<!-- dialogo para prestar un libro -->
+	<div th:if="${adminData} != null" id="lendBookFormBackground" class="background" style="display: none;">
+		<div id="lendBookFormContainer" class="dataFormContainer">
+			<div id="lendBookForm" class="dataForm" style="height: 90%;">
+				<label for="usersSearch" th:text="#{user.search}"> </label>
+				<input type="text" id="usersSearch" class="searchInput" />
+				<button id="addNewUser" class="addQuitButton" th:title="#{user.new}" type="button">
+					<img th:alt-title="#{user.new}" th:src="@{img/crudmenu/add.png}"/>
+					<label th:text="#{user.new}"></label>
+				</button>
+				<div class="closeButton" id="closeButtonLendBook">
+					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
+				</div>
+				<div class="dataTable">
+					<table>
+						<thead>
+							<tr>
+								<th th:text="#{users}"></th>
+							</tr>
+						</thead>
+						<tbody id="usersDataTable">
+						</tbody>
+					</table>
+				</div>
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
+					<div class="dataFormField" style="display:inline;">
+						<label for="lendDate" th:text="#{date}"> </label>
+						<input type="date" id="lendDate"/>
+					</div>
+					<button th:title="#{lend}" type="button" id="acceptLendBook">
+						<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{lend}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelLendBook">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- dialogo para añadir un nuevo usuario -->
+	<div th:if="${adminData} != null" id="newUserFormBackground" class="background" style="display: none;">
+		<div id="newUserFormContainer" class="dataFormContainer">
+			<div id="newUserForm" class="dataForm">
+				<div class="dataFormField">
+					<label for="newUserName" th:text="#{login.form.username}"> </label>
+					<input maxlength="60" type="text" id="newUserName"></input>
+				</div>
+				<div class="dataFormButtons">
+					<button th:title="#{accept}" type="button" id="acceptNewUser">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{add}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelNewUser">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
 	<script th:inline="javascript">
 	/*<![CDATA[*/
@@ -395,12 +469,18 @@
     messageTranslatorEmpty = /*[[#{translators.empty}]]*/;
     messageNoAuthors = /*[[#{authors.table.empty}]]*/;
     messageNoTranslators = /*[[#{translators.table.empty}]]*/;
+    messageUserEmpty = /*[[#{users.empty}]]*/;
+    messageUserNoSelected = /*[[#{lends.user.noIndexMsg}]]*/;
+    messageLend = /*[[#{lend}]]*/;
+    messageReturn = /*[[#{return}]]*/;
     
     booksLink = /*[[@{/books}]]*/;
     publishersLink = /*[[@{/publishers}]]*/;
     collectionsLink = /*[[@{/collections}]]*/;
     authorsLink = /*[[@{/authors}]]*/;
     translatorsLink = /*[[@{/translators}]]*/;
+    usersLink = /*[[@{/users}]]*/;
+    lendsLink = /*[[@{/lends}]]*/;
     currentSectionLink = booksLink;
     
     csrfParameterName=/*[[${_csrf.parameterName}]]*/;
@@ -411,5 +491,6 @@
 	<script th:if="${editable}" th:src="@{#{js.collectionsScripts}}" type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.authorsScripts}}" type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.translatorsScripts}}" type="text/javascript"></script>
+	<script th:if="${adminData} != null" th:src="@{#{js.lendsScripts}}" type="text/javascript"></script>
 </div>
 </html>
