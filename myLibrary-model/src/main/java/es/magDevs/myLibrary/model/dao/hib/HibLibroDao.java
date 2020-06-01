@@ -39,6 +39,7 @@ import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
+import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 
 /**
@@ -95,6 +96,8 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					.add(Projections.property("tomo"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.id) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
+					.add(Projections.sqlProjection("(SELECT u.nombre "
+							+ "FROM prestamos p JOIN usuarios u ON u.username=p.usuario WHERE p.libro=this_.id) AS usr_prestamo", new String[]{"usr_prestamo"}, new Type[]{StandardBasicTypes.STRING}))
 			);
 			List<Object[]> l = query.list();
 			List<Libro> books = new ArrayList<Libro>();
@@ -110,6 +113,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 				book.setUbicacion((Ubicacion) objects[4]);
 				book.setTomo((Integer) objects[5]);
 				book.setAutoresTxt((String) objects[6]);
+				String usrPrestamo = (String) objects[7];
+				if (StringUtils.isNotBlank(usrPrestamo)) {
+					book.setPrestamo(new Usuario(null, null, null, usrPrestamo, null, null));
+				}
 				books.add(book);
 			}
 
