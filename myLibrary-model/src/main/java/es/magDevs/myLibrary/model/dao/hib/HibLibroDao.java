@@ -17,20 +17,19 @@ package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
@@ -93,7 +92,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					.add(Projections.property("editorial"))
 					.add(Projections.property("tipo"))
 					.add(Projections.property("ubicacion"))
-					.add(Projections.property("tomo")));
+					.add(Projections.property("tomo"))
+					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
+							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.id) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
+			);
 			List<Object[]> l = query.list();
 			List<Libro> books = new ArrayList<Libro>();
 			// Recorremos los datos obtenidos para convertirlos en objetos de la
@@ -107,19 +109,7 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 				book.setTipo((Tipo) objects[3]);
 				book.setUbicacion((Ubicacion) objects[4]);
 				book.setTomo((Integer) objects[5]);
-				// Obtenemos los autores asociados
-				Query queryAutores = s
-						.createSQLQuery("SELECT a.id, a.nombre, a.apellidos"
-								+ " FROM autores a JOIN libros_autores la ON"
-								+ " a.id=la.autor where la.libro=:id").setParameter("id", book.getId());
-				List<Object[]> autoresData = queryAutores.list();
-				Set<Autor> autores = new HashSet<Autor>();
-				for (Object[] autorData : autoresData) {
-					autores.add(new Autor((Integer) autorData[0],
-							(String) autorData[1], (String) autorData[2], null,
-							null, null, null, null));
-				}
-				book.setAutores(autores);
+				book.setAutoresTxt((String) objects[6]);
 				books.add(book);
 			}
 

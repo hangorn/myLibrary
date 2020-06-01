@@ -45,6 +45,7 @@ public class Libro extends Bean {
 
 	private Set<Autor> autores;
 	private Set<Traductor> traductores;
+	private String autoresTxt;
 	
 	private Usuario prestamo;
 
@@ -242,6 +243,14 @@ public class Libro extends Bean {
 
 	public void setPrestamo(Usuario prestamo) {
 		this.prestamo = prestamo;
+	}
+
+	public String getAutoresTxt() {
+		return autoresTxt;
+	}
+
+	public void setAutoresTxt(String autoresTxt) {
+		this.autoresTxt = autoresTxt;
 	}
 
 	public String toString() {
