@@ -22,6 +22,7 @@
 		<table>
 			<thead>
 				<tr>
+					<th style="width: 10px" th:if="${adminData} != null"></th>
 					<th th:text="#{date}"></th>
 					<th th:text="#{login.form.username}"></th>
 					<th th:text="#{books.field.title}"></th>
@@ -29,6 +30,14 @@
 			</thead>
 			<tbody>
 				<tr th:each="lendData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
+					<td th:if="${adminData} != null">
+						<form th:action="@{/lends_delete}" method="post">
+							<input type="hidden" name="delete" th:value="${lendData.libro.id}"></input>
+							<button type="submit" th:title="#{return(${lendData.usuario.nombre})}" >
+								<img th:alt-title="#{return(${lendData.usuario.nombre})}" th:src="@{img/crudmenu/return.png}" width="20px" height="20px"/>
+							</button>
+						</form>
+					</td>
 					<td th:text="${lendData.fecha}"></td>
 					<td th:text="${lendData.usuario.nombre}" th:title="${lendData.usuario.nombre}"></td>
 					<td th:text="${lendData.libro.titulo}" th:title="${lendData.libro.titulo}"></td>

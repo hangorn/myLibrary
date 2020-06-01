@@ -158,8 +158,7 @@ public class LendsController extends AbstractController {
 			manageException("acceptCreation", e);
 			dao.rollbackTransaction();
 		}
-		model.addAllAttributes(FragmentManager.getEmptyBody(""));
-		return "commons/body";
+		return list(model);
 	}
 	
 	@Override
