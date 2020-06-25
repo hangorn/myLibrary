@@ -105,7 +105,7 @@ public class FragmentManager {
 		fragmentMapper.put("mainFragment", action.get());
 		fragmentMapper.put("section", section.get());
 		fragmentMapper.put("action", action.get());
-		fragmentMapper.put("sectionsNoCrud", new HashSet<>(Arrays.asList(SECTION.LENDS.get())));
+		fragmentMapper.put("sectionsNoCrud", new HashSet<>(Arrays.asList(SECTION.LENDS.get(), SECTION.PENDING.get())));
 		
 		return fragmentMapper;
 	}

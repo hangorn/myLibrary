@@ -17,6 +17,7 @@ package es.magDevs.myLibrary.web.controllers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,13 +36,16 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Traductor;
+import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
+import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
@@ -145,6 +149,7 @@ public class BooksController extends AbstractController {
 				// Obtenemos todos los datos del libro seleccionado
 				bookData = (Libro) getDao().get(
 						((Bean) data.get(index)).getId());
+				bookData.setId(null);
 				// Guardamos los autores que ya tiene asignados el nuevo libro
 				if (bookData.getAutores() != null
 						&& bookData.getAutores().size() > 0) {
@@ -202,7 +207,7 @@ public class BooksController extends AbstractController {
 		if (id >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				bookData = (Libro) getDao().get(id);
+				bookData = (Libro) getCompleteData(id);
 				// Guardamos los autores que ya tiene asignados el nuevo libro
 				if (bookData.getAutores() != null
 						&& bookData.getAutores().size() > 0) {
@@ -718,5 +723,22 @@ public class BooksController extends AbstractController {
 
 	public Class<BooksFilter> getBeanClass() {
 		return BooksFilter.class;
+	}
+	
+	@Override
+	protected Bean getCompleteData(Integer id) throws Exception {
+		Libro book = (Libro) super.getCompleteData(id);
+		String username = MainController.getUsername();
+		if (username != null) {
+			Pendiente filterPendiente = new Pendiente();
+			filterPendiente.setLibro(new Libro());
+			filterPendiente.getLibro().setId(book.getId());
+			filterPendiente.setUsuario(new Usuario(username, null, null, null, null, null));
+			List<?> pendiente = DaoFactory.getPendienteDao().getWithPag(filterPendiente, 0, 0);
+			if (!pendiente.isEmpty()) {
+				book.setPendiente(((Pendiente) pendiente.get(0)).getFecha());
+			}
+		}
+		return book;
 	}
 }

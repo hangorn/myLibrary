@@ -1,0 +1,43 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="searchContainer" th:fragment="pendingSearch">
+	<div class="searchIcon">
+		<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/search.png}" /> <img
+			th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/arrows.png}" />
+	</div>
+	<div class="search">
+		<form th:action="@{${multiselect} ? '/pending_multisearch' : '/pending_search'}" th:object="${filter}" method="post">
+			<div class="searchField">
+				<label for="libro.titulo" th:text="#{books.field.title}"></label>
+				<input type="text" th:field="*{libro.titulo}" th:errorclass="fieldError" />
+			</div>
+			<div class="searchReset">
+				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}" th:src="@{img/searchmenu/reset.png}" />
+			</div>
+			<div class="searchField searchSubmit">
+				<button type="submit" name="search">
+					<img th:alt-title="#{menu.search.icon}" th:src="@{img/searchmenu/submit.png}" /> <label
+						th:text="#{menu.search.search}"></label>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+</html>

@@ -119,3 +119,13 @@ CREATE TABLE prestamos (
 	CONSTRAINT fk_prestamos_libros FOREIGN KEY (libro) REFERENCES libros(id),
 	CONSTRAINT fk_prestamos_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
 );
+
+CREATE TABLE pendientes (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	libro INTEGER NOT NULL,
+	usuario varchar(50) NOT NULL,
+	fecha varchar(10) NOT NULL,
+	CONSTRAINT pk_pendientes PRIMARY KEY(id),
+	CONSTRAINT fk_pendientes_libros FOREIGN KEY (libro) REFERENCES libros(id),
+	CONSTRAINT fk_pendientes_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
+);

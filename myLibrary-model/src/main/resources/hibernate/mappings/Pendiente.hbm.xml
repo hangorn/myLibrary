@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 02-ago-2014 16:15:34 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="es.magDevs.myLibrary.model.beans.Pendiente" table="pendientes">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="fecha" type="java.lang.String">
+            <column name="fecha" />
+        </property>
+        
+        <many-to-one class="es.magDevs.myLibrary.model.beans.Libro" lazy="false" name="libro" fetch="join">
+			<column name="libro" />
+		</many-to-one>
+        <many-to-one class="es.magDevs.myLibrary.model.beans.Usuario" lazy="false" name="usuario" fetch="join">
+			<column name="usuario" />
+		</many-to-one>
+    </class>
+</hibernate-mapping>

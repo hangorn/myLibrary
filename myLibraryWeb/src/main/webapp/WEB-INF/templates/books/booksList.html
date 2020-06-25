@@ -25,7 +25,7 @@
 					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
 						<input type="checkbox" onclick="setAllChecked(this, event)" />
 					</th>
-					<th style="width: 10px" th:if="${adminData} != null"></th>
+					<th style="width: min-content" th:if="${userData} != null"></th>
 					<th th:text="#{books.table.head.title}"></th>
 					<th th:text="#{books.table.head.author}"></th>
 					<th th:text="#{books.table.head.publisher}"></th>
@@ -36,8 +36,11 @@
 			<tbody>
 				<tr th:each="bookData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
 					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
-					<td th:if="${adminData} != null">
-						<img th:if="${bookData.prestamo} != null AND !${#strings.isEmpty(bookData.prestamo.nombre)}" th:alt-title="#{lend.to(${bookData.prestamo.nombre})}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
+					<td th:if="${userData} != null">
+						<div style="display: flex; flex-direction: row; justify-content: space-between;">
+							<img th:if="${adminData} != null AND ${bookData.prestamo} != null AND !${#strings.isEmpty(bookData.prestamo.nombre)}" th:alt-title="#{lend.to(${bookData.prestamo.nombre})}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
+							<img th:if="!${#strings.isEmpty(bookData.pendiente)}" th:alt-title="#{pending(${bookData.pendiente})}" th:src="@{img/menu/pending.png}" width="20px" height="20px"/>
+						</div>
 					</td>
 					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
 						th:title="${bookData.titulo}"></td>

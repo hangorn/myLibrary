@@ -35,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,8 +133,9 @@ public class MainController implements InitializingBean, Serializable {
 				.split(" ");
 		// Si hay usuario registrado, mostrarmo el menu de prestamos
 		if (getUserData() != null) {
-			items = Arrays.copyOf(items, items.length+1);
-			items[items.length-1] = "lends";
+			items = Arrays.copyOf(items, items.length+2);
+			items[items.length-2] = "lends";
+			items[items.length-1] = "pending";
 		}
 		//Ordenamos 
 		Arrays.sort(items, new Comparator<String>() {
@@ -249,7 +251,7 @@ public class MainController implements InitializingBean, Serializable {
 	 * @return datos del usuario
 	 */
 	@ModelAttribute("userData")
-	Authentication getUserData() {
+	public static Authentication getUserData() {
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 if(authentication == null){
 			 return null;
@@ -261,6 +263,14 @@ public class MainController implements InitializingBean, Serializable {
 			}
 		}
 		return null;
+	}
+	
+	public static String getUsername() {
+		Authentication authentication = getUserData();
+		if (authentication == null) {
+			return null;
+		}
+		return ((User) authentication.getPrincipal()).getUsername();
 	}
 
 	/**

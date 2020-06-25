@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -81,13 +82,30 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 			query.setMaxResults(pageSize);
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por titulo de libro
-			if (filter != null) {
-				query.addOrder(Property.forName("titulo").asc());
-			} else {
+			Libro libro = (Libro) filter;
+			boolean authorFiltered = libro != null && libro.getAutores() != null
+					&& libro.getAutores().size() > 0
+					&& (!StringUtils.isBlank(libro.getAutores().iterator().next().getNombre())
+							|| !StringUtils.isBlank(libro.getAutores().iterator().next().getApellidos())
+							|| !StringUtils.isBlank(libro.getAutores().iterator().next().getPais())
+							|| libro.getAutores().iterator().next().getAnnoNacimiento() != null);
+			if (filter == null
+					|| (StringUtils.isBlank(libro.getTitulo())
+					&& !authorFiltered
+					&& (libro.getEditorial() == null || StringUtils.isBlank(libro.getEditorial().getNombre()))
+					&& (libro.getUbicacion() == null || StringUtils.isBlank(libro.getUbicacion().getCodigo()))
+					&& (libro.getColeccion() == null || StringUtils.isBlank(libro.getColeccion().getNombre()))
+					&& (libro.getTipo() == null || StringUtils.isBlank(libro.getTipo().getDescripcion()))
+					&& StringUtils.isBlank(libro.getNotas())
+					&& StringUtils.isBlank(libro.getIsbn())
+					&& libro.getAnnoCompra() == null
+					&& libro.getNumPaginas() == null)) {
 				query.addOrder(Property.forName("id").desc());
+			} else {
+				query.addOrder(Property.forName("titulo").asc());
 			}
 			// Fijamos los datos que queremos obtener
-			query.setProjection(Projections.projectionList()
+			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("titulo"))
 					.add(Projections.property("editorial"))
@@ -97,8 +115,13 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.id) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
 					.add(Projections.sqlProjection("(SELECT u.nombre "
-							+ "FROM prestamos p JOIN usuarios u ON u.username=p.usuario WHERE p.libro=this_.id) AS usr_prestamo", new String[]{"usr_prestamo"}, new Type[]{StandardBasicTypes.STRING}))
-			);
+							+ "FROM prestamos p JOIN usuarios u ON u.username=p.usuario WHERE p.libro=this_.id) AS usr_prestamo", new String[]{"usr_prestamo"}, new Type[]{StandardBasicTypes.STRING}));
+			boolean hayUsuarioRegistrado = libro != null && libro.getUsuarioRegistrado() != null;
+			if (hayUsuarioRegistrado) {
+				projection.add(Projections.sqlProjection("(SELECT p.fecha FROM pendientes p WHERE p.libro=this_.id AND p.usuario='"
+							+ libro.getUsuarioRegistrado().getUsername()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}));
+			}
+			query.setProjection(projection);
 			List<Object[]> l = query.list();
 			List<Libro> books = new ArrayList<Libro>();
 			// Recorremos los datos obtenidos para convertirlos en objetos de la
@@ -116,6 +139,9 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 				String usrPrestamo = (String) objects[7];
 				if (StringUtils.isNotBlank(usrPrestamo)) {
 					book.setPrestamo(new Usuario(null, null, null, usrPrestamo, null, null));
+				}
+				if (hayUsuarioRegistrado) {
+					book.setPendiente((String) objects[8]);
 				}
 				books.add(book);
 			}

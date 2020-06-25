@@ -213,13 +213,23 @@
 				th:text="${traductor.nombre}" th:title="${traductor.nombre}" th:href="@{/translators_readid?readid=}+${traductor.id}"></a>
 		</div>
 		<!-- botones de acccion para libros: prestar, marcar como leido, ... -->
-		<div>
+		<div th:if="*{id} != null">
 			<div class="crudButtons">
+				<!-- Prestamo -->
 				<button th:if="${adminData} != null AND *{prestamo} == null" th:title="#{lend}" type="button" id="lendBookButton">
 					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <label th:text="#{lend}"></label>
 				</button>
 				<button th:if="${adminData} != null AND *{prestamo} != null" th:title="#{return(*{prestamo.nombre})}" type="button" id="returnBookButton">
-					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/return.png}" /> <label th:text="#{return(*{prestamo.nombre})}"></label>
+					<img th:alt-title="#{return(*{prestamo.nombre})}" th:src="@{img/crudmenu/return.png}" /> <label th:text="#{return(*{prestamo.nombre})}"></label>
+				</button>
+				
+				<!-- Pendiente -->
+				<button th:if="${userData} != null AND *{pendiente} == null" th:title="#{mark.pending}" type="button" id="markPendingBookButton">
+					<img width="32px" height="32px" th:alt-title="#{mark.pending}" th:src="@{img/menu/pending.png}" /> <label th:text="#{mark.pending}"></label>
+				</button>
+				<button th:if="${userData} != null AND *{pendiente} != null" th:title="#{unmark.pending(*{pendiente})}" type="button" id="unmarkPendingBookButton">
+					<img width="32px" height="32px" th:alt-title="#{unmark.pending(*{pendiente})}" th:src="@{img/menu/no_pending.png}"/>
+					<label th:text="#{unmark.pending(*{pendiente})}"></label>
 				</button>
 			</div>
 		</div>
@@ -460,6 +470,27 @@
 		</div>
 	</div>
 
+	<!-- dialogo para seleccionara una fecha -->
+	<div th:if="${userData} != null" id="selectDateFormBackground" class="background" style="display: none;">
+		<div id="selectDateFormContainer" class="dataFormContainer" style="height: 20%; overflow: hidden;">
+			<div id="selectDateBookForm" class="dataForm" style="height: 90%;">
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
+					<div class="dataFormField" style="display:inline;">
+						<label for="selectedDate" th:text="#{date}"> </label>
+						<input type="date" id="selectedDate"/>
+					</div>
+					<button th:title="#{accept}" type="button" id="acceptSelectDate">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{accept}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelSelectDate">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
 	<script th:inline="javascript">
 	/*<![CDATA[*/
@@ -473,6 +504,8 @@
     messageUserNoSelected = /*[[#{lends.user.noIndexMsg}]]*/;
     messageLend = /*[[#{lend}]]*/;
     messageReturn = /*[[#{return}]]*/;
+    messageMarkPending = /*[[#{mark.pending}]]*/;
+    messageUnmarkPending = /*[[#{unmark.pending}]]*/;
     
     booksLink = /*[[@{/books}]]*/;
     publishersLink = /*[[@{/publishers}]]*/;
@@ -481,6 +514,7 @@
     translatorsLink = /*[[@{/translators}]]*/;
     usersLink = /*[[@{/users}]]*/;
     lendsLink = /*[[@{/lends}]]*/;
+    pendingLink = /*[[@{/pending}]]*/;
     currentSectionLink = booksLink;
     
     csrfParameterName=/*[[${_csrf.parameterName}]]*/;
@@ -492,5 +526,6 @@
 	<script th:if="${editable}" th:src="@{#{js.authorsScripts}}" type="text/javascript"></script>
 	<script th:if="${editable}" th:src="@{#{js.translatorsScripts}}" type="text/javascript"></script>
 	<script th:if="${adminData} != null" th:src="@{#{js.lendsScripts}}" type="text/javascript"></script>
+	<script th:if="${userData} != null" th:src="@{#{js.pendingScripts}}" type="text/javascript"></script>
 </div>
 </html>

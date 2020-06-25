@@ -26,6 +26,7 @@ import es.magDevs.myLibrary.web.controllers.AuthorsController;
 import es.magDevs.myLibrary.web.controllers.BooksController;
 import es.magDevs.myLibrary.web.controllers.CollectionsController;
 import es.magDevs.myLibrary.web.controllers.LendsController;
+import es.magDevs.myLibrary.web.controllers.PendingController;
 import es.magDevs.myLibrary.web.controllers.PlacesController;
 import es.magDevs.myLibrary.web.controllers.PublishersController;
 import es.magDevs.myLibrary.web.controllers.TranslatorsController;
@@ -52,6 +53,7 @@ public class ControllerFactory {
 		controllers.put(CONTROLLER.AUTHORS, new AuthorsController(messageSource));
 		controllers.put(CONTROLLER.LENDS, new LendsController(messageSource));
 		controllers.put(CONTROLLER.USERS, new UsersController(messageSource));
+		controllers.put(CONTROLLER.PENDING, new PendingController(messageSource));
 	}
 
 	/**

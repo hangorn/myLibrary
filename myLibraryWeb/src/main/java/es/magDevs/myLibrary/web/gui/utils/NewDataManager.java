@@ -25,6 +25,7 @@ import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
@@ -373,6 +374,17 @@ public class NewDataManager {
 		}
 		if (newData.getEmail() != null && newData.getEmail().length() > 150) {
 			newData.setEmail(StringUtils.substring(newData.getEmail(), 0, 50));
+		}
+		return true;
+	}
+
+	public static boolean processPending(Pendiente newData, MessageSource messageSource) {
+		if (newData.getUsuario() == null || newData.getUsuario().getUsername() == null ||
+				newData.getLibro() == null || newData.getLibro().getId() == null) {
+			return false;
+		}
+		if (StringUtils.isBlank(newData.getFecha())) {
+			newData.setFecha(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 		}
 		return true;
 	}

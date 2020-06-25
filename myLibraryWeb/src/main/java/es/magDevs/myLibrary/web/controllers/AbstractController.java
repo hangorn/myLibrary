@@ -438,7 +438,7 @@ public abstract class AbstractController implements Controller {
 		if (id != null && id >= 0 && data != null) {
 			try {
 				// Obtenemos todos los datos del elemento seleccionado
-				elementData = getDao().get(id);
+				elementData = getCompleteData(id);
 			} catch (Exception e) {
 				elementData = getNewFilter();
 				msg = manageException("update", e);
@@ -460,6 +460,10 @@ public abstract class AbstractController implements Controller {
 		return "commons/body";
 	}
 
+	protected Bean getCompleteData(Integer id) throws Exception {
+		return getDao().get(id);
+	}
+
 	public String read(Integer index, Model model) {
 		Bean elementData = null;
 		String msg = "";
@@ -467,7 +471,7 @@ public abstract class AbstractController implements Controller {
 		if (index >= 0 && data != null) {
 			// Obtenemos todos los datos del elemento seleccionado
 			try {
-				elementData = getDao().get(((Bean) data.get(index)).getId());
+				elementData = getCompleteData(((Bean) data.get(index)).getId());
 			} catch (Exception e) {
 				elementData = getNewFilter();
 				msg = manageException("read", e);
@@ -493,7 +497,7 @@ public abstract class AbstractController implements Controller {
 		String msg = "";
 		// Obtenemos todos los datos del elemento seleccionado
 		try {
-			elementData = getDao().get(id);
+			elementData = getCompleteData(id);
 		} catch (Exception e) {
 			elementData = getNewFilter();
 			msg = manageException("read", e);

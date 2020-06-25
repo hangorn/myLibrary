@@ -27,11 +27,13 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 
 /**
@@ -51,6 +53,13 @@ public class FilterManager {
 	 *         {@code null} si no existe ningun criterio
 	 */
 	public static BooksFilter processBooksFilter(BooksFilter filter) {
+		String user = MainController.getUsername();
+		if (user != null) {
+			if (filter == null) {
+				filter = new BooksFilter();
+			}
+			filter.setUsuarioRegistrado(new Usuario(user, null, null, null, null, null));
+		}
 		if (filter == null) {
 			return null;
 		}
@@ -63,7 +72,8 @@ public class FilterManager {
 						|| !StringUtils.isBlank(filter.getAutor().getPais()) || filter
 						.getAutor().getAnnoNacimiento() != null);
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getTitulo())
+		if (filter.getUsuarioRegistrado() == null
+				&& StringUtils.isBlank(filter.getTitulo())
 				&& !authorFiltered
 				&& (filter.getEditorial() == null || StringUtils.isBlank(filter
 						.getEditorial().getNombre()))
@@ -256,6 +266,25 @@ public class FilterManager {
 		if (filter == null || (StringUtils.isBlank(filter.getUsername()) && StringUtils.isBlank(filter.getNombre()) && 
 				StringUtils.isBlank(filter.getEmail()))) {
 			return null;
+		}
+		return filter;
+	}
+
+	public static Bean processPendingFilter(Pendiente filter) {
+		String username = MainController.getUsername();
+		if (filter == null) {
+			filter = new Pendiente();
+		}
+		filter.setLibro(null);
+		if (username != null) {
+			if (filter.getUsuario() == null) {
+				filter.setUsuario(new Usuario());
+			}
+			filter.getUsuario().setUsername(username);
+		} else {
+			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
+			filter = new Pendiente(null, new Libro(), null, null);
+			filter.getLibro().setId(-1);
 		}
 		return filter;
 	}

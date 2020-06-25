@@ -48,6 +48,8 @@ public class Libro extends Bean {
 	private String autoresTxt;
 	
 	private Usuario prestamo;
+	private String pendiente;
+	private Usuario usuarioRegistrado;
 
 	public Libro() {
 		super();
@@ -237,6 +239,14 @@ public class Libro extends Bean {
 		this.traductores = traductores;
 	}
 
+	public String getAutoresTxt() {
+		return autoresTxt;
+	}
+
+	public void setAutoresTxt(String autoresTxt) {
+		this.autoresTxt = autoresTxt;
+	}
+
 	public Usuario getPrestamo() {
 		return prestamo;
 	}
@@ -245,12 +255,20 @@ public class Libro extends Bean {
 		this.prestamo = prestamo;
 	}
 
-	public String getAutoresTxt() {
-		return autoresTxt;
+	public String getPendiente() {
+		return pendiente;
 	}
 
-	public void setAutoresTxt(String autoresTxt) {
-		this.autoresTxt = autoresTxt;
+	public void setPendiente(String pendiente) {
+		this.pendiente = pendiente;
+	}
+
+	public Usuario getUsuarioRegistrado() {
+		return usuarioRegistrado;
+	}
+
+	public void setUsuarioRegistrado(Usuario usuarioRegistrado) {
+		this.usuarioRegistrado = usuarioRegistrado;
 	}
 
 	public String toString() {
