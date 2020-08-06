@@ -15,15 +15,13 @@
  */
 package es.magDevs.myLibrary.web.gui.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 
 import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
+import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Prestamo;
@@ -348,7 +346,7 @@ public class NewDataManager {
 			return false;
 		}
 		if (StringUtils.isBlank(lend.getFecha())) {
-			lend.setFecha(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+			lend.setFecha(DatesManager.getStringToday());
 		}
 		return true;
 	}
@@ -384,7 +382,20 @@ public class NewDataManager {
 			return false;
 		}
 		if (StringUtils.isBlank(newData.getFecha())) {
-			newData.setFecha(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+			newData.setFecha(DatesManager.getStringToday());
+		}
+		return true;
+	}
+
+	public static boolean processRead(Leido newData, MessageSource messageSource) {
+		if (newData.getUsuario() == null || newData.getUsuario().getUsername() == null ||
+				newData.getLibro() == null || newData.getLibro().getId() == null) {
+			return false;
+		}
+		if (StringUtils.isBlank(newData.getFechaTxt())) {
+			newData.setFecha(DatesManager.getIntToday());
+		} else {
+			newData.setFecha(DatesManager.string2Int(newData.getFechaTxt()));
 		}
 		return true;
 	}

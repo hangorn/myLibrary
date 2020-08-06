@@ -16,11 +16,11 @@
 package es.magDevs.myLibrary.model.dao;
 
 /**
- * Interfaz para el acceso a los datos de libros pendientes de leer
+ * Interfaz para el acceso a los datos de libros leidos
  * 
  * @author javier.vaquero
  * 
  */
-public interface PendienteDao extends AbstractDao {
+public interface LeidoDao extends AbstractDao {
 
 }

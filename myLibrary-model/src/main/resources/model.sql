@@ -129,3 +129,13 @@ CREATE TABLE pendientes (
 	CONSTRAINT fk_pendientes_libros FOREIGN KEY (libro) REFERENCES libros(id),
 	CONSTRAINT fk_pendientes_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
 );
+
+CREATE TABLE leidos (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	libro INTEGER NOT NULL,
+	usuario varchar(50) NOT NULL,
+	fecha INTEGER NOT NULL,
+	CONSTRAINT pk_leidos PRIMARY KEY(id),
+	CONSTRAINT fk_leidos_libros FOREIGN KEY (libro) REFERENCES libros(id),
+	CONSTRAINT fk_leidos_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
+);

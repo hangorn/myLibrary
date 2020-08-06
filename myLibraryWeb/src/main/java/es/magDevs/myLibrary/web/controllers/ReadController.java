@@ -15,6 +15,11 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
@@ -22,31 +27,34 @@ import org.springframework.ui.Model;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
+import es.magDevs.myLibrary.model.dao.LeidoDao;
 import es.magDevs.myLibrary.model.dao.PendienteDao;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
+import es.magDevs.myLibrary.web.gui.utils.DatesManager;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
- * Controlador para libros marcados como pendientes
+ * Controlador para libros marcados como leidos
  * 
  * @author javier.vaquero
  * 
  */
-public class PendingController extends AbstractController {
+public class ReadController extends AbstractController {
 
-	public PendingController(MessageSource messageSource) {
+	public ReadController(MessageSource messageSource) {
 		super(messageSource);
 	}
 
 	// LOG
 	private static final Logger log = Logger
-			.getLogger(PendingController.class);
+			.getLogger(ReadController.class);
 
 	/* *****************************************
 	 * ********** IMPLEMENTACIONES *************
@@ -57,7 +65,7 @@ public class PendingController extends AbstractController {
 	 * {@inheritDoc}
 	 */
 	protected SECTION getSection() {
-		return SECTION.PENDING;
+		return SECTION.READ;
 	}
 
 	/**
@@ -71,52 +79,77 @@ public class PendingController extends AbstractController {
 	 * {@inheritDoc}
 	 */
 	protected AbstractDao getDao() {
-		return DaoFactory.getPendienteDao();
+		return DaoFactory.getLeidoDao();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected Bean getNewFilter() {
-		return new Pendiente();
+		return new Leido();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected Bean processFilter(Bean filter) {
-		return FilterManager.processPendingFilter((Pendiente) filter);
+		return FilterManager.processReadFilter((Leido) filter);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected boolean processNewData(Bean newData) {
-		return NewDataManager.processPending((Pendiente) newData, messageSource);
+		return NewDataManager.processRead((Leido) newData, messageSource);
 	}
+	
+	private Map<Integer, Leido> newReadBooks = new HashMap<>();
 
 	/* *****************************************
 	 * ************** ACCIONES *****************
 	 * *****************************************
 	 */
 
-	public Class<Pendiente> getBeanClass() {
-		return Pendiente.class;
+	public Class<Leido> getBeanClass() {
+		return Leido.class;
 	}
 	
 	@Override
 	public String acceptCreation(Bean newElement, Model model) {
+		Leido leido = (Leido) newElement;
+		if (StringUtils.isEmpty(leido.getFechaTxt())) {
+			leido.setFecha(DatesManager.getIntToday());
+		} else {
+			leido.setFecha(DatesManager.string2Int(leido.getFechaTxt()));
+		}
+		
 		String username = MainController.getUsername();
 		if (username != null) {
-			PendienteDao dao = DaoFactory.getPendienteDao();
+			LeidoDao dao = DaoFactory.getLeidoDao();
+			PendienteDao daoPendiente = DaoFactory.getPendienteDao();
 			try {
+				// Buscamos si el libro este pendiente
+				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
+				query.getLibro().setId(leido.getLibro().getId());
+				query.getUsuario().setUsername(username);
+				List<?> pendientes = daoPendiente.getWithPag(query, 0, 0);
+				
 				dao.beginTransaction();
-				((Pendiente) newElement).setUsuario(new Usuario(username, null, null, null, null, null));
+				// Guardamos el bean en un mapa con un ID ficticio por si hay que borrarlo
+				newReadBooks.put(newElement.getId(), leido);
+				leido.setUsuario(new Usuario(username, null, null, null, null, null));
+				// Guardamos el libro como leido
 				dao.insert(newElement);
+				
+				// Si estaba marcado como pendiente, lo desmarcamos
+				if (!pendientes.isEmpty()) {
+					Pendiente prestamo = (Pendiente) pendientes.get(0);
+					daoPendiente.delete(prestamo);
+				}
 				dao.commitTransaction();
 			} catch (Exception e) {
-				dao.rollbackTransaction();
 				manageException("acceptCreation", e);
+				dao.rollbackTransaction();
 			}
 		}
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));
@@ -125,21 +158,20 @@ public class PendingController extends AbstractController {
 	
 	@Override
 	public String delete(Integer index, Model model) {
-		String username = MainController.getUsername();
-		if (username != null) {
-			PendienteDao dao = DaoFactory.getPendienteDao();
-			try {
-				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
-				query.getLibro().setId(index);
-				query.getUsuario().setUsername(username);
-				Pendiente pendiente = (Pendiente) dao.getWithPag(query, 0, 0).get(0);
-				dao.beginTransaction();
-				dao.delete(pendiente);
-				dao.commitTransaction();
-			} catch (Exception e) {
-				manageException("delete", e);
-				dao.rollbackTransaction();
+		LeidoDao dao = DaoFactory.getLeidoDao();
+		try {
+			Leido query;
+			if (index < 0) {
+				query = newReadBooks.get(index);
+			} else {
+				query = new Leido(index, null, null, null);
 			}
+			dao.beginTransaction();
+			dao.delete(query);
+			dao.commitTransaction();
+		} catch (Exception e) {
+			manageException("delete", e);
+			dao.rollbackTransaction();
 		}
 		return list(model);
 	}

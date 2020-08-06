@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
+import es.magDevs.myLibrary.model.dao.LeidoDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.PendienteDao;
 import es.magDevs.myLibrary.model.dao.PrestamoDao;
@@ -39,6 +40,7 @@ import es.magDevs.myLibrary.model.dao.UsuarioDao;
 import es.magDevs.myLibrary.model.dao.hib.HibAutorDao;
 import es.magDevs.myLibrary.model.dao.hib.HibColeccionDao;
 import es.magDevs.myLibrary.model.dao.hib.HibEditorialDao;
+import es.magDevs.myLibrary.model.dao.hib.HibLeidoDao;
 import es.magDevs.myLibrary.model.dao.hib.HibLibroDao;
 import es.magDevs.myLibrary.model.dao.hib.HibPendienteDao;
 import es.magDevs.myLibrary.model.dao.hib.HibPrestamoDao;
@@ -282,6 +284,19 @@ public class DaoFactory {
 	public static PendienteDao getPendienteDao() {
 		if (dataAccessType == 1) {
 			return new HibPendienteDao(sessionFactory);
+		}
+		return null;
+	}
+
+	/**
+	 * Proporciona el dao correspondiente para acceder a los datos de los
+	 * libros pendientes
+	 * 
+	 * @return
+	 */
+	public static LeidoDao getLeidoDao() {
+		if (dataAccessType == 1) {
+			return new HibLeidoDao(sessionFactory);
 		}
 		return null;
 	}

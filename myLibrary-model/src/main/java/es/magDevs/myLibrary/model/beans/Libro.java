@@ -16,6 +16,7 @@
 package es.magDevs.myLibrary.model.beans;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,6 +51,8 @@ public class Libro extends Bean {
 	private Usuario prestamo;
 	private String pendiente;
 	private Usuario usuarioRegistrado;
+	private List<String> leido;
+	private List<Leido> leidos;
 
 	public Libro() {
 		super();
@@ -269,6 +272,22 @@ public class Libro extends Bean {
 
 	public void setUsuarioRegistrado(Usuario usuarioRegistrado) {
 		this.usuarioRegistrado = usuarioRegistrado;
+	}
+
+	public List<String> getLeido() {
+		return leido;
+	}
+
+	public void setLeido(List<String> leido) {
+		this.leido = leido;
+	}
+
+	public List<Leido> getLeidos() {
+		return leidos;
+	}
+
+	public void setLeidos(List<Leido> leidos) {
+		this.leidos = leidos;
 	}
 
 	public String toString() {

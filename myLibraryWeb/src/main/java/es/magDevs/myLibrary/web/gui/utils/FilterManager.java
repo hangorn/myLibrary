@@ -26,6 +26,7 @@ import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
+import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Prestamo;
@@ -275,7 +276,10 @@ public class FilterManager {
 		if (filter == null) {
 			filter = new Pendiente();
 		}
-		filter.setLibro(null);
+		if (filter.getLibro() == null) {
+			filter.setLibro(new Libro());
+		}
+		filter.getLibro().setId(null);
 		if (username != null) {
 			if (filter.getUsuario() == null) {
 				filter.setUsuario(new Usuario());
@@ -284,6 +288,36 @@ public class FilterManager {
 		} else {
 			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
 			filter = new Pendiente(null, new Libro(), null, null);
+			filter.getLibro().setId(-1);
+		}
+		return filter;
+	}
+
+	public static Bean processReadFilter(Leido filter) {
+		String username = MainController.getUsername();
+		if (filter == null) {
+			filter = new Leido();
+		}
+		if (filter.getLibro() == null) {
+			filter.setLibro(new Libro());
+		}
+		filter.getLibro().setId(null);
+		
+		if (StringUtils.isNotBlank(filter.getFechaMinTxt())) {
+			filter.setFechaMin(DatesManager.string2Int(filter.getFechaMinTxt()));
+		}
+		if (StringUtils.isNotBlank(filter.getFechaMaxTxt())) {
+			filter.setFechaMax(DatesManager.string2Int(filter.getFechaMaxTxt()));
+		}
+		
+		if (username != null) {
+			if (filter.getUsuario() == null) {
+				filter.setUsuario(new Usuario());
+			}
+			filter.getUsuario().setUsername(username);
+		} else {
+			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
+			filter = new Leido(null, new Libro(), null, null);
 			filter.getLibro().setId(-1);
 		}
 		return filter;

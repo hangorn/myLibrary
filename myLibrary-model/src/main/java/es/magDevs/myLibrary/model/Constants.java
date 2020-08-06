@@ -35,12 +35,18 @@ public class Constants {
     public static final String USERS_TABLE = "Usuario";
     public static final String PRESTAMOS_TABLE = "Prestamo";
     public static final String PENDIENTE_TABLE = "Pendiente";
+    public static final String LEIDO_TABLE = "Leido";
     
     //Roles
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ROLE_USER = "ROLE_USER";
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_ROLE_ADMIN = "ROLE_ADMIN";
+    
+    //Formatos de fechas
+	public static final String INT_FORMAT = "yyyyMMdd";
+	public static final String STRING_FORMAT = "yyyy-MM-dd";
+	public static final String PRESENTATION_FORMAT = "dd/MM/yyyy";
 	
 	/**
 	 * Distintos tipos de acciones que se pueden realizar
@@ -78,7 +84,8 @@ public class Constants {
 		TRANSLATORS("translators",6),
 		LENDS("lends",7),
 		USERS("users",8),
-		PENDING("pending",9);
+		PENDING("pending",9),
+		READ("read",10);
 		
 		private String value;
 		private Integer order;
@@ -120,7 +127,8 @@ public class Constants {
 		TRANSLATORS("translators"),
 		LENDS("lends"),
 		USERS("users"),
-		PENDING("pending");
+		PENDING("pending"),
+		READ("read");
 		
 		private static Map<String, CONTROLLER> instances;
 		private static void saveInstance(String s,CONTROLLER c) {

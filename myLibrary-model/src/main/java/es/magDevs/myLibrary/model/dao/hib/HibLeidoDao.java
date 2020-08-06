@@ -27,19 +27,19 @@ import org.hibernate.criterion.Restrictions;
 
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
-import es.magDevs.myLibrary.model.beans.Pendiente;
-import es.magDevs.myLibrary.model.dao.PendienteDao;
+import es.magDevs.myLibrary.model.beans.Leido;
+import es.magDevs.myLibrary.model.dao.LeidoDao;
 
 /**
- * Acceso a los datos de libros pendientes, usando hibernate
+ * Acceso a los datos de libros leidos, usando hibernate
  * 
  * @author javier.vaquero
  * 
  */
-public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
+public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 
-	public HibPendienteDao(SessionFactory sessionFactory) {
-		super(sessionFactory, Constants.PENDIENTE_TABLE);
+	public HibLeidoDao(SessionFactory sessionFactory) {
+		super(sessionFactory, Constants.LEIDO_TABLE);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 	@Override
 	protected Map<String, Boolean> getOrders() {
 		Map<String, Boolean> orders = new LinkedHashMap<String, Boolean>();
-		orders.put("libro.annoCompra", false);
+		orders.put("fecha", false);
 		return orders;
 	}
 
@@ -56,8 +56,8 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 	 * {@inheritDoc}
 	 */
 	protected Criteria getFilters(Session session, Bean f) {
-		Pendiente filter = (Pendiente)f;
-		Criteria c = session.createCriteria(Pendiente.class, "pendiente");
+		Leido filter = (Leido)f;
+		Criteria c = session.createCriteria(Leido.class, "leido");
 		if (filter == null) {
 			return c;
 		}
@@ -69,7 +69,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 		}
 		// Titulo del libro
 		if (filter.getLibro() != null && StringUtils.isNotEmpty(filter.getLibro().getTitulo())) {
-			c.add(Restrictions.like("libro.titulo", "%"+ filter.getLibro().getTitulo() + "%"));
+			c.createCriteria("libro").add(Restrictions.like("titulo", "%"+ filter.getLibro().getTitulo() + "%"));
 		}
 		// Usuario
 		if (filter.getUsuario() != null && StringUtils.isNotEmpty(filter.getUsuario().getUsername())) {
@@ -80,7 +80,14 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 			c.createCriteria("usuario").add(Restrictions.like("nombre", "%"+ filter.getUsuario().getNombre() + "%"));
 		}
 		
-		c.createAlias("pendiente.libro", "libro");
+		// Fechas
+		if (filter.getFechaMin() != null) {
+			c.add(Restrictions.ge("fecha", filter.getFechaMin()));
+		}
+		if (filter.getFechaMax() != null) {
+			c.add(Restrictions.le("fecha", filter.getFechaMax()));
+		}
+		
 		return c;
 	}
 

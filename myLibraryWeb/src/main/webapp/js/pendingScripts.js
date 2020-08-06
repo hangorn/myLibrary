@@ -27,20 +27,21 @@ var markPending = function() {
 	input.select();
 	document.getElementById("selectedDate").valueAsDate = new Date();
 	document.getElementById("acceptSelectDate").onclick = acceptMarkPending;
+
+	//Registramos el evento de salir del proceso de marcar como pendiente
+	document.getElementById("cancelSelectDate").onclick = function() {
+		document.getElementById("selectDateFormBackground").style.display = "none";
+	};
 };
 
 if(markPendingButton != null) {
 	buttonPending.onclick = markPending;
 }
 
-//Registramos el evento de salir del proceso de marcar como pendiente
-document.getElementById("cancelSelectDate").onclick = function() {
-	document.getElementById("selectDateFormBackground").style.display = "none";
-};
-
 //Registramos el evento para cuando se confirme marcar un libro como pendiente
 var acceptMarkPending = function() {
-	var valueDate = document.getElementById("selectedDate").value
+	var valueDate = document.getElementById("selectedDate").value;
+	var formattedDate = formatDate(valueDate);
 	
 	var ajaxRequest = new XMLHttpRequest();
 	ajaxRequest.open("POST", pendingLink + "_acceptCreation", true);
@@ -50,7 +51,7 @@ var acceptMarkPending = function() {
 			document.getElementById("selectDateFormBackground").style.display = "none";
 			
 			buttonPending.onclick = unmarkPending;
-			buttonPending.title = messageUnmarkPending.replace("{0}",valueDate);
+			buttonPending.title = messageUnmarkPending.replace("{0}",formattedDate);
 			var img = buttonPending.getElementsByTagName("img")[0];
 			img.src = img.src.replace("pending","no_pending");
 			img.title = buttonPending.title;

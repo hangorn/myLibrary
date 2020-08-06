@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.model.dao.hib;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Modificacion;
 import es.magDevs.myLibrary.model.beans.ModificacionCampo;
@@ -45,6 +47,10 @@ import es.magDevs.myLibrary.model.dao.AbstractDao;
 public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao {
 
 	private String table;
+
+	private SimpleDateFormat formatModelString;
+	private SimpleDateFormat formatModelInt;
+	private SimpleDateFormat formatPresentation;
 
 	/**
 	 * Metodo abstracto con el que se obtendra el filtro general para cualquier
@@ -251,5 +257,39 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 	 */
 	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
 		return new HashMap<>();
+	}
+	
+	protected String string2Presentation(String date) {
+		if (date == null) {
+			return null;
+		}
+		if (formatModelString == null) {
+			formatModelString = new SimpleDateFormat(Constants.STRING_FORMAT);
+		}
+		if (formatPresentation == null) {
+			formatPresentation = new SimpleDateFormat(Constants.PRESENTATION_FORMAT);
+		}
+		try {
+			return formatPresentation.format(formatModelString.parse(date));
+		} catch (ParseException e) {
+			return date;
+		}
+	}
+	
+	protected String int2Presentation(String date) {
+		if (date == null) {
+			return null;
+		}
+		if (formatModelInt == null) {
+			formatModelInt = new SimpleDateFormat(Constants.INT_FORMAT);
+		}
+		if (formatPresentation == null) {
+			formatPresentation = new SimpleDateFormat(Constants.PRESENTATION_FORMAT);
+		}
+		try {
+			return formatPresentation.format(formatModelInt.parse(date));
+		} catch (ParseException e) {
+			return date;
+		}
 	}
 }

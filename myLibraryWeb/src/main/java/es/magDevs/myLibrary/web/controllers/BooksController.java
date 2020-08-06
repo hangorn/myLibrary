@@ -35,6 +35,7 @@ import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
+import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Traductor;
@@ -47,6 +48,7 @@ import es.magDevs.myLibrary.model.dao.LibroDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
+import es.magDevs.myLibrary.web.gui.utils.DatesManager;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
@@ -736,8 +738,17 @@ public class BooksController extends AbstractController {
 			filterPendiente.setUsuario(new Usuario(username, null, null, null, null, null));
 			List<?> pendiente = DaoFactory.getPendienteDao().getWithPag(filterPendiente, 0, 0);
 			if (!pendiente.isEmpty()) {
-				book.setPendiente(((Pendiente) pendiente.get(0)).getFecha());
+				book.setPendiente(DatesManager.string2Presentation(((Pendiente) pendiente.get(0)).getFecha()));
 			}
+			
+			Leido filterLeido = new Leido();
+			filterLeido.setLibro(new Libro());
+			filterLeido.getLibro().setId(book.getId());
+			filterLeido.setUsuario(new Usuario(username, null, null, null, null, null));
+			@SuppressWarnings("unchecked")
+			List<Leido> leido = (List<Leido>) DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0);
+			leido.stream().forEach(l->l.setFechaTxt(DatesManager.int2Presentation(l.getFecha())));
+			book.setLeidos(leido);
 		}
 		return book;
 	}

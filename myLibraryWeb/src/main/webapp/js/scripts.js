@@ -200,6 +200,7 @@ function showLoading() {
 		loadingScreen.style.display = 'flex';
 		loadingScreen.style.alignItems = 'center';
 		loadingScreen.style.justifyContent = 'center';
+		loadingScreen.style.zIndex = '6000';
 		var loadingText = document.createElement('div');
 		loadingScreen.appendChild(loadingText);
 		loadingText.append('Cargando ...');
@@ -217,4 +218,15 @@ function hideLoading() {
 	if (loadingScreen != null && loadingScreen.parentElement == document.body) {
 		document.body.removeChild(loadingScreen);
 	}
+}
+// Formatea fecha
+function formatDate(date) {
+	if (date == null || date == "") {
+		return date;
+	}
+	var splitted = date.split("-");
+	if (splitted.length != 3) {
+		return date;
+	}
+	return splitted[2]+"/"+splitted[1]+"/"+splitted[0];
 }

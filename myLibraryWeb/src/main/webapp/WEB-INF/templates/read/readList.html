@@ -17,7 +17,7 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="pendingList">
+<div th:fragment="readList">
 	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
 		<table>
 			<thead>
@@ -28,18 +28,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="pendingData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
+				<tr th:each="readData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
 					<td>
-						<form th:action="@{/read_acceptCreation}" method="post">
-							<input type="hidden" name="libro.id" th:value="${pendingData.libro.id}"></input>
-							<input type="hidden" name="acceptCreation"></input>
-							<button type="submit" th:title="#{mark.read}" >
-								<img th:alt-title="#{mark.read}" th:src="@{img/menu/mark_read.png}" width="20px" height="20px"/>
+						<form th:action="@{/read_delete}" method="post">
+							<input type="hidden" name="delete" th:value="${readData.id}"></input>
+							<button type="submit" th:title="#{unmark.read(${readData.fecha})}" >
+								<img th:alt-title="#{unmark.read(${readData.fecha})}" th:src="@{img/menu/unmark_read.png}" width="20px" height="20px"/>
 							</button>
 						</form>
 					</td>
-					<td th:text="${pendingData.fecha}"></td>
-					<td th:text="${pendingData.libro.titulo}" th:title="${pendingData.libro.titulo}"></td>
+					<td th:text="${readData.fecha}"></td>
+					<td th:text="${readData.libro.titulo}" th:title="${readData.libro.titulo}"></td>
 				</tr>
 			</tbody>
 		</table>

@@ -131,11 +131,12 @@ public class MainController implements InitializingBean, Serializable {
 		// Obtenemos los elementos del menu
 		String[] items = messageSource.getMessage("menu.items", null, null)
 				.split(" ");
-		// Si hay usuario registrado, mostrarmo el menu de prestamos
+		// Si hay usuario registrado, mostrarmos el menu de prestamos, de libros pendiente y leidos
 		if (getUserData() != null) {
-			items = Arrays.copyOf(items, items.length+2);
-			items[items.length-2] = "lends";
-			items[items.length-1] = "pending";
+			items = Arrays.copyOf(items, items.length+3);
+			items[items.length-3] = "lends";
+			items[items.length-2] = "pending";
+			items[items.length-1] = "read";
 		}
 		//Ordenamos 
 		Arrays.sort(items, new Comparator<String>() {

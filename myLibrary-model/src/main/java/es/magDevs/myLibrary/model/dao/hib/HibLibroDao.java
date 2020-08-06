@@ -16,10 +16,12 @@
 package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
@@ -119,7 +121,9 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 			boolean hayUsuarioRegistrado = libro != null && libro.getUsuarioRegistrado() != null;
 			if (hayUsuarioRegistrado) {
 				projection.add(Projections.sqlProjection("(SELECT p.fecha FROM pendientes p WHERE p.libro=this_.id AND p.usuario='"
-							+ libro.getUsuarioRegistrado().getUsername()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}));
+							+ libro.getUsuarioRegistrado().getUsername()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}))
+					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(l.fecha SEPARATOR '|') FROM leidos l WHERE l.libro=this_.id AND l.usuario='"
+							+ libro.getUsuarioRegistrado().getUsername()+"') AS fechas_leido", new String[]{"fechas_leido"}, new Type[]{StandardBasicTypes.STRING}));
 			}
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
@@ -141,7 +145,11 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					book.setPrestamo(new Usuario(null, null, null, usrPrestamo, null, null));
 				}
 				if (hayUsuarioRegistrado) {
-					book.setPendiente((String) objects[8]);
+					book.setPendiente(string2Presentation((String) objects[8]));
+					String fechasLeido = (String) objects[9];
+					if (StringUtils.isNotEmpty(fechasLeido)) {
+						book.setLeido(Arrays.asList(fechasLeido.split("\\|")).stream().map(f->int2Presentation(f)).collect(Collectors.toList()));
+					}
 				}
 				books.add(book);
 			}
