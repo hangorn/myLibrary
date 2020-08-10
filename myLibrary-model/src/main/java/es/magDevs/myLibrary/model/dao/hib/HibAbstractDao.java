@@ -292,4 +292,11 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 			return date;
 		}
 	}
+	
+	protected String int2Presentation(Integer date) {
+		if (date == null) {
+			return null;
+		}
+		return int2Presentation(""+date);
+	}
 }

@@ -17,6 +17,7 @@ package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -94,5 +95,15 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 	@Override
 	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
 		return new HashMap<>();
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List getWithPag(Bean filter, int page, int pageSize) throws Exception {
+		List<Leido> data = super.getWithPag(filter, page, pageSize);
+		for (Leido leido : data) {
+			leido.setFechaTxt(int2Presentation(leido.getFecha()));
+		}
+		return data;
 	}
 }

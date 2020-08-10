@@ -17,6 +17,7 @@ package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -85,5 +86,15 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 	@Override
 	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
 		return new HashMap<>();
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List getWithPag(Bean filter, int page, int pageSize) throws Exception {
+		List<Prestamo> data = super.getWithPag(filter, page, pageSize);
+		for (Prestamo prestamo : data) {
+			prestamo.setFecha(string2Presentation(prestamo.getFecha()));
+		}
+		return data;
 	}
 }

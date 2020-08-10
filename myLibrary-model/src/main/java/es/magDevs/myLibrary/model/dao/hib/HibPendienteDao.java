@@ -17,6 +17,7 @@ package es.magDevs.myLibrary.model.dao.hib;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -87,5 +88,15 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 	@Override
 	protected Map<String, String> getCambios(Bean viejo, Bean nuevo) {
 		return new HashMap<>();
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List getWithPag(Bean filter, int page, int pageSize) throws Exception {
+		List<Pendiente> data = super.getWithPag(filter, page, pageSize);
+		for (Pendiente pendiente : data) {
+			pendiente.setFecha(string2Presentation(pendiente.getFecha()));
+		}
+		return data;
 	}
 }
