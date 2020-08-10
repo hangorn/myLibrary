@@ -42,6 +42,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.web.controllers.AuthorsController;
 
 public class MailManager {
@@ -88,6 +89,9 @@ public class MailManager {
 	}
 	
 	public static void enviarError(Throwable ex, String userAgent) {
+		if (Constants.isDebug) {
+			return;
+		}
 		try {
 			InputStream isProperties = Thread.currentThread().getContextClassLoader().getResourceAsStream("credentials.properties");
 			if (isProperties == null) {
