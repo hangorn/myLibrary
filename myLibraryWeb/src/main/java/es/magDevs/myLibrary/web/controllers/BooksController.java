@@ -738,7 +738,7 @@ public class BooksController extends AbstractController {
 			filterPendiente.setUsuario(new Usuario(username, null, null, null, null, null));
 			List<?> pendiente = DaoFactory.getPendienteDao().getWithPag(filterPendiente, 0, 0);
 			if (!pendiente.isEmpty()) {
-				book.setPendiente(DatesManager.string2Presentation(((Pendiente) pendiente.get(0)).getFecha()));
+				book.setPendiente(((Pendiente) pendiente.get(0)).getFecha());
 			}
 			
 			Leido filterLeido = new Leido();

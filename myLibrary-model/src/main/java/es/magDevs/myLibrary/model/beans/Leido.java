@@ -32,6 +32,7 @@ public class Leido extends Bean {
 	private Integer fechaMax;
 	private String fechaMinTxt;
 	private String fechaMaxTxt;
+	private String autoresTxt;
 
 	public Leido() {
 	}
@@ -115,6 +116,14 @@ public class Leido extends Bean {
 
 	public void setFechaMaxTxt(String fechaMaxTxt) {
 		this.fechaMaxTxt = fechaMaxTxt;
+	}
+
+	public String getAutoresTxt() {
+		return autoresTxt;
+	}
+
+	public void setAutoresTxt(String autoresTxt) {
+		this.autoresTxt = autoresTxt;
 	}
 
 	public String toString() {

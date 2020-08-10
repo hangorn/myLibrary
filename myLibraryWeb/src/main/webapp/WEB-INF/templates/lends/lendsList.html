@@ -26,6 +26,7 @@
 					<th th:text="#{date}"></th>
 					<th th:text="#{login.form.username}"></th>
 					<th th:text="#{books.field.title}"></th>
+					<th th:text="#{books.table.head.author}"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,7 +41,10 @@
 					</td>
 					<td th:text="${lendData.fecha}"></td>
 					<td th:text="${lendData.usuario.nombre}" th:title="${lendData.usuario.nombre}"></td>
-					<td th:text="${lendData.libro.titulo}" th:title="${lendData.libro.titulo}"></td>
+					<td th:title="${lendData.libro.titulo}">
+						<div th:include="commons/components::readOnlySingleLink(${lendData.libro.titulo}, @{/books_readid?readid=}+${lendData.libro.id})"></div>
+					</td>
+					<td th:if="!${#strings.isEmpty(lendData.autoresTxt)}" th:text="${lendData.autoresTxt}" th:title="${lendData.autoresTxt}"></td>
 				</tr>
 			</tbody>
 		</table>

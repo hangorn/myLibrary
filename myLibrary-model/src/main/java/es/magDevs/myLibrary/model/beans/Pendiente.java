@@ -25,7 +25,8 @@ public class Pendiente extends Bean {
 
 	private Libro libro;
 	private Usuario usuario;
-	private String fecha; 
+	private String fecha;
+	private String autoresTxt;
 
 	public Pendiente() {
 	}
@@ -66,6 +67,14 @@ public class Pendiente extends Bean {
 
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
+	}
+
+	public String getAutoresTxt() {
+		return autoresTxt;
+	}
+
+	public void setAutoresTxt(String autoresTxt) {
+		this.autoresTxt = autoresTxt;
 	}
 
 	public String toString() {

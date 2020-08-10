@@ -25,6 +25,7 @@
 					<th style="width: 10px"></th>
 					<th th:text="#{date}"></th>
 					<th th:text="#{books.field.title}"></th>
+					<th th:text="#{books.table.head.author}"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -39,7 +40,10 @@
 						</form>
 					</td>
 					<td th:text="${pendingData.fecha}"></td>
-					<td th:text="${pendingData.libro.titulo}" th:title="${pendingData.libro.titulo}"></td>
+					<td th:title="${pendingData.libro.titulo}">
+						<div th:include="commons/components::readOnlySingleLink(${pendingData.libro.titulo}, @{/books_readid?readid=}+${pendingData.libro.id})"></div>
+					</td>
+					<td th:if="!${#strings.isEmpty(pendingData.autoresTxt)}" th:text="${pendingData.autoresTxt}" th:title="${pendingData.autoresTxt}"></td>
 				</tr>
 			</tbody>
 		</table>
