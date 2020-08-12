@@ -39,6 +39,7 @@ public class Usuario extends Bean {
 		if (usuario == null) {
 			return;
 		}
+		setId(usuario.getId());
 		this.username = usuario.getUsername();
 		this.password = usuario.getPassword();
 		this.email = usuario.getEmail();
@@ -47,8 +48,9 @@ public class Usuario extends Bean {
 		this.admin = usuario.getAdmin();
 	}
 
-	public Usuario(String username, String password, String email, String nombre,
+	public Usuario(Integer id, String username, String password, String email, String nombre,
 			Boolean enabled, Boolean admin) {
+		setId(id);
 		this.username = username;
 		this.password = password;
 		this.email = email;

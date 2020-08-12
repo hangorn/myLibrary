@@ -85,7 +85,7 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 			c.add(Restrictions.like("email", "%" + filter.getEmail() + "%"));
 		}
 		// Nombre
-		if (!StringUtils.isBlank(filter.getEmail())) {
+		if (!StringUtils.isBlank(filter.getNombre())) {
 			c.add(Restrictions.like("nombre", "%" + filter.getNombre() + "%"));
 		}
 		// Activo
@@ -186,13 +186,13 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 			s.beginTransaction();
 			List<Object[]> l;
 			if (StringUtils.isNotBlank(start)) {
-				l = s.createQuery("SELECT username, nombre FROM Usuario WHERE nombre LIKE :nombre ORDER BY nombre").setParameter("nombre", start + "%").list();
+				l = s.createQuery("SELECT id, username, nombre FROM Usuario WHERE nombre LIKE :nombre ORDER BY nombre").setParameter("nombre", start + "%").list();
 			} else {
-				l = s.createQuery("SELECT username, nombre FROM Usuario ORDER BY nombre").list();
+				l = s.createQuery("SELECT id, username, nombre FROM Usuario ORDER BY nombre").list();
 			}
 			List<Usuario> list = new ArrayList<>(l.size());
 			for (Object[] result : l) {
-				list.add(new Usuario((String)result[0], null, null, (String)result[1], null, null));
+				list.add(new Usuario((Integer)result[0], (String)result[1], null, null, (String)result[2], null, null));
 			}
 			s.getTransaction().commit();
 			return list;

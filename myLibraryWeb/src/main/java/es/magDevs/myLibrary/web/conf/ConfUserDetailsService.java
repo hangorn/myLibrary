@@ -15,7 +15,10 @@
  */
 package es.magDevs.myLibrary.web.conf;
 
+import java.util.Collection;
+
 import org.apache.log4j.Logger;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,7 +48,7 @@ public class ConfUserDetailsService implements UserDetailsService {
 			// BBDD, si no se obtiene ningun se lanzara un excepcion
 			UserBean user = new UserBean(dao.getUser(username));
 			// Creamos los detalles del usuario para Spring
-			User userDetails = new User(user.getUsername(), user.getPassword(),
+			User userDetails = new AuthenticatedUser(user.getId(), user.getUsername(), user.getPassword(),
 					user.isEnabled(), true, true, true, user.getAuths());
 			dao.commitTransaction();
 			return userDetails;
@@ -55,6 +58,25 @@ public class ConfUserDetailsService implements UserDetailsService {
 			// usuario lanzando la excepcion correspondiente 
 			log.error("Error al obtener los datos de un usuario al autenticarse", e);
 			throw new UsernameNotFoundException("");
+		}
+	}
+	
+	public static class AuthenticatedUser extends User {
+		private Integer id;
+
+		public AuthenticatedUser(Integer id ,String username, String password, boolean enabled,
+				boolean accountNonExpired, boolean credentialsNonExpired,
+				boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+			super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+			this.id = id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
 		}
 	}
 }

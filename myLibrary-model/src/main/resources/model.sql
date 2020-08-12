@@ -139,3 +139,22 @@ CREATE TABLE leidos (
 	CONSTRAINT fk_leidos_libros FOREIGN KEY (libro) REFERENCES libros(id),
 	CONSTRAINT fk_leidos_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(username)
 );
+
+-- Quitamos FKs
+ALTER TABLE prestamos drop FOREIGN KEY fk_prestamos_usuarios;
+ALTER TABLE leidos drop FOREIGN KEY fk_leidos_usuarios;
+ALTER TABLE pendientes drop FOREIGN KEY fk_pendientes_usuarios;
+-- Quitamos la PK
+ALTER TABLE usuarios DROP PRIMARY KEY;
+-- Añadimos columna id en usuarios
+ALTER TABLE usuarios add COLUMN id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY;
+-- Lo que antes era PK ahora es UK
+ALTER TABLE usuarios ADD CONSTRAINT uk_username UNIQUE KEY(username);
+-- Cambiamos los usuarios a enteros
+ALTER TABLE prestamos MODIFY COLUMN usuario INTEGER NOT NULL;
+ALTER TABLE leidos MODIFY COLUMN usuario INTEGER NOT NULL;
+ALTER TABLE pendientes MODIFY COLUMN usuario INTEGER NOT NULL;
+-- Restauramos las FKs
+ALTER TABLE prestamos ADD CONSTRAINT fk_prestamos_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);
+ALTER TABLE leidos ADD CONSTRAINT fk_leidos_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);
+ALTER TABLE pendientes ADD CONSTRAINT fk_pendientes_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);

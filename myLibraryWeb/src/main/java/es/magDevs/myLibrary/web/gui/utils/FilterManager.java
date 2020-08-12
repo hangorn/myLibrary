@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
@@ -34,6 +33,7 @@ import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Traductor;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.web.conf.ConfUserDetailsService.AuthenticatedUser;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
 
@@ -54,12 +54,12 @@ public class FilterManager {
 	 *         {@code null} si no existe ningun criterio
 	 */
 	public static BooksFilter processBooksFilter(BooksFilter filter) {
-		String user = MainController.getUsername();
+		Integer user = MainController.getUserid();
 		if (user != null) {
 			if (filter == null) {
 				filter = new BooksFilter();
 			}
-			filter.setUsuarioRegistrado(new Usuario(user, null, null, null, null, null));
+			filter.setUsuarioRegistrado(new Usuario(user, null, null, null, null, null, null));
 		}
 		if (filter == null) {
 			return null;
@@ -254,7 +254,7 @@ public class FilterManager {
 			if (filter.getUsuario() == null) {
 				filter.setUsuario(new Usuario());
 			}
-			filter.getUsuario().setUsername(((User) authentication.getPrincipal()).getUsername());
+			filter.getUsuario().setId(((AuthenticatedUser) authentication.getPrincipal()).getId());
 		} else {
 			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
 			filter = new Prestamo(null, new Libro(), null, null);
@@ -272,7 +272,7 @@ public class FilterManager {
 	}
 
 	public static Bean processPendingFilter(Pendiente filter) {
-		String username = MainController.getUsername();
+		Integer userid = MainController.getUserid();
 		if (filter == null) {
 			filter = new Pendiente();
 		}
@@ -280,11 +280,11 @@ public class FilterManager {
 			filter.setLibro(new Libro());
 		}
 		filter.getLibro().setId(null);
-		if (username != null) {
+		if (userid != null) {
 			if (filter.getUsuario() == null) {
 				filter.setUsuario(new Usuario());
 			}
-			filter.getUsuario().setUsername(username);
+			filter.getUsuario().setId(userid);
 		} else {
 			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
 			filter = new Pendiente(null, new Libro(), null, null);
@@ -294,7 +294,7 @@ public class FilterManager {
 	}
 
 	public static Bean processReadFilter(Leido filter) {
-		String username = MainController.getUsername();
+		Integer userid = MainController.getUserid();
 		if (filter == null) {
 			filter = new Leido();
 		}
@@ -310,11 +310,11 @@ public class FilterManager {
 			filter.setFechaMax(DatesManager.string2Int(filter.getFechaMaxTxt()));
 		}
 		
-		if (username != null) {
+		if (userid != null) {
 			if (filter.getUsuario() == null) {
 				filter.setUsuario(new Usuario());
 			}
-			filter.getUsuario().setUsername(username);
+			filter.getUsuario().setId(userid);
 		} else {
 			// Si no esta autenticado, filtramos por algo para que no se obtengan resultados
 			filter = new Leido(null, new Libro(), null, null);

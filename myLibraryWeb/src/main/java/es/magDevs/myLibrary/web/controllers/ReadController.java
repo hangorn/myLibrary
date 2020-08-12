@@ -123,21 +123,21 @@ public class ReadController extends AbstractController {
 			leido.setFecha(DatesManager.string2Int(leido.getFechaTxt()));
 		}
 		
-		String username = MainController.getUsername();
-		if (username != null) {
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
 			LeidoDao dao = DaoFactory.getLeidoDao();
 			PendienteDao daoPendiente = DaoFactory.getPendienteDao();
 			try {
 				// Buscamos si el libro este pendiente
 				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
 				query.getLibro().setId(leido.getLibro().getId());
-				query.getUsuario().setUsername(username);
+				query.getUsuario().setId(userid);
 				List<?> pendientes = daoPendiente.getWithPag(query, 0, 0);
 				
 				dao.beginTransaction();
 				// Guardamos el bean en un mapa con un ID ficticio por si hay que borrarlo
 				newReadBooks.put(newElement.getId(), leido);
-				leido.setUsuario(new Usuario(username, null, null, null, null, null));
+				leido.setUsuario(new Usuario(userid, null, null, null, null, null, null));
 				// Guardamos el libro como leido
 				dao.insert(newElement);
 				

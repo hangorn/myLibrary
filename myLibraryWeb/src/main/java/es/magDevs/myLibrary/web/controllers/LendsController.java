@@ -134,6 +134,7 @@ public class LendsController extends AbstractController {
 				NewDataManager.processUser(usuario, messageSource);
 				DaoFactory.getUsuarioDao().insert(usuario);
 			}
+			((Prestamo) newElement).setUsuario(DaoFactory.getUsuarioDao().getUser(usuario.getUsername()));
 			dao.insert(newElement);
 			dao.commitTransaction();
 		} catch (Exception e) {

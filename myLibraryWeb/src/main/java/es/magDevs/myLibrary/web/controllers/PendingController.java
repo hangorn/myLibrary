@@ -106,12 +106,12 @@ public class PendingController extends AbstractController {
 	
 	@Override
 	public String acceptCreation(Bean newElement, Model model) {
-		String username = MainController.getUsername();
-		if (username != null) {
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
 			PendienteDao dao = DaoFactory.getPendienteDao();
 			try {
 				dao.beginTransaction();
-				((Pendiente) newElement).setUsuario(new Usuario(username, null, null, null, null, null));
+				((Pendiente) newElement).setUsuario(new Usuario(userid, null, null, null, null, null, null));
 				dao.insert(newElement);
 				dao.commitTransaction();
 			} catch (Exception e) {
@@ -125,13 +125,13 @@ public class PendingController extends AbstractController {
 	
 	@Override
 	public String delete(Integer index, Model model) {
-		String username = MainController.getUsername();
-		if (username != null) {
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
 			PendienteDao dao = DaoFactory.getPendienteDao();
 			try {
 				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
 				query.getLibro().setId(index);
-				query.getUsuario().setUsername(username);
+				query.getUsuario().setId(userid);
 				Pendiente pendiente = (Pendiente) dao.getWithPag(query, 0, 0).get(0);
 				dao.beginTransaction();
 				dao.delete(pendiente);

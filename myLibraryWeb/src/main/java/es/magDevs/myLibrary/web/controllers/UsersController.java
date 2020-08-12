@@ -116,4 +116,9 @@ public class UsersController extends AbstractController {
 	public Class<Usuario> getBeanClass() {
 		return Usuario.class;
 	}
+	
+	@Override
+	protected boolean isMultiUpdateDisabled() {
+		return true;
+	}
 }

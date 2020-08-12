@@ -117,13 +117,13 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.id) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
 					.add(Projections.sqlProjection("(SELECT u.nombre "
-							+ "FROM prestamos p JOIN usuarios u ON u.username=p.usuario WHERE p.libro=this_.id) AS usr_prestamo", new String[]{"usr_prestamo"}, new Type[]{StandardBasicTypes.STRING}));
+							+ "FROM prestamos p JOIN usuarios u ON u.id=p.usuario WHERE p.libro=this_.id) AS usr_prestamo", new String[]{"usr_prestamo"}, new Type[]{StandardBasicTypes.STRING}));
 			boolean hayUsuarioRegistrado = libro != null && libro.getUsuarioRegistrado() != null;
 			if (hayUsuarioRegistrado) {
 				projection.add(Projections.sqlProjection("(SELECT p.fecha FROM pendientes p WHERE p.libro=this_.id AND p.usuario='"
-							+ libro.getUsuarioRegistrado().getUsername()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}))
+							+ libro.getUsuarioRegistrado().getId()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(l.fecha SEPARATOR '|') FROM leidos l WHERE l.libro=this_.id AND l.usuario='"
-							+ libro.getUsuarioRegistrado().getUsername()+"') AS fechas_leido", new String[]{"fechas_leido"}, new Type[]{StandardBasicTypes.STRING}));
+							+ libro.getUsuarioRegistrado().getId()+"') AS fechas_leido", new String[]{"fechas_leido"}, new Type[]{StandardBasicTypes.STRING}));
 			}
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
@@ -142,7 +142,7 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 				book.setAutoresTxt((String) objects[6]);
 				String usrPrestamo = (String) objects[7];
 				if (StringUtils.isNotBlank(usrPrestamo)) {
-					book.setPrestamo(new Usuario(null, null, null, usrPrestamo, null, null));
+					book.setPrestamo(new Usuario(null, null, null, null, usrPrestamo, null, null));
 				}
 				if (hayUsuarioRegistrado) {
 					book.setPendiente(string2Presentation((String) objects[8]));

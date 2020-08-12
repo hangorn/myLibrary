@@ -1,0 +1,52 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="usersForm(editable)">
+
+	<!-- formulario para los datos de los traductores -->
+	<div class="booksForm">
+		<!-- nombre -->
+		<div class="formField">
+			<label for="username" th:text="#{users.field.login}"></label> <input required="required"
+				th:maxlength="#{TEXT_MAX_LENGHT}" th:readonly="!${editable}" type="text"
+				th:field="*{username}" th:errorclass="fieldError " th:title="${editable}?'':*{username}" />
+		</div>
+		<div class="formField">
+			<label for="nombre" th:text="#{users.field.name}"></label> <input required="required"
+				th:maxlength="#{NAME_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
+				th:field="*{nombre}" th:errorclass="fieldError " th:title="${editable}?'':*{nombre}" />
+		</div>
+		<div class="formField">
+			<label for="email" th:text="#{users.field.email}"></label> <input
+				th:maxlength="#{TITLE_MAX_LENGHT}" class="bigTextFormField" th:readonly="!${editable}" type="text"
+				th:field="*{email}" th:errorclass="fieldError " th:title="${editable}?'':*{email}" />
+		</div>
+		<div class="formField">
+			<label for="enabled" th:text="#{users.table.head.active}"></label> <input
+				th:readonly="!${editable}" type="checkbox" th:field="*{enabled}"
+				th:errorclass="fieldError " th:title="#{users.table.head.active}" />
+		</div>
+		<div class="formField">
+			<label for="admin" th:text="#{users.table.head.admin}"></label> <input
+				th:readonly="!${editable}" type="checkbox" th:field="*{admin}"
+				th:errorclass="fieldError " th:title="#{users.table.head.admin}" />
+		</div>
+	</div>
+</div>
+</html>

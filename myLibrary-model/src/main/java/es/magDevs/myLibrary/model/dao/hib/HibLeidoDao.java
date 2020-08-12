@@ -83,7 +83,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			c.createCriteria("libro").add(Restrictions.like("titulo", "%"+ filter.getLibro().getTitulo() + "%"));
 		}
 		// Usuario
-		if (filter.getUsuario() != null && StringUtils.isNotEmpty(filter.getUsuario().getUsername())) {
+		if (filter.getUsuario() != null && filter.getUsuario().getId() != null) {
 			c.add(Restrictions.eq("usuario", filter.getUsuario()));
 		}
 		// Nombre de usuario

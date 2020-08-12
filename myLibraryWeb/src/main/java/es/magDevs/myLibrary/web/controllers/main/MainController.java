@@ -59,6 +59,7 @@ import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.dao.TipoDao;
 import es.magDevs.myLibrary.model.dao.UbicacionDao;
+import es.magDevs.myLibrary.web.conf.ConfUserDetailsService.AuthenticatedUser;
 import es.magDevs.myLibrary.web.controllers.LoginController;
 import es.magDevs.myLibrary.web.gui.beans.MenuItem;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
@@ -133,10 +134,16 @@ public class MainController implements InitializingBean, Serializable {
 				.split(" ");
 		// Si hay usuario registrado, mostrarmos el menu de prestamos, de libros pendiente y leidos
 		if (getUserData() != null) {
-			items = Arrays.copyOf(items, items.length+3);
-			items[items.length-3] = "lends";
-			items[items.length-2] = "pending";
-			items[items.length-1] = "read";
+			boolean isAdmin = getAdminData() != null;
+			int numNewElements = isAdmin ? 4 : 3;
+			items = Arrays.copyOf(items, items.length+numNewElements);
+			
+			items[items.length-numNewElements--] = "lends";
+			items[items.length-numNewElements--] = "pending";
+			items[items.length-numNewElements--] = "read";
+			if (isAdmin) {
+				items[items.length-numNewElements--] = "users";
+			}
 		}
 		//Ordenamos 
 		Arrays.sort(items, new Comparator<String>() {
@@ -272,6 +279,14 @@ public class MainController implements InitializingBean, Serializable {
 			return null;
 		}
 		return ((User) authentication.getPrincipal()).getUsername();
+	}
+	
+	public static Integer getUserid() {
+		Authentication authentication = getUserData();
+		if (authentication == null) {
+			return null;
+		}
+		return ((AuthenticatedUser) authentication.getPrincipal()).getId();
 	}
 
 	/**

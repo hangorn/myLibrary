@@ -85,9 +85,9 @@ public class Constants {
 		PLACES("places",5),
 		TRANSLATORS("translators",6),
 		LENDS("lends",7),
-		USERS("users",8),
-		PENDING("pending",9),
-		READ("read",10);
+		PENDING("pending",8),
+		READ("read",9),
+		USERS("users",10);
 		
 		private String value;
 		private Integer order;
