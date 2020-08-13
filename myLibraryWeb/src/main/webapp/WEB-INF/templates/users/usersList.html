@@ -24,6 +24,7 @@
 				<tr>
 					<th th:text="#{users.table.head.login}"></th>
 					<th th:text="#{users.table.head.name}"></th>
+					<th th:text="#{users.table.head.access}"></th>
 					<th th:text="#{users.table.head.active}"></th>
 					<th th:text="#{users.table.head.admin}"></th>
 				</tr>
@@ -32,6 +33,12 @@
 				<tr th:each="userData,dataStat : ${data}" onclick="setSelected(this)" th:id="'row_'+${dataStat.index}">
 					<td th:text="${userData.username}" th:title="${userData.username}"></td>
 					<td th:text="${userData.nombre}" th:title="${userData.nombre}"></td>
+					<td th:if="${userData.password} != -1" th:title="#{users.value.with.access}">
+						<img th:alt-title="#{users.value.with.access}" th:src="@{img/searchmenu/check.png}" width="16px" height="16px" style="vertical-align: middle;"/>
+					</td>
+					<td th:if="${userData.password} == -1" th:title="#{users.value.without.access}">
+						<img th:alt-title="#{users.value.without.access}" th:src="@{img/searchmenu/reset.png}" width="16px" height="16px" style="vertical-align: middle;"/>
+					</td>
 					<td th:if="${userData.enabled}" th:title="#{users.value.activated}">
 						<img th:alt-title="#{users.value.activated}" th:src="@{img/searchmenu/check.png}" width="16px" height="16px" style="vertical-align: middle;"/>
 					</td>

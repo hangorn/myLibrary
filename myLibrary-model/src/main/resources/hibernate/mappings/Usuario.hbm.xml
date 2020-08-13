@@ -11,7 +11,7 @@
 		<property name="username" type="java.lang.String">
 			<column length="50" name="username" not-null="true" unique="true" />
 		</property>
-		<property generated="never" name="password" type="java.lang.String">
+		<property update="false" generated="never" name="password" type="java.lang.String">
 			<column length="50" name="password" not-null="true" />
 		</property>
 		<property generated="never" name="email" type="java.lang.String">
