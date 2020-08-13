@@ -20,7 +20,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.ui.Model;
 
+import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
@@ -28,6 +31,7 @@ import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
+import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -120,5 +124,19 @@ public class UsersController extends AbstractController {
 	@Override
 	protected boolean isMultiUpdateDisabled() {
 		return true;
+	}
+	
+	@Override
+	public String delete(Integer index, Model model) {
+		Usuario usr = (Usuario) data.get(index);
+		if (usr.getPrestamos() != 0 || usr.getPendientes() != 0 || usr.getLeidos() != 0) {
+			String msg = messageSource.getMessage("users.menu.delete.with.books", null, LocaleContextHolder.getLocale());
+			// Enlazamos fragmentos de plantillas
+			model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST, getSection()));
+			// Fijamos variables para la vista
+			setModelData(model);
+			return "commons/body";
+		}
+		return super.delete(index, model);
 	}
 }
