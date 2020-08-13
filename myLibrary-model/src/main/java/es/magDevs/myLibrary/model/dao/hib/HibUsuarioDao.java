@@ -19,13 +19,20 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
@@ -97,6 +104,66 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 			c.add(Restrictions.eq("admin", filter.getAdmin()));
 		}
 		return c;
+	}
+	
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public List getWithPag(Bean filter, int page, int pageSize) throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			// Obtenemos el filtro
+			Criteria query = getFilters(s, filter);
+			// Fijamos las opciones de paginacion
+			if(pageSize > 0)  {
+				query.setMaxResults(pageSize);
+			}
+			query.setFirstResult(page * pageSize);
+			// Ordenamos por los ordenes indicados
+			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+				Property field = Property.forName(orderData.getKey());
+				Order order = orderData.getValue() ? field.asc() : field.desc();
+				query.addOrder(order);
+			}
+			
+			ProjectionList projection = Projections.projectionList()
+					.add(Projections.property("id"))
+					.add(Projections.property("username"))
+					.add(Projections.property("password"))
+					.add(Projections.property("email"))
+					.add(Projections.property("nombre"))
+					.add(Projections.property("enabled"))
+					.add(Projections.property("admin"))
+					.add(Projections.sqlProjection("(SELECT count(1) FROM prestamos WHERE this_.id=prestamos.usuario) count_prestamos", new String[]{"count_prestamos"}, new Type[]{StandardBasicTypes.INTEGER}))
+					.add(Projections.sqlProjection("(SELECT count(1) FROM pendientes WHERE this_.id=pendientes.usuario) count_pendientes", new String[]{"count_pendientes"}, new Type[]{StandardBasicTypes.INTEGER}))
+					.add(Projections.sqlProjection("(SELECT count(1) FROM leidos WHERE this_.id=leidos.usuario) count_leidos", new String[]{"count_leidos"}, new Type[]{StandardBasicTypes.INTEGER}));
+			query.setProjection(projection);
+			List<Object[]> l = query.list();
+			List<Usuario> data = new ArrayList<>();
+			// Recorremos los datos obtenidos para convertirlos en objetos
+			for (Object[] objects : l) {
+				Usuario usuario = new Usuario();
+				usuario.setId((Integer) objects[0]);
+				usuario.setUsername((String) objects[1]);
+				usuario.setPassword((String) objects[2]);
+				usuario.setEmail((String) objects[3]);
+				usuario.setNombre((String) objects[4]);
+				usuario.setEnabled((Boolean) objects[5]);
+				usuario.setAdmin((Boolean) objects[6]);
+
+				usuario.setPrestamos((Integer) objects[7]);
+				usuario.setPendientes((Integer) objects[8]);
+				usuario.setLeidos((Integer) objects[9]);
+				
+				data.add(usuario);
+			}
+			s.getTransaction().commit();
+			return data;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
 	}
 
 	/**

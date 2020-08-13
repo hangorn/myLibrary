@@ -31,6 +31,10 @@ public class Usuario extends Bean {
 	private String nombre;
 	private Boolean enabled;
 	private Boolean admin;
+	
+	private Integer prestamos;
+	private Integer pendientes;
+	private Integer leidos;
 
 	public Usuario() {
 	}
@@ -105,6 +109,30 @@ public class Usuario extends Bean {
 
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
+	}
+
+	public Integer getPrestamos() {
+		return prestamos;
+	}
+
+	public void setPrestamos(Integer prestamos) {
+		this.prestamos = prestamos;
+	}
+
+	public Integer getPendientes() {
+		return pendientes;
+	}
+
+	public void setPendientes(Integer pendientes) {
+		this.pendientes = pendientes;
+	}
+
+	public Integer getLeidos() {
+		return leidos;
+	}
+
+	public void setLeidos(Integer leidos) {
+		this.leidos = leidos;
 	}
 
 	public Usuario clone() {
