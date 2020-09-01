@@ -127,7 +127,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 					.add(Projections.property("libro"))
 					.add(Projections.property("usuario"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
-							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.id) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
+							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
 			List<Pendiente> data = new ArrayList<>();
