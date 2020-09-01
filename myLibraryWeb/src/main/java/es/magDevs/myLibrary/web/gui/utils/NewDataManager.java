@@ -370,7 +370,9 @@ public class NewDataManager {
 		if (newData.getUsername() != null && newData.getUsername().length() > 50) {
 			newData.setUsername(StringUtils.substring(newData.getUsername(), 0, 50));
 		}
-		if (newData.getEmail() != null && newData.getEmail().length() > 150) {
+		if (StringUtils.isBlank(newData.getEmail())) {
+			newData.setEmail(null);
+		} else if (newData.getEmail() != null && newData.getEmail().length() > 150) {
 			newData.setEmail(StringUtils.substring(newData.getEmail(), 0, 50));
 		}
 		return true;

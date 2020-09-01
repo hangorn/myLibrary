@@ -37,7 +37,6 @@ import es.magDevs.myLibrary.model.dao.PendienteDao;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.utils.DatesManager;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
-import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -152,8 +151,7 @@ public class ReadController extends AbstractController {
 				dao.rollbackTransaction();
 			}
 		}
-		model.addAllAttributes(FragmentManager.getEmptyBody(""));
-		return "commons/body";
+		return list(model);
 	}
 	
 	@Override

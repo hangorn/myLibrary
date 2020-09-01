@@ -37,4 +37,38 @@
 		</table>
 	</div>
 </div>
+
+<div th:fragment="readOnlyLendsList(text, books)">
+	<label th:text="${text}"></label>
+	<div class="dataTable">
+		<table>
+			<tbody>
+				<tr th:each="book : ${books}">
+					<td onclick="this.children[0].click();" th:title="${book.libro.titulo}">
+						<a th:text="${book.libro.titulo}" th:href="@{/books_readid?readid=}+${book.libro.id}"></a>
+					</td>
+					<td th:title="${book.fecha}" th:text="${book.fecha}">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div th:fragment="readOnlyReadList(text, books)">
+	<label th:text="${text}"></label>
+	<div class="dataTable">
+		<table>
+			<tbody>
+				<tr th:each="book : ${books}">
+					<td onclick="this.children[0].click();" th:title="${book.libro.titulo}">
+						<a th:text="${book.libro.titulo}" th:href="@{/books_readid?readid=}+${book.libro.id}"></a>
+					</td>
+					<td th:title="${book.fecha}" th:text="${book.fechaTxt}">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
 </html>

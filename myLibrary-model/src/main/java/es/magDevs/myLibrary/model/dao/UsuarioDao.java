@@ -40,6 +40,14 @@ public interface UsuarioDao extends AbstractDao {
 	public int updatePassword(Usuario usuario, String newPassword) throws Exception;
 
 	/**
+	 * Fija la contraseña indicada para el usuario si el usuario no tiene una contraseña previa
+	 * @param userId
+	 * @param password
+	 * @return numero de cambios
+	 */
+	public int createPassword(Integer userId, String password);
+
+	/**
 	 * Actualiza los permisos del usuario indicado
 	 * @param usuario
 	 * @return

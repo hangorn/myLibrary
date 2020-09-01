@@ -52,13 +52,13 @@
 					<td th:if="!${userData.admin}" th:title="#{users.value.no.admin}">
 						<img th:alt-title="#{users.value.no.admin}" th:src="@{img/searchmenu/reset.png}" width="16px" height="16px" style="vertical-align: middle;"/>
 					</td>
-					<td th:title="#{menu.lends.text}+': '+${userData.prestamos}+' '+#{menu.pending.text}+': '+${userData.pendientes}+' '+#{menu.read.text}+': '+${userData.leidos}">
+					<td th:title="#{menu.lends.text}+': '+${userData.countPrestamos}+' '+#{menu.pending.text}+': '+${userData.countPendientes}+' '+#{menu.read.text}+': '+${userData.countLeidos}">
 						<img th:alt-title="#{menu.lends.text}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
-						<span style="min-width: 40px;display: inline-block;" th:text="${userData.prestamos}">0</span>
+						<span style="min-width: 40px;display: inline-block;" th:text="${userData.countPrestamos}">0</span>
 						<img th:alt-title="#{menu.pending.text}" th:src="@{img/menu/pending.png}" width="20px" height="20px"/>
-						<span style="min-width: 40px;display: inline-block;" th:text="${userData.pendientes}">0</span>
+						<span style="min-width: 40px;display: inline-block;" th:text="${userData.countPendientes}">0</span>
 						<img th:alt-title="#{menu.read.text}" th:src="@{img/menu/mark_read.png}" width="20px" height="20px"/>
-						<span style="min-width: 40px;display: inline-block;" th:text="${userData.leidos}">0</span>
+						<span style="min-width: 40px;display: inline-block;" th:text="${userData.countLeidos}">0</span>
 					</td>
 				</tr>
 			</tbody>

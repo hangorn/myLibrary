@@ -21,12 +21,17 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.ACTION;
+import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Leido;
+import es.magDevs.myLibrary.model.beans.Pendiente;
+import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
@@ -41,9 +46,12 @@ import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
  * 
  */
 public class UsersController extends AbstractController {
-	public UsersController(MessageSource messageSource) {
+	public UsersController(MessageSource messageSource, PasswordEncoder passwordEncoder) {
 		super(messageSource);
+		this.passwordEncoder = passwordEncoder;
 	}
+
+    private PasswordEncoder passwordEncoder;
 
 	// LOG
 	private static final Logger log = Logger
@@ -129,7 +137,7 @@ public class UsersController extends AbstractController {
 	@Override
 	public String delete(Integer index, Model model) {
 		Usuario usr = (Usuario) data.get(index);
-		if (usr.getPrestamos() != 0 || usr.getPendientes() != 0 || usr.getLeidos() != 0) {
+		if (usr.getCountPrestamos() != 0 || usr.getCountPendientes() != 0 || usr.getCountLeidos() != 0) {
 			String msg = messageSource.getMessage("users.menu.delete.with.books", null, LocaleContextHolder.getLocale());
 			// Enlazamos fragmentos de plantillas
 			model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST, getSection()));
@@ -138,5 +146,61 @@ public class UsersController extends AbstractController {
 			return "commons/body";
 		}
 		return super.delete(index, model);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Bean getCompleteData(Integer id) throws Exception {
+		Usuario usuario = (Usuario) super.getCompleteData(id);
+		
+		Prestamo filterPrestamo = new Prestamo();
+		filterPrestamo.setUsuario(usuario);
+		usuario.setPrestamos(DaoFactory.getPrestamoDao().getWithPag(filterPrestamo, 0, 0));
+		
+		Pendiente filterPendiente = new Pendiente();
+		filterPendiente.setUsuario(usuario);
+		usuario.setPendientes(DaoFactory.getPendienteDao().getWithPag(filterPendiente, 0, 0));
+		
+		Leido filterLeido = new Leido();
+		filterLeido.setUsuario(usuario);
+		usuario.setLeidos(DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0));
+		
+		return usuario;
+	}
+	
+	@Override
+	public String manageRelatedData(RELATED_ACTION action, String dataType, String data) {
+		if (RELATED_ACTION.NEW.equals(action) && "access".equals(dataType)) {
+			if (data == null) {
+				return "FAIL";
+			}
+			int separatorIndex = data.indexOf('|');
+			if (separatorIndex < 1 || separatorIndex == data.length()-1) {
+				return "FAIL";
+			}
+			Integer userId = Integer.valueOf(data.substring(0, separatorIndex));
+			String pass = data.substring(separatorIndex+1);
+			//Realizamos el cambio
+	        UsuarioDao dao = DaoFactory.getUsuarioDao();
+            dao.beginTransaction();
+            try {
+                int changes = dao.createPassword(userId, this.passwordEncoder.encode((CharSequence)pass));
+                if (changes != 1) {
+                	//Si la actualizacion a afectado a mas de un usuario se deshace, esto no es posible
+                    dao.rollbackTransaction();
+    				return "FAIL";
+                } else {
+                    dao.commitTransaction();
+                }
+            }
+            catch (Exception e) {
+                log.error((Object)"Error al actualizar contrase\u00f1a", e);
+                dao.rollbackTransaction();
+				return "FAIL";
+            }
+			
+			return "OK";
+		}
+		return super.manageRelatedData(action, dataType, data);
 	}
 }

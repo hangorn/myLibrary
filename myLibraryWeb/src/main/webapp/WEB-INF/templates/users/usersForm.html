@@ -20,7 +20,8 @@
 <div th:fragment="usersForm(editable)">
 
 	<!-- formulario para los datos de los traductores -->
-	<div class="booksForm">
+	<div class="booksForm" th:style="!${editable} ? 'margin-bottom: 0px;' : ''">
+		<input type="hidden" th:field="*{id}" id="userId"></input>
 		<!-- nombre -->
 		<div class="formField">
 			<label for="username" th:text="#{users.field.login}"></label> <input required="required"
@@ -39,14 +40,61 @@
 		</div>
 		<div class="formField">
 			<label for="enabled" th:text="#{users.table.head.active}"></label> <input
-				th:readonly="!${editable}" type="checkbox" th:field="*{enabled}"
+				th:disabled="!${editable}" type="checkbox" th:field="*{enabled}"
 				th:errorclass="fieldError " th:title="#{users.table.head.active}" />
 		</div>
 		<div class="formField">
 			<label for="admin" th:text="#{users.table.head.admin}"></label> <input
-				th:readonly="!${editable}" type="checkbox" th:field="*{admin}"
+				th:disabled="!${editable}" type="checkbox" th:field="*{admin}"
 				th:errorclass="fieldError " th:title="#{users.table.head.admin}" />
 		</div>
+		
+		<button th:if="*{password} == -1" th:title="#{users.menu.allow.access}" type="button" id="allowAccessButton">
+			<img th:alt-title="#{users.menu.allow.access}" th:src="@{img/menu/lock_closed.png}" style="height: 32px; width: 32px;"/>
+			<label th:text="#{users.menu.allow.access}" style="margin-left: 15px; float: right; height: 32px; line-height: 32px;"></label>
+		</button>
 	</div>
+	<div th:if="!${editable}" class="booksForm" style="border-radius: 0px;">
+		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField" style="width: 32% !important; max-height: 340px; vertical-align: top;"
+			th:include="commons/components :: readOnlyLendsList(#{menu.lends.text}, *{prestamos})"></div>
+		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField" style="width: 32% !important; max-height: 340px; vertical-align: top;"
+			th:include="commons/components :: readOnlyLendsList(#{menu.pending.text}, *{pendientes})"></div>
+		<div th:if="!${editable}" class="formField bigSearchFormField tableFormField" style="width: 32% !important; max-height: 340px; vertical-align: top;"
+			th:include="commons/components :: readOnlyReadList(#{menu.read.text}, *{leidos})"></div>
+	</div>
+	
+
+	<!-- dialogo para dar acceso a un usuario -->
+	<div th:if="*{password} == -1" id="allowAccessFormBackground" class="background" style="display: none;">
+		<div id="allowAccessFormContainer" class="dataFormContainer" style="height: 20%; overflow: hidden;">
+			<div id="allowAccessForm" class="dataForm" style="height: 90%;">
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
+					<div class="dataFormField" style="display:inline;">
+						<label for="newPassword" th:text="#{login.form.newpassword}"> </label>
+						<input type="password" id="newPassword"/>
+					</div>
+					<button th:title="#{accept}" type="button" id="acceptAllowAccess">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{accept}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelAllowAccess">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+    usersLink = /*[[@{/users}]]*/;
+    
+    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+    csrfToken=/*[[${_csrf.token}]]*/;
+/*]]>*/
+	</script>
+	<script th:src="@{#{js.usersScripts}}" type="text/javascript"></script>
 </div>
 </html>

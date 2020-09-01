@@ -152,9 +152,9 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 				usuario.setEnabled((Boolean) objects[5]);
 				usuario.setAdmin((Boolean) objects[6]);
 
-				usuario.setPrestamos((Integer) objects[7]);
-				usuario.setPendientes((Integer) objects[8]);
-				usuario.setLeidos((Integer) objects[9]);
+				usuario.setCountPrestamos((Integer) objects[7]);
+				usuario.setCountPendientes((Integer) objects[8]);
+				usuario.setCountLeidos((Integer) objects[9]);
 				
 				data.add(usuario);
 			}
@@ -180,6 +180,20 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 				.setParameter("newPassword", newPassword)
 				.setParameter("username", usuario.getUsername())
 				.setParameter("oldPassword", usuario.getPassword())
+				.executeUpdate();
+	}
+
+	@Override
+	public int createPassword(Integer userId, String password) {
+		Session session = getSession();
+		if (!(session.isOpen() && session.getTransaction() != null)) {
+			return 0;
+		}
+		return session.createQuery("UPDATE Usuario SET password=:newPassword"
+				+ " WHERE id=:id AND password=:oldPassword")
+				.setParameter("newPassword", password)
+				.setParameter("id", userId)
+				.setParameter("oldPassword", "-1")
 				.executeUpdate();
 	}
 

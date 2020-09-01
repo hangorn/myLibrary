@@ -27,8 +27,12 @@
 			<div class="searchField">
 				<label for="libro.titulo" th:text="#{books.field.title}"></label>
 				<input type="text" th:field="*{libro.titulo}" th:errorclass="fieldError" />
+			</div>
+			<div class="searchField">
 				<label for="fechaMinTxt" th:text="#{since}"></label>
 				<input type="date" th:field="*{fechaMinTxt}" th:errorclass="fieldError" />
+			</div>
+			<div class="searchField">
 				<label for="fechaMaxTxt" th:text="#{until}"></label>
 				<input type="date" th:field="*{fechaMaxTxt}" th:errorclass="fieldError" />
 			</div>

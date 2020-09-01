@@ -53,7 +53,7 @@ public class ControllerFactory {
 		controllers.put(CONTROLLER.BOOKS, new BooksController(messageSource));
 		controllers.put(CONTROLLER.AUTHORS, new AuthorsController(messageSource));
 		controllers.put(CONTROLLER.LENDS, new LendsController(messageSource));
-		controllers.put(CONTROLLER.USERS, new UsersController(messageSource));
+		controllers.put(CONTROLLER.USERS, new UsersController(messageSource, passwordEncoder));
 		controllers.put(CONTROLLER.PENDING, new PendingController(messageSource));
 		controllers.put(CONTROLLER.READ, new ReadController(messageSource));
 	}

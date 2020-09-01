@@ -15,6 +15,8 @@
  */
 package es.magDevs.myLibrary.model.beans;
 
+import java.util.List;
+
 import org.hibernate.Hibernate;
 
 /**
@@ -32,9 +34,12 @@ public class Usuario extends Bean {
 	private Boolean enabled;
 	private Boolean admin;
 	
-	private Integer prestamos;
-	private Integer pendientes;
-	private Integer leidos;
+	private Integer countPrestamos;
+	private Integer countPendientes;
+	private Integer countLeidos;
+	private List<Prestamo> prestamos;
+	private List<Pendiente> pendientes;
+	private List<Leido> leidos;
 
 	public Usuario() {
 	}
@@ -111,27 +116,51 @@ public class Usuario extends Bean {
 		this.admin = admin;
 	}
 
-	public Integer getPrestamos() {
+	public Integer getCountPrestamos() {
+		return countPrestamos;
+	}
+
+	public void setCountPrestamos(Integer countPrestamos) {
+		this.countPrestamos = countPrestamos;
+	}
+
+	public Integer getCountPendientes() {
+		return countPendientes;
+	}
+
+	public void setCountPendientes(Integer countPendientes) {
+		this.countPendientes = countPendientes;
+	}
+
+	public Integer getCountLeidos() {
+		return countLeidos;
+	}
+
+	public void setCountLeidos(Integer countLeidos) {
+		this.countLeidos = countLeidos;
+	}
+
+	public List<Prestamo> getPrestamos() {
 		return prestamos;
 	}
 
-	public void setPrestamos(Integer prestamos) {
+	public void setPrestamos(List<Prestamo> prestamos) {
 		this.prestamos = prestamos;
 	}
 
-	public Integer getPendientes() {
+	public List<Pendiente> getPendientes() {
 		return pendientes;
 	}
 
-	public void setPendientes(Integer pendientes) {
+	public void setPendientes(List<Pendiente> pendientes) {
 		this.pendientes = pendientes;
 	}
 
-	public Integer getLeidos() {
+	public List<Leido> getLeidos() {
 		return leidos;
 	}
 
-	public void setLeidos(Integer leidos) {
+	public void setLeidos(List<Leido> leidos) {
 		this.leidos = leidos;
 	}
 
