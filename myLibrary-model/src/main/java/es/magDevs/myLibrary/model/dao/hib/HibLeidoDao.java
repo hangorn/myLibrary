@@ -99,6 +99,11 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			c.add(Restrictions.le("fecha", filter.getFechaMax()));
 		}
 		
+		// Sin prestamos
+		if (filter.getPrestado() != null && filter.getPrestado() == -1) {
+			c.add(Restrictions.isNull("prestado"));
+		}
+		
 		return c;
 	}
 

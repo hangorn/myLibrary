@@ -28,11 +28,14 @@ import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
+import es.magDevs.myLibrary.model.dao.LeidoDao;
 import es.magDevs.myLibrary.model.dao.PrestamoDao;
+import es.magDevs.myLibrary.web.gui.utils.DatesManager;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
@@ -148,12 +151,21 @@ public class LendsController extends AbstractController {
 	@Override
 	public String delete(Integer index, Model model) {
 		PrestamoDao dao = DaoFactory.getPrestamoDao();
+		LeidoDao leidoDao = DaoFactory.getLeidoDao();
 		try {
 			Prestamo query = new Prestamo(null, new Libro(), null, null);
 			query.getLibro().setId(index);
 			Prestamo prestamo = (Prestamo) dao.getWithPag(query, 0, 0).get(0);
+
+			Leido leido = new Leido();
+			leido.setUsuario(prestamo.getUsuario());
+			leido.setLibro(prestamo.getLibro());
+			leido.setFecha(DatesManager.getIntToday());
+			leido.setPrestado(DatesManager.presentation2Int(prestamo.getFecha()));
+			
 			dao.beginTransaction();
 			dao.delete(prestamo);
+			leidoDao.insert(leido);
 			dao.commitTransaction();
 		} catch (Exception e) {
 			manageException("acceptCreation", e);

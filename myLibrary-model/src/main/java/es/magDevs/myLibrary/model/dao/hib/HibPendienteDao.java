@@ -59,7 +59,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 	@Override
 	protected Map<String, Boolean> getOrders() {
 		Map<String, Boolean> orders = new LinkedHashMap<String, Boolean>();
-		orders.put("libro.annoCompra", false);
+		orders.put("pendiente.fecha", true);
 		return orders;
 	}
 

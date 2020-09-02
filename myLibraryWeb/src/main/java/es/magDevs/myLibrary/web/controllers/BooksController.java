@@ -750,6 +750,7 @@ public class BooksController extends AbstractController {
 			filterLeido.setLibro(new Libro());
 			filterLeido.getLibro().setId(book.getId());
 			filterLeido.setUsuario(user);
+			filterLeido.setPrestado(-1);
 			@SuppressWarnings("unchecked")
 			List<Leido> leido = (List<Leido>) DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0);
 			leido.stream().forEach(l->l.setFechaTxt(DatesManager.int2Presentation(l.getFecha())));

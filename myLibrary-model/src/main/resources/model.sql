@@ -158,3 +158,6 @@ ALTER TABLE pendientes MODIFY COLUMN usuario INTEGER NOT NULL;
 ALTER TABLE prestamos ADD CONSTRAINT fk_prestamos_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);
 ALTER TABLE leidos ADD CONSTRAINT fk_leidos_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);
 ALTER TABLE pendientes ADD CONSTRAINT fk_pendientes_usuarios FOREIGN KEY(usuario) REFERENCES usuarios(id);
+
+-- Nueva columna para historico de prestamos
+alter table leidos add column prestado INTEGER NULL;

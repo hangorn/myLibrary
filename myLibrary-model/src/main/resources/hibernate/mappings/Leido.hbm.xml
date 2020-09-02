@@ -11,6 +11,9 @@
         <property name="fecha" type="java.lang.Integer">
             <column name="fecha" />
         </property>
+        <property name="prestado" type="java.lang.Integer">
+            <column name="prestado" />
+        </property>
         
         <many-to-one class="es.magDevs.myLibrary.model.beans.Libro" lazy="false" name="libro" fetch="join">
 			<column name="libro" />

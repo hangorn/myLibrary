@@ -32,6 +32,11 @@ public class DatesManager {
 		return localDate.getYear()*10000 + localDate.getMonthValue()*100 + localDate.getDayOfMonth();
 	}
 	
+	public static Integer presentation2Int(String date) {
+		LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(Constants.PRESENTATION_FORMAT));
+		return localDate.getYear()*10000 + localDate.getMonthValue()*100 + localDate.getDayOfMonth();
+	}
+	
 	public static String getStringToday() {
 		return LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.STRING_FORMAT));
 	}
