@@ -245,7 +245,7 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String insert(Usuario data) {
+	public Integer insert(Usuario data) {
 		Session session = getSession();
 		if (!(session.isOpen() && session.getTransaction() != null)) {
 			return null;
@@ -256,7 +256,7 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 		if (data.getEnabled() == null) {
 			data.setEnabled(new Boolean(true));
 		}
-		return (String) session.save(data);
+		return (Integer) session.save(data);
 	}
 
 	@Override

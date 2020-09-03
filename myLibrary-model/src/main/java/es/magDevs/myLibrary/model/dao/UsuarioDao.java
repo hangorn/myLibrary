@@ -68,7 +68,7 @@ public interface UsuarioDao extends AbstractDao {
 	 * @param data
 	 * @return
 	 */
-	public String insert(Usuario data);
+	public Integer insert(Usuario data);
 	
 	/**
 	 * Obtiene una lista de las usuarios cuyo nombre empieza por la
