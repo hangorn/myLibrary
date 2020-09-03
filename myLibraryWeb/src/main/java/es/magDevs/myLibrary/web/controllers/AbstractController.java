@@ -169,9 +169,9 @@ public abstract class AbstractController implements Controller {
 		try {
 			// Iniciamos paginacion
 			AbstractDao dao = getDao();
-			pagManager.reset(dao.getCount(filter));
 			// Reiniciamos el filtro de busqueda si no hay un filtro valido
 			filter = processFilter(filter);
+			pagManager.reset(dao.getCount(filter));
 			// Buscamos los datos
 			data = dao.getWithPag(filter, pagManager.getPage() - 1,
 					pagManager.getPageSize());
