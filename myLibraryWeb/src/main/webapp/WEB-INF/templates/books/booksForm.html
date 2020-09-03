@@ -131,7 +131,7 @@
 				th:if="${editable}" type="text" id="collectionSearch" autocomplete="off" class="searchInput" /><label
 				for="coleccion.id" th:text="${editable}?#{books.crud.labelCollectionsList}:#{books.crud.labelCollections}"></label>
 			<select th:field="*{coleccion.id}" th:if="${editable}" th:errorclass="fieldError"
-				th:title="*{coleccion} == null OR *{#strings.isEmpty(coleccion.nombre)}?'':*{coleccion.nombre}+' ('+*{coleccion.editorial.nombre}+')'">
+				th:title="*{coleccion} == null OR *{#strings.isEmpty(coleccion.nombre)}?'':*{coleccion.nombre}+ (*{coleccion.editorial} == null OR *{coleccion.editorial.nombre} == null?'':' ('+*{coleccion.editorial.nombre}+')')">
 				<option th:if="${editable}" th:text="' -  -  -  -  -  -  -  -  - '" id="emptyCollection" value="0"
 					selected="selected"></option>
 				<option th:if="*{coleccion.id} != null AND *{coleccion.id} > 0 AND !*{#strings.isEmpty(coleccion.nombre)}"
