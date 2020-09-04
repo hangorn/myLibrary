@@ -23,10 +23,10 @@
 			<thead>
 				<tr>
 					<th style="width: 10px" th:if="${adminData} != null"></th>
-					<th th:text="#{date}"></th>
-					<th th:text="#{login.form.username}"></th>
-					<th th:text="#{books.field.title}"></th>
-					<th th:text="#{books.table.head.author}"></th>
+					<th th:replace="commons/sorter :: sorter(#{date}, '2')"></th>
+					<th th:replace="commons/sorter :: sorter(#{login.form.username}, '6')"></th>
+					<th th:replace="commons/sorter :: sorter(#{books.field.title}, '4')"></th>
+					<th th:replace="commons/sorter :: sorter(#{books.table.head.author}, '7')"></th>
 				</tr>
 			</thead>
 			<tbody>

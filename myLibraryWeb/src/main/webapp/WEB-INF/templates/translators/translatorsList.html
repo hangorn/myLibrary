@@ -23,7 +23,7 @@
 			<thead>
 				<tr>
 					<th style="width: 10px" th:if="${multiselect}"></th>
-					<th th:text="#{translators.table.head.name}"></th>
+					<th th:replace="commons/sorter :: sorter(#{translators.table.head.name}, 'nombre')"></th>
 				</tr>
 			</thead>
 			<tbody>

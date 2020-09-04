@@ -43,6 +43,7 @@ import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.LibroDao;
 
 /**
@@ -91,7 +92,9 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 							|| !StringUtils.isBlank(libro.getAutores().iterator().next().getApellidos())
 							|| !StringUtils.isBlank(libro.getAutores().iterator().next().getPais())
 							|| libro.getAutores().iterator().next().getAnnoNacimiento() != null);
-			if (filter == null
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else if (filter == null
 					|| (StringUtils.isBlank(libro.getTitulo())
 					&& !authorFiltered
 					&& (libro.getEditorial() == null || StringUtils.isBlank(libro.getEditorial().getNombre()))

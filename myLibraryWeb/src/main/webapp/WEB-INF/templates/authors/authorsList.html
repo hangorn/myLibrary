@@ -25,10 +25,10 @@
 					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
 						<input type="checkbox" onclick="setAllChecked(this, event)" />
 					</th>
-					<th th:text="#{authors.table.head.name}"></th>
-					<th th:text="#{authors.table.head.surname}"></th>
-					<th th:text="#{authors.table.head.country}"></th>
-					<th th:text="#{authors.table.head.birthyear}"></th>
+					<th th:replace="commons/sorter :: sorter(#{authors.table.head.name}, '2')"></th>
+					<th th:replace="commons/sorter :: sorter(#{authors.table.head.surname}, '3')"></th>
+					<th th:replace="commons/sorter :: sorter(#{authors.table.head.country}, '4')"></th>
+					<th th:replace="commons/sorter :: sorter(#{authors.table.head.birthyear}, '5')"></th>
 				</tr>
 			</thead>
 			<tbody>

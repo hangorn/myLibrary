@@ -44,6 +44,10 @@ import es.magDevs.myLibrary.web.gui.beans.filters.BooksFilter;
  * 
  */
 public class FilterManager {
+	private static boolean sinOrdenacion(Bean bean) {
+		return StringUtils.isEmpty(bean.getSortedColumn());
+	}
+	
 	/**
 	 * Procesa el filtro suministrado para obtener unicamente un filtro en caso
 	 * de que haya que filtrar. En caso de que no existe ningun criterio de
@@ -73,7 +77,8 @@ public class FilterManager {
 						|| !StringUtils.isBlank(filter.getAutor().getPais()) || filter
 						.getAutor().getAnnoNacimiento() != null);
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (filter.getUsuarioRegistrado() == null
+		if (sinOrdenacion(filter)
+				&& filter.getUsuarioRegistrado() == null
 				&& StringUtils.isBlank(filter.getTitulo())
 				&& !authorFiltered
 				&& (filter.getEditorial() == null || StringUtils.isBlank(filter
@@ -107,7 +112,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getNombre())
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getNombre())
 				&& StringUtils.isBlank(filter.getApellidos())
 				&& StringUtils.isBlank(filter.getCiudad())
 				&& StringUtils.isBlank(filter.getPais())
@@ -133,7 +139,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getNombre())
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getNombre())
 				&& StringUtils.isBlank(filter.getCiudad())) {
 			return null;
 		}
@@ -154,7 +161,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getNombre())
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getNombre())
 				&& (filter.getEditorial() == null || StringUtils.isBlank(filter
 						.getEditorial().getNombre()))) {
 			return null;
@@ -176,7 +184,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getDescripcion())) {
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getDescripcion())) {
 			return null;
 		}
 		return filter;
@@ -196,7 +205,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getDescripcion())
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getDescripcion())
 				&& StringUtils.isBlank(filter.getCodigo())) {
 			return null;
 		}
@@ -217,7 +227,8 @@ public class FilterManager {
 			return null;
 		}
 		// Si no tenemos ningun filtro activo devolvemos 'null'
-		if (StringUtils.isBlank(filter.getNombre())) {
+		if (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getNombre())) {
 			return null;
 		}
 		return filter;
@@ -242,7 +253,8 @@ public class FilterManager {
 		}
 		if (isAdmin)  {
 			// Si es administrador y no hay filtros, no filtramos por nada
-			if (filter == null || ((filter.getLibro() == null || StringUtils.isBlank(filter.getLibro().getTitulo())) && 
+			if (filter == null || (sinOrdenacion(filter)
+					&& (filter.getLibro() == null || StringUtils.isBlank(filter.getLibro().getTitulo())) && 
 					(filter.getUsuario() == null || StringUtils.isBlank(filter.getUsuario().getNombre())))) {
 				return null;
 			}
@@ -264,7 +276,8 @@ public class FilterManager {
 	}
 
 	public static Bean processUsersFilter(Usuario filter) {
-		if (filter == null || (StringUtils.isBlank(filter.getUsername()) && StringUtils.isBlank(filter.getNombre()) && 
+		if (filter == null || (sinOrdenacion(filter)
+				&& StringUtils.isBlank(filter.getUsername()) && StringUtils.isBlank(filter.getNombre()) && 
 				StringUtils.isBlank(filter.getEmail()))) {
 			return null;
 		}

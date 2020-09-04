@@ -39,6 +39,7 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.LeidoDao;
 
 /**
@@ -73,6 +74,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			return c;
 		}
 
+		c.createAlias("usuario", "usuario");
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro
 		if (filter.getLibro() != null && filter.getLibro().getId() != null) {
@@ -88,7 +90,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 		}
 		// Nombre de usuario
 		if (filter.getUsuario() != null && StringUtils.isNotEmpty(filter.getUsuario().getNombre())) {
-			c.createCriteria("usuario").add(Restrictions.like("nombre", "%"+ filter.getUsuario().getNombre() + "%"));
+			c.add(Restrictions.like("usuario.nombre", "%"+ filter.getUsuario().getNombre() + "%"));
 		}
 		
 		// Fechas
@@ -127,17 +129,24 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			}
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por los ordenes indicados
-			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
-				Property field = Property.forName(orderData.getKey());
-				Order order = orderData.getValue() ? field.asc() : field.desc();
-				query.addOrder(order);
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+					Property field = Property.forName(orderData.getKey());
+					Order order = orderData.getValue() ? field.asc() : field.desc();
+					query.addOrder(order);
+				}
 			}
-			
+
+			query.createAlias("libro", "lib");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
-					.add(Projections.property("libro"))
-					.add(Projections.property("usuario"))
+					.add(Projections.property("lib.id"))
+					.add(Projections.property("lib.titulo"))
+					.add(Projections.property("usuario.id"))
+					.add(Projections.property("usuario.nombre"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
 			query.setProjection(projection);
@@ -146,12 +155,17 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			// Recorremos los datos obtenidos para convertirlos en objetos
 			for (Object[] objects : l) {
 				Leido leido = new Leido();
-				leido.setId((Integer) objects[0]);
-				leido.setFecha((Integer) objects[1]);
-				leido.setFechaTxt(int2Presentation((Integer) objects[1]));
-				leido.setLibro((Libro) objects[2]);
-				leido.setUsuario((Usuario) objects[3]);
-				leido.setAutoresTxt((String) objects[4]);
+				int i = 0;
+				leido.setId((Integer) objects[i++]);
+				leido.setFecha((Integer) objects[i]);
+				leido.setFechaTxt(int2Presentation((Integer) objects[i++]));
+				leido.setLibro(new Libro());
+				leido.getLibro().setId((Integer) objects[i++]);
+				leido.getLibro().setTitulo((String) objects[i++]);
+				leido.setUsuario(new Usuario());
+				leido.getUsuario().setId((Integer) objects[i++]);
+				leido.getUsuario().setNombre((String) objects[i++]);
+				leido.setAutoresTxt((String) objects[i++]);
 				data.add(leido);
 			}
 			s.getTransaction().commit();

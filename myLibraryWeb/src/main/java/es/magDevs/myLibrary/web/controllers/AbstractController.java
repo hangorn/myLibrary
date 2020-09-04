@@ -301,6 +301,38 @@ public abstract class AbstractController implements Controller {
 		return "commons/body";
 	}
 
+	public String listSort(String column, String dir, Model model) {
+		String msg = "";
+		try {
+			boolean direccion = "asc".equals(dir);
+			if (filter != null && column.equals(filter.getSortedColumn()) && direccion == filter.getSortedDirection()) {
+				filter.setSortedColumn(null);
+				filter.setSortedDirection(null);
+			} else {
+				if (filter == null) {
+					filter = getNewFilter();
+				}
+				filter.setSortedColumn(column);
+				filter.setSortedDirection(direccion);
+			}
+			
+			// Realizamos la paginacion
+			AbstractDao dao = getDao();
+			if (pagManager.getElementsCount() <= 0) {
+				pagManager.reset(dao.getCount(filter));
+			}
+			data = dao.getWithPag(filter, pagManager.getPage() - 1, pagManager.getPageSize());
+		} catch (Exception e) {
+			msg = manageException("pageSize", e);
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.LIST,
+				getSection()));
+		// Fijamos variables para la vista
+		setModelData(model);
+		return "commons/body";
+	}
+
 	public String filter(Bean f, Model model) {
 		String msg = "";
 		try {

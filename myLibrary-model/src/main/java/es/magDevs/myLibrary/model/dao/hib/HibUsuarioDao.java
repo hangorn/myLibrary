@@ -37,6 +37,7 @@ import org.hibernate.type.Type;
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
 
 /**
@@ -121,10 +122,14 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 			}
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por los ordenes indicados
-			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
-				Property field = Property.forName(orderData.getKey());
-				Order order = orderData.getValue() ? field.asc() : field.desc();
-				query.addOrder(order);
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+					Property field = Property.forName(orderData.getKey());
+					Order order = orderData.getValue() ? field.asc() : field.desc();
+					query.addOrder(order);
+				}
 			}
 			
 			ProjectionList projection = Projections.projectionList()

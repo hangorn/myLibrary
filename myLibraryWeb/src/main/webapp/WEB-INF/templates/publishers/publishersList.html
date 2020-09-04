@@ -25,8 +25,8 @@
 					<th style="width: 10px" th:if="${multiselect}" onclick="this.children[0].click()">
 						<input type="checkbox" onclick="setAllChecked(this, event)" />
 					</th>
-					<th th:text="#{publishers.table.head.name}"></th>
-					<th th:text="#{publishers.table.head.city}"></th>
+					<th th:replace="commons/sorter :: sorter(#{publishers.table.head.name}, 'nombre')"></th>
+					<th th:replace="commons/sorter :: sorter(#{publishers.table.head.city}, 'ciudad')"></th>
 				</tr>
 			</thead>
 			<tbody>

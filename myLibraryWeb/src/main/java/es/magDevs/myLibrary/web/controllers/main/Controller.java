@@ -87,6 +87,19 @@ public interface Controller {
 	public String listPageSize(String pageSize, Model model);
 
 	/**
+	 * Accion para cambiar el tamaño de pagina en el listado de datos
+	 * 
+	 * @param column
+	 *            id de la columna
+	 * @param dir
+	 *            direccion de ordenacion
+	 * @param model
+	 *            modelo de datos de SPRING
+	 * @return
+	 */
+	public String listSort(String column, String dir, Model model);
+
+	/**
 	 * Accion para mostrar el listado de datos aplicando el filtro indicado
 	 * 
 	 * @param f

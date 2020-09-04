@@ -23,7 +23,7 @@
 			<thead>
 				<tr>
 					<th style="width: 10px" th:if="${multiselect}"></th>
-					<th th:text="#{types.table.head.description}"></th>
+					<th th:replace="commons/sorter :: sorter(#{types.table.head.description}, 'descripcion')"></th>
 				</tr>
 			</thead>
 			<tbody>

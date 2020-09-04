@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_previous"})).permitAll();
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_start"})).permitAll();
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_end"})).permitAll();
+	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/" + section.get() + "_sort.+"})).permitAll();
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_pageSize"})).permitAll();
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_search"})).permitAll();
 	            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/" + section.get() + "_read"})).permitAll();

@@ -39,6 +39,7 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.PendienteDao;
 
 /**
@@ -72,6 +73,8 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 		if (filter == null) {
 			return c;
 		}
+		c.createAlias("usuario", "usuario");
+		c.createAlias("pendiente.libro", "libro");
 
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro
@@ -88,10 +91,9 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 		}
 		// Nombre de usuario
 		if (filter.getUsuario() != null && StringUtils.isNotEmpty(filter.getUsuario().getNombre())) {
-			c.createCriteria("usuario").add(Restrictions.like("nombre", "%"+ filter.getUsuario().getNombre() + "%"));
+			c.add(Restrictions.like("usuario.nombre", "%"+ filter.getUsuario().getNombre() + "%"));
 		}
-		
-		c.createAlias("pendiente.libro", "libro");
+
 		return c;
 	}
 
@@ -115,17 +117,23 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 			}
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por los ordenes indicados
-			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
-				Property field = Property.forName(orderData.getKey());
-				Order order = orderData.getValue() ? field.asc() : field.desc();
-				query.addOrder(order);
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+					Property field = Property.forName(orderData.getKey());
+					Order order = orderData.getValue() ? field.asc() : field.desc();
+					query.addOrder(order);
+				}
 			}
-			
+
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
-					.add(Projections.property("libro"))
-					.add(Projections.property("usuario"))
+					.add(Projections.property("libro.id"))
+					.add(Projections.property("libro.titulo"))
+					.add(Projections.property("usuario.id"))
+					.add(Projections.property("usuario.nombre"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
 			query.setProjection(projection);
@@ -134,11 +142,16 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 			// Recorremos los datos obtenidos para convertirlos en objetos
 			for (Object[] objects : l) {
 				Pendiente pendiente = new Pendiente();
-				pendiente.setId((Integer) objects[0]);
-				pendiente.setFecha(string2Presentation((String) objects[1]));
-				pendiente.setLibro((Libro) objects[2]);
-				pendiente.setUsuario((Usuario) objects[3]);
-				pendiente.setAutoresTxt((String) objects[4]);
+				int i = 0;
+				pendiente.setId((Integer) objects[i++]);
+				pendiente.setFecha(string2Presentation((String) objects[i++]));
+				pendiente.setLibro(new Libro());
+				pendiente.getLibro().setId((Integer) objects[i++]);
+				pendiente.getLibro().setTitulo((String) objects[i++]);
+				pendiente.setUsuario(new Usuario());
+				pendiente.getUsuario().setId((Integer) objects[i++]);
+				pendiente.getUsuario().setNombre((String) objects[i++]);
+				pendiente.setAutoresTxt((String) objects[i++]);
 				data.add(pendiente);
 			}
 			s.getTransaction().commit();

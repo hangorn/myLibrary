@@ -1,0 +1,38 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th th:fragment="sorter(header, columnId)">
+	<div  style="display: flex; align-items: center;">
+		<span th:text="${header}"></span>
+	
+		<a th:if="!(${filter.sortedColumn} == ${columnId} AND ${filter.sortedDirection})" th:href="@{'/'+${section}+'_sort?dir=asc&amp;column='+${columnId}}">
+			<img th:alt-title="#{sort.asc}" th:src="@{img/searchmenu/ordenar_asc.png}" />
+		</a>
+		<a th:if="${filter.sortedColumn} == ${columnId} AND ${filter.sortedDirection}" th:href="@{'/'+${section}+'_sort?dir=asc&amp;column='+${columnId}}">				
+			<img th:alt-title="#{sort.asc}" th:src="@{img/searchmenu/ordenar_sel_asc.png}" />
+		</a>
+		<a th:if="!(${filter.sortedColumn} == ${columnId} AND !${filter.sortedDirection})" th:href="@{'/'+${section}+'_sort?dir=desc&amp;column='+${columnId}}">				
+			<img th:alt-title="#{sort.desc}" th:src="@{img/searchmenu/ordenar_desc.png}" />
+		</a>
+		<a th:if="${filter.sortedColumn} == ${columnId} AND !${filter.sortedDirection}" th:href="@{'/'+${section}+'_sort?dir=desc&amp;column='+${columnId}}">				
+			<img th:alt-title="#{sort.desc}" th:src="@{img/searchmenu/ordenar_sel_desc.png}" />
+		</a>
+	</div>
+</th>
+</html>

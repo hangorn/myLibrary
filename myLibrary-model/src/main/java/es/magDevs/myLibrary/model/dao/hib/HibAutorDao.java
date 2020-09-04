@@ -33,6 +33,7 @@ import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.AutorDao;
 
 /**
@@ -75,8 +76,11 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			query.setMaxResults(pageSize);
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por titulo de libro
-			query.addOrder(Property.forName("apellidos").asc()).addOrder(
-					Property.forName("nombre").asc());
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				query.addOrder(Property.forName("apellidos").asc()).addOrder(Property.forName("nombre").asc());
+			}
 			// Fijamos los datos que queremos obtener
 			query.setProjection(Projections.projectionList()
 					.add(Projections.property("id"))

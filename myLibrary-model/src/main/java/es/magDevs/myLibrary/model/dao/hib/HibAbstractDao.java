@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,6 +36,7 @@ import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Modificacion;
 import es.magDevs.myLibrary.model.beans.ModificacionCampo;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 
 /**
@@ -155,10 +157,14 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 			}
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por los ordenes indicados
-			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
-				Property field = Property.forName(orderData.getKey());
-				Order order = orderData.getValue() ? field.asc() : field.desc();
-				query.addOrder(order);
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+					Property field = Property.forName(orderData.getKey());
+					Order order = orderData.getValue() ? field.asc() : field.desc();
+					query.addOrder(order);
+				}
 			}
 			List l = query.list();
 			s.getTransaction().commit();

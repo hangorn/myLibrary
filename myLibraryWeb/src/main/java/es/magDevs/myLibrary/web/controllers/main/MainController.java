@@ -393,6 +393,11 @@ public class MainController implements InitializingBean, Serializable {
 		return getController(controllerName, userAgent).listPageSize(pageSize, model);
 	}
 	
+	@RequestMapping(value = CTL_PATH_VAR+"_sort")
+	public String listSort(@RequestParam("column") String column, @RequestParam("dir") String dir, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).listSort(column, dir, model);
+	}
+	
 	@RequestMapping(value = CTL_PATH_VAR+"_search")
 	public String listSearch(@ModelAttribute(CTL_NAME) Bean filter, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
 		return getController(controllerName, userAgent).filter(filter, model);

@@ -22,12 +22,12 @@
 		<table>
 			<thead>
 				<tr>
-					<th th:text="#{users.table.head.login}"></th>
-					<th th:text="#{users.table.head.name}"></th>
-					<th th:text="#{users.table.head.access}"></th>
-					<th th:text="#{users.table.head.active}"></th>
-					<th th:text="#{users.table.head.admin}"></th>
-					<th th:text="#{menu.books.text}"></th>
+					<th th:replace="commons/sorter :: sorter(#{users.table.head.login}, '2')"></th>
+					<th th:replace="commons/sorter :: sorter(#{users.table.head.name}, '5')"></th>
+					<th th:replace="commons/sorter :: sorter(#{users.table.head.access}, '3')"></th>
+					<th th:replace="commons/sorter :: sorter(#{users.table.head.active}, '6')"></th>
+					<th th:replace="commons/sorter :: sorter(#{users.table.head.admin}, '7')"></th>
+					<th th:replace="commons/sorter :: sorter(#{menu.books.text}, '10')"></th>
 				</tr>
 			</thead>
 			<tbody>

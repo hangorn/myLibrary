@@ -39,6 +39,7 @@ import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Usuario;
+import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.PrestamoDao;
 
 /**
@@ -113,17 +114,25 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 			}
 			query.setFirstResult(page * pageSize);
 			// Ordenamos por los ordenes indicados
-			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
-				Property field = Property.forName(orderData.getKey());
-				Order order = orderData.getValue() ? field.asc() : field.desc();
-				query.addOrder(order);
+			if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+				query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+			} else  {
+				for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+					Property field = Property.forName(orderData.getKey());
+					Order order = orderData.getValue() ? field.asc() : field.desc();
+					query.addOrder(order);
+				}
 			}
 			
+			query.createAlias("usuario", "usr");
+			query.createAlias("libro", "lib");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
-					.add(Projections.property("libro"))
-					.add(Projections.property("usuario"))
+					.add(Projections.property("lib.id"))
+					.add(Projections.property("lib.titulo"))
+					.add(Projections.property("usr.id"))
+					.add(Projections.property("usr.nombre"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
 							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
 			query.setProjection(projection);
@@ -132,11 +141,16 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 			// Recorremos los datos obtenidos para convertirlos en objetos
 			for (Object[] objects : l) {
 				Prestamo prestamo = new Prestamo();
-				prestamo.setId((Integer) objects[0]);
-				prestamo.setFecha(string2Presentation((String) objects[1]));
-				prestamo.setLibro((Libro) objects[2]);
-				prestamo.setUsuario((Usuario) objects[3]);
-				prestamo.setAutoresTxt((String) objects[4]);
+				int i = 0;
+				prestamo.setId((Integer) objects[i++]);
+				prestamo.setFecha(string2Presentation((String) objects[i++]));
+				prestamo.setLibro(new Libro());
+				prestamo.getLibro().setId((Integer) objects[i++]);
+				prestamo.getLibro().setTitulo((String) objects[i++]);
+				prestamo.setUsuario(new Usuario());
+				prestamo.getUsuario().setId((Integer) objects[i++]);
+				prestamo.getUsuario().setNombre((String) objects[i++]);
+				prestamo.setAutoresTxt((String) objects[i++]);
 				data.add(prestamo);
 			}
 			s.getTransaction().commit();

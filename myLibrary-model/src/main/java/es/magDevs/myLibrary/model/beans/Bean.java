@@ -29,6 +29,14 @@ import org.hibernate.Hibernate;
 @SuppressWarnings("serial")
 public abstract class Bean implements Serializable, Cloneable {
 	private Integer id;
+	/**
+	 * nombre de la columna en SQL
+	 */
+	private String sortedColumn;
+	/**
+	 * <code>true</code> para orden ascendente, <code>false</code> para descendente
+	 */
+	private Boolean sortedDirection;
 
 	public Bean() {
 		super();
@@ -50,6 +58,28 @@ public abstract class Bean implements Serializable, Cloneable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getSortedColumn() {
+		return sortedColumn;
+	}
+
+	public void setSortedColumn(String sortedColumn) {
+		this.sortedColumn = sortedColumn;
+	}
+
+	/**
+	 * <code>true</code> para orden ascendente, <code>false</code> para descendente
+	 */
+	public Boolean getSortedDirection() {
+		return sortedDirection;
+	}
+
+	/**
+	 * <code>true</code> para orden ascendente, <code>false</code> para descendente
+	 */
+	public void setSortedDirection(Boolean sortedDirection) {
+		this.sortedDirection = sortedDirection;
 	}
 
 	public boolean equals(Object other) {
