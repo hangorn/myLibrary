@@ -73,6 +73,7 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 		if (filter == null) {
 			return c;
 		}
+		c.createAlias("usuario", "usr");
 
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro
@@ -89,7 +90,7 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 		}
 		// Nombre de usuario
 		if (filter.getUsuario() != null && StringUtils.isNotEmpty(filter.getUsuario().getNombre())) {
-			c.createCriteria("usuario").add(Restrictions.like("nombre", "%"+ filter.getUsuario().getNombre() + "%"));
+			c.add(Restrictions.like("usr.nombre", "%"+ filter.getUsuario().getNombre() + "%"));
 		}
 		return c;
 	}
@@ -124,7 +125,6 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 				}
 			}
 			
-			query.createAlias("usuario", "usr");
 			query.createAlias("libro", "lib");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))

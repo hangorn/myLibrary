@@ -122,6 +122,14 @@ document.getElementById("acceptNewCollection").onclick = function() {
 	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newCollectionFormBackground").style.display = "none";
 };
+document.getElementById("newCollectionFormBackground").onkeydown =  function(event) {
+	// Si se pulsa enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptNewCollection").onclick();
+		event.preventDefault();
+		return false;
+	}
+};
 
 // Registramos el evento para cuando se cancele la creacion de una nueva
 // coleccion

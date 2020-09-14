@@ -27,6 +27,14 @@ var markRead = function() {
 	input.select();
 	document.getElementById("selectedDate").valueAsDate = new Date();
 	document.getElementById("acceptSelectDate").onclick = acceptMarkRead;
+	document.getElementById("selectDateFormContainer").onkeydown = function() {
+		// Si se ha presionado enter
+		if (event.keyCode === 13) {
+			acceptMarkRead();
+			event.preventDefault();
+			return false;
+		}
+	};
 
 	//Registramos el evento de salir del proceso de marcar como leido
 	document.getElementById("cancelSelectDate").onclick = function() {

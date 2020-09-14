@@ -429,7 +429,7 @@
 				<div class="closeButton" id="closeButtonLendBook">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
 				</div>
-				<div class="dataTable">
+				<div class="dataTable" style="overflow-y: auto; height: 52%;">
 					<table>
 						<thead>
 							<tr>
@@ -440,19 +440,19 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
-					<div class="dataFormField" style="display:inline;">
-						<label for="lendDate" th:text="#{date}"> </label>
-						<input type="date" id="lendDate"/>
-					</div>
-					<button th:title="#{lend}" type="button" id="acceptLendBook">
-						<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{lend}"></label>
-					</button>
-					<button th:title="#{cancel}" type="button" id="cancelLendBook">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
-					</button>
+			</div>
+			<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; bottom: 10px;/*position: absolute;width: 85%;*/">
+				<div class="dataFormField" style="display:inline;">
+					<label for="lendDate" th:text="#{date}"> </label>
+					<input type="date" id="lendDate"/>
 				</div>
+				<button th:title="#{lend}" type="button" id="acceptLendBook">
+					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <label
+						th:text="#{lend}"></label>
+				</button>
+				<button th:title="#{cancel}" type="button" id="cancelLendBook">
+					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+				</button>
 			</div>
 		</div>
 	</div>

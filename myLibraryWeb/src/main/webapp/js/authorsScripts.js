@@ -189,3 +189,11 @@ document.getElementById("acceptNewAuthor").onclick = function() {
 	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newAuthorFormBackground").style.display = "none";
 };
+document.getElementById("newAuthorFormBackground").onkeydown =  function(event) {
+	// Si se pulsa enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptNewAuthor").onclick();
+		event.preventDefault();
+		return false;
+	}
+};

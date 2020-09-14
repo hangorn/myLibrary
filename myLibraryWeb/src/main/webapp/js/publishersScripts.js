@@ -119,6 +119,14 @@ document.getElementById("acceptNewPublisher").onclick = function() {
 	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newPublisherFormBackground").style.display = "none";
 };
+document.getElementById("newPublisherFormBackground").onkeydown =  function(event) {
+	// Si se pulsa enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptNewPublisher").onclick();
+		event.preventDefault();
+		return false;
+	}
+};
 
 // Registramos el evento para cuando se cancele la creacion de una nueva
 // editorial

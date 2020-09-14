@@ -155,6 +155,14 @@ document.getElementById("acceptNewUser").onclick = function() {
 	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newUserFormBackground").style.display = "none";
 };
+document.getElementById("newUserFormBackground").onkeydown = function() {
+	// Si se ha presionado enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptNewUser").onclick();
+		event.preventDefault();
+		return false;
+	}
+};
 
 //Registramos el evento para cuando se confirme el prestamo de un libro
 document.getElementById("acceptLendBook").onclick = function() {
@@ -187,6 +195,14 @@ document.getElementById("acceptLendBook").onclick = function() {
 	ajaxRequest.send("libro.id=" + document.getElementById("bookId").value + "&usuario.username=" + usernameSelected
 			+ "&fecha="+ document.getElementById("lendDate").value +"&acceptCreation&"+csrfParameterName+"="+csrfToken);
 	showLoading();
+};
+document.getElementById("lendBookFormContainer").onkeydown = function() {
+	// Si se ha presionado enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptLendBook").onclick();
+		event.preventDefault();
+		return false;
+	}
 };
 
 //Añadimos el evento para devolver un libro

@@ -172,3 +172,11 @@ document.getElementById("acceptNewTranslator").onclick = function() {
 	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newTranslatorFormBackground").style.display = "none";
 };
+document.getElementById("newTranslatorFormBackground").onkeydown =  function(event) {
+	// Si se pulsa enter
+	if (event.keyCode === 13) {
+		document.getElementById("acceptNewTranslator").onclick();
+		event.preventDefault();
+		return false;
+	}
+};
