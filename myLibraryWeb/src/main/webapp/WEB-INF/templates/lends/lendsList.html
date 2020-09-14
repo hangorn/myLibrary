@@ -32,7 +32,7 @@
 			<tbody>
 				<tr th:each="lendData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
 					<td th:if="${adminData} != null">
-						<form th:action="@{/lends_delete}" method="post">
+						<form th:action="@{/lends_delete}" method="post" th:onsubmit="'return confirm(&#34;' + #{return.confirmation(${lendData.libro.titulo}, ${lendData.usuario.nombre})} + '&#34;);'">
 							<input type="hidden" name="delete" th:value="${lendData.libro.id}"></input>
 							<button type="submit" th:title="#{return(${lendData.usuario.nombre})}" >
 								<img th:alt-title="#{return(${lendData.usuario.nombre})}" th:src="@{img/crudmenu/return.png}" width="20px" height="20px"/>

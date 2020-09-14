@@ -70,11 +70,11 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 	protected Criteria getFilters(Session session, Bean f) {
 		Pendiente filter = (Pendiente)f;
 		Criteria c = session.createCriteria(Pendiente.class, "pendiente");
+		c.createAlias("usuario", "usuario");
+		c.createAlias("pendiente.libro", "libro");
 		if (filter == null) {
 			return c;
 		}
-		c.createAlias("usuario", "usuario");
-		c.createAlias("pendiente.libro", "libro");
 
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro

@@ -70,10 +70,10 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 	protected Criteria getFilters(Session session, Bean f) {
 		Prestamo filter = (Prestamo)f;
 		Criteria c = session.createCriteria(Prestamo.class);
+		c.createAlias("usuario", "usr");
 		if (filter == null) {
 			return c;
 		}
-		c.createAlias("usuario", "usr");
 
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro

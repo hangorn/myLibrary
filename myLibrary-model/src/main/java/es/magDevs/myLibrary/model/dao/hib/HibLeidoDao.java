@@ -70,11 +70,10 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 	protected Criteria getFilters(Session session, Bean f) {
 		Leido filter = (Leido)f;
 		Criteria c = session.createCriteria(Leido.class, "leido");
+		c.createAlias("usuario", "usuario");
 		if (filter == null) {
 			return c;
 		}
-
-		c.createAlias("usuario", "usuario");
 		// Recorremos todos los posibles criterios para filtrar:
 		// Libro
 		if (filter.getLibro() != null && filter.getLibro().getId() != null) {

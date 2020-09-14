@@ -31,7 +31,7 @@
 			<tbody>
 				<tr th:each="pendingData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
 					<td>
-						<form th:action="@{/read_acceptCreation}" method="post">
+						<form th:action="@{/read_acceptCreation}" method="post" th:onsubmit="'return confirm(&#34;' + #{unmark.pending.confirmation(${pendingData.libro.titulo})} + '&#34;);'">
 							<input type="hidden" name="libro.id" th:value="${pendingData.libro.id}"></input>
 							<input type="hidden" name="acceptCreation"></input>
 							<button type="submit" th:title="#{mark.read}" >
