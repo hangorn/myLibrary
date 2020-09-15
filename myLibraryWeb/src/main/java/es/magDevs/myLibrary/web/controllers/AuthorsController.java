@@ -142,9 +142,7 @@ public class AuthorsController extends AbstractController {
 		try {
 			return dao.getAutores(hint);
 		} catch (Exception e) {
-			log.error("Error los datos mediante peticion AJAX"
-					+ " de los autores", e);
-			return new ArrayList<Autor>();
+			throw new RuntimeException(e);
 		}
 	}
 

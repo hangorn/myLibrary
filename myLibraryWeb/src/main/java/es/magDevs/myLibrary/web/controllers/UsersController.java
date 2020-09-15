@@ -15,7 +15,6 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -120,8 +119,7 @@ public class UsersController extends AbstractController {
 		try {
 			return dao.getUsers(hint);
 		} catch (Exception e) {
-			log.error("Error los datos mediante peticion AJAX de los usuarios", e);
-			return new ArrayList<Usuario>();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -194,8 +192,8 @@ public class UsersController extends AbstractController {
                 }
             }
             catch (Exception e) {
-                log.error((Object)"Error al actualizar contrase\u00f1a", e);
                 dao.rollbackTransaction();
+                manageException("related", e);
 				return "FAIL";
             }
 			

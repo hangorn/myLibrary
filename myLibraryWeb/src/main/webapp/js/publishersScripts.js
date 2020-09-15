@@ -56,6 +56,8 @@ inputPublisherSearch.oninput = function() {
 				list.appendChild(listItem);
 			}
 			list.multiple = true;
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Configuramos y enviamos la peticion
@@ -109,6 +111,8 @@ document.getElementById("acceptNewPublisher").onclick = function() {
 				listItem.title = nombre;
 				listItem.selected = true;
 			}
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado una

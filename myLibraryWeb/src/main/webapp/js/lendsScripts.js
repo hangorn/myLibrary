@@ -71,6 +71,8 @@ var recargarUsuarios = function() {
 				var userData = usersData[i];
 				addUserToList(userData.nombre, userData.username, list);
 			}
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Configuramos y enviamos la peticion
@@ -146,6 +148,8 @@ document.getElementById("acceptNewUser").onclick = function() {
 			// Creamos un nuevo elemento en la lista de usuarios y lo seleccionamos
 			var newTd = addUserToList(nombre, ""+newUserIdCount, document.getElementById("usersDataTable"), true);
 			seleccionar(newTd);
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado un nuevo usuario
@@ -189,8 +193,11 @@ document.getElementById("acceptLendBook").onclick = function() {
 			img.alt = messageReturn.replace("{0}",nombreSelected);
 			var label = buttonLendReturn.getElementsByTagName("label")[0];
 			label.innerText = messageReturn.replace("{0}",nombreSelected);
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("libro.id=" + document.getElementById("bookId").value + "&usuario.username=" + usernameSelected
 			+ "&fecha="+ document.getElementById("lendDate").value +"&acceptCreation&"+csrfParameterName+"="+csrfToken);
@@ -220,8 +227,11 @@ var returnBook = function() {
 			img.alt = messageLend;
 			var label = buttonLendReturn.getElementsByTagName("label")[0];
 			label.innerText = messageLend;
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("delete="+ document.getElementById("bookId").value +"&"+csrfParameterName+"="+csrfToken);
 	showLoading();

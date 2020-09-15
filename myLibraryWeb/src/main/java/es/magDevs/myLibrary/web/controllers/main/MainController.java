@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.WebApplicationContext;
 
 import es.magDevs.myLibrary.model.Constants;
@@ -88,6 +90,7 @@ public class MainController implements InitializingBean, Serializable {
 		factory = new ControllerFactory(messageSource, passwordEncoder);
 	}
 	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	public String handleError(Model model, HttpServletRequest req, Exception ex) {
 		log.error("Error interno al URL="+req.getRequestURI(), ex);

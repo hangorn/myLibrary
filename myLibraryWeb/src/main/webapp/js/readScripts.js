@@ -83,8 +83,11 @@ var acceptMarkRead = function() {
 				var label = buttonPending.getElementsByTagName("label")[0];
 				label.innerText = messageMarkPending;
 			}
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("libro.id=" + document.getElementById("bookId").value + "&id="+ --idMarkRead + "&fechaTxt="+ valueDate +"&acceptCreation&"+csrfParameterName+"="+csrfToken);
 	showLoading();
@@ -103,8 +106,11 @@ var unmarkRead = function(event) {
 	ajaxRequest.onreadystatechange = function() {
 		if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
 			button.remove();
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	var clickedId = button.id.replace("unmarkReadBookButton-", "");
 	ajaxRequest.send("delete="+ clickedId +"&"+csrfParameterName+"="+csrfToken);

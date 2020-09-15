@@ -43,8 +43,11 @@ var acceptAllowAccess = function() {
 		if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200 && ajaxRequest.responseText == "OK") {
 			document.getElementById("allowAccessFormBackground").style.display = "none";
 			allowAccessButton.style.display = "none";
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("data=" + valueUserId + "|" + valuePassword + "&" + csrfParameterName + "=" + csrfToken);
 	showLoading();

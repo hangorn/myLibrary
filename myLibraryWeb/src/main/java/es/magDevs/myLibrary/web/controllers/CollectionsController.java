@@ -283,9 +283,7 @@ public class CollectionsController extends AbstractController {
 		try {
 			return dao.getColecciones(hint, publisherId);
 		} catch (Exception e) {
-			log.error("Error los datos mediante peticion AJAX"
-					+ " de las colecciones", e);
-			return new ArrayList<Coleccion>();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -311,9 +309,7 @@ public class CollectionsController extends AbstractController {
 			newPublisher = new ObjectMapper().readValue(requestBody,
 					Editorial.class);
 		} catch (Exception e) {
-			log.error(
-					"Error al crear la nueva editorial con los datos JSON de la peticion AJAX",
-					e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";

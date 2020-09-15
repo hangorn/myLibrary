@@ -66,8 +66,11 @@ var acceptMarkPending = function() {
 			img.alt = buttonPending.title;
 			var label = buttonPending.getElementsByTagName("label")[0];
 			label.innerText = buttonPending.title;
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("libro.id=" + document.getElementById("bookId").value + "&fecha="+ valueDate +"&acceptCreation&"+csrfParameterName+"="+csrfToken);
 	showLoading();
@@ -88,8 +91,11 @@ var unmarkPending = function() {
 			img.alt = messageMarkPending;
 			var label = buttonPending.getElementsByTagName("label")[0];
 			label.innerText = messageMarkPending;
+			hideLoading();
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
+			hideLoading();
 		}
-		hideLoading();
 	};
 	ajaxRequest.send("delete="+ document.getElementById("bookId").value +"&"+csrfParameterName+"="+csrfToken);
 	showLoading();

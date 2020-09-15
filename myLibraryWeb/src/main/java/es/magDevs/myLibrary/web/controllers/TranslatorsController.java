@@ -145,7 +145,7 @@ public class TranslatorsController extends AbstractController {
 		try {
 			return dao.getTraductores(hint);
 		} catch (Exception e) {
-			return new ArrayList<Traductor>();
+			throw new RuntimeException(e);
 		}
 	}
 

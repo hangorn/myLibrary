@@ -147,8 +147,8 @@ public class ReadController extends AbstractController {
 				}
 				dao.commitTransaction();
 			} catch (Exception e) {
-				manageException("acceptCreation", e);
 				dao.rollbackTransaction();
+				throw new RuntimeException(e);
 			}
 		}
 		return list(model);
@@ -168,8 +168,8 @@ public class ReadController extends AbstractController {
 			dao.delete(query);
 			dao.commitTransaction();
 		} catch (Exception e) {
-			manageException("delete", e);
 			dao.rollbackTransaction();
+			throw new RuntimeException(e);
 		}
 		return list(model);
 	}

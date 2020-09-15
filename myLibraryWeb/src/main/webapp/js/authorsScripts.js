@@ -121,6 +121,8 @@ inputAuthorSearch.oninput = function() {
 					ajaxRequest.send("data=" + data[1]+"&"+csrfParameterName+"="+csrfToken);
 				};
 			}
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Configuramos y enviamos la peticion
@@ -179,6 +181,8 @@ document.getElementById("acceptNewAuthor").onclick = function() {
 			listItem.title = listItem.innerHTML = txt;
 			listItem.value = newAuthorIdCount;
 			authorsList.appendChild(listItem);
+		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+			alert(errorMessage);
 		}
 	};
 	// Enviamos una peticion AJAX al servidor para indicar que se ha creado un

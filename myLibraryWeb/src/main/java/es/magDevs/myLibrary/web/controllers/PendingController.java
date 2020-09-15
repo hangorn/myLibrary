@@ -116,7 +116,7 @@ public class PendingController extends AbstractController {
 				dao.commitTransaction();
 			} catch (Exception e) {
 				dao.rollbackTransaction();
-				manageException("acceptCreation", e);
+				throw new RuntimeException(e);
 			}
 		}
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));
@@ -137,8 +137,8 @@ public class PendingController extends AbstractController {
 				dao.delete(pendiente);
 				dao.commitTransaction();
 			} catch (Exception e) {
-				manageException("delete", e);
 				dao.rollbackTransaction();
+				throw new RuntimeException(e);
 			}
 		}
 		return list(model);

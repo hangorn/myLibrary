@@ -579,7 +579,7 @@ public class BooksController extends AbstractController {
 			newPublisher = new ObjectMapper().readValue(requestBody,
 					Editorial.class);
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -598,7 +598,7 @@ public class BooksController extends AbstractController {
 			newCollection = new ObjectMapper().readValue(requestBody,
 					Coleccion.class);
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -617,7 +617,7 @@ public class BooksController extends AbstractController {
 				newAuthors.put(authorId, null);
 			}
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -636,7 +636,7 @@ public class BooksController extends AbstractController {
 				Integer id = Integer.parseInt(ids[i]);
 				newAuthors.remove(id);
 			} catch (Exception e) {
-				log.error("", e);
+				manageException("related", e);
 				continue;
 			}
 		}
@@ -658,7 +658,7 @@ public class BooksController extends AbstractController {
 				newAuthors.put(tmpAutor.getId(), tmpAutor);
 			}
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -677,7 +677,7 @@ public class BooksController extends AbstractController {
 			newTranslators.put(translatorId, null);
 		}
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";
@@ -696,7 +696,7 @@ public class BooksController extends AbstractController {
 				Integer id = Integer.parseInt(ids[i]);
 				newTranslators.remove(id);
 			} catch (Exception e) {
-				log.error("", e);
+				manageException("related", e);
 				continue;
 			}
 		}
@@ -718,7 +718,7 @@ public class BooksController extends AbstractController {
 				newTranslators.put(tmpTraductor.getId(), tmpTraductor);
 			}
 		} catch (Exception e) {
-			log.error("", e);
+			manageException("related", e);
 			return "FAIL";
 		}
 		return "OK";

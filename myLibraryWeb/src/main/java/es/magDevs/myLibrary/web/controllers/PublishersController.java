@@ -143,9 +143,7 @@ public class PublishersController extends AbstractController {
 		try {
 			return dao.getEditoriales(hint);
 		} catch (Exception e) {
-			log.error("Error los datos mediante peticion AJAX"
-					+ " de las editoriales", e);
-			return new ArrayList<Editorial>();
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -142,7 +142,7 @@ public class LendsController extends AbstractController {
 			dao.commitTransaction();
 		} catch (Exception e) {
 			dao.rollbackTransaction();
-			manageException("acceptCreation", e);
+			throw new RuntimeException(e);
 		}
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));
 		return "commons/body";
@@ -168,8 +168,8 @@ public class LendsController extends AbstractController {
 			leidoDao.insert(leido);
 			dao.commitTransaction();
 		} catch (Exception e) {
-			manageException("acceptCreation", e);
 			dao.rollbackTransaction();
+			throw new RuntimeException(e);
 		}
 		return list(model);
 	}
