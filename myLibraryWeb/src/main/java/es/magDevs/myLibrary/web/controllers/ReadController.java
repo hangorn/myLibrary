@@ -173,4 +173,19 @@ public class ReadController extends AbstractController {
 		}
 		return list(model);
 	}
+
+	/**
+	 * Metodo para gestionar peticiones AJAX para obtener datos del historial de prestamos
+	 * 
+	 * @param hint texto para buscar usuarios
+	 * @param id del libro para el que se buscaran los prestamos
+	 * @return datos
+	 */
+	public List<Leido> getData(String hint, Integer id) {
+		try {
+			return DaoFactory.getLeidoDao().getHistorialPrestamos(hint, id);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

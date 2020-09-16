@@ -215,6 +215,10 @@
 		<!-- botones de acccion para libros: prestar, marcar como leido, ... -->
 		<div th:if="*{id} != null">
 			<div class="crudButtons">
+				<!-- Historial de prestamos -->
+				<button th:if="*{haTenidoPrestamos} OR *{prestamo} != null" th:title="#{lend}" type="button" id="lendsHistoryButton" style="float: left;margin-left: 20px;margin-right: -50%;">
+					<img th:alt-title="#{lends.history}" th:src="@{img/menu/lends.png}" width="32px" height="32px"/> <label th:text="#{lends.history}"></label>
+				</button>
 				<!-- Prestamo -->
 				<button th:if="${adminData} != null AND *{prestamo} == null" th:title="#{lend}" type="button" id="lendBookButton">
 					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <label th:text="#{lend}"></label>
@@ -494,6 +498,32 @@
 					<button th:title="#{cancel}" type="button" id="cancelSelectDate">
 						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
 					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- dialogo para mostrar el historial de prestamos de un libro -->
+	<div th:if="${adminData} != null" id="lendsHistoryFormBackground" class="background" style="display: none;">
+		<div id="lendsHistoryFormContainer" class="dataFormContainer">
+			<div id="lendsHistoryForm" class="dataForm" style="height: 90%;">
+				<label for="lendsHistorySearch" th:text="#{user.search}"> </label>
+				<input type="text" id="lendsHistorySearch" class="searchInput" />
+				<div class="closeButton" id="closeButtonLendsHistory">
+					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
+				</div>
+				<div class="dataTable" style="overflow-y: auto; height: 85%;">
+					<table>
+						<thead>
+							<tr>
+								<th th:text="#{user}"></th>
+								<th th:text="#{since}"></th>
+								<th th:text="#{until}"></th>
+							</tr>
+						</thead>
+						<tbody id="lendsHistoryDataTable">
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

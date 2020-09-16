@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -173,6 +174,44 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			}
 			s.getTransaction().commit();
 			return data;
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Leido> getHistorialPrestamos(String nombreUsuario, Integer idLibro) throws Exception {
+		Session s = null;
+		try {
+			s = getSession();
+			s.beginTransaction();
+			
+			String hql = "SELECT nombre, REPLACE(fecha,'-',''), null FROM prestamos JOIN usuarios ON prestamos.usuario=usuarios.id WHERE libro= :idLibro ";
+			String hql2 = " UNION SELECT nombre, prestado, fecha FROM leidos JOIN usuarios ON leidos.usuario=usuarios.id AND prestado IS NOT NULL WHERE libro= :idLibro ";
+			if (StringUtils.isNotBlank(nombreUsuario)) {
+				hql += " AND nombre LIKE :nombreUsuario ";
+				hql2 += " AND nombre LIKE :nombreUsuario ";
+			}
+			hql += hql2 + " ORDER BY 2 desc, 3 ";
+					
+					
+			Query query = s.createSQLQuery(hql);
+			if (StringUtils.isNotBlank(nombreUsuario)) {
+				query.setParameter("nombreUsuario", nombreUsuario+"%");
+			}
+			@SuppressWarnings("unchecked")
+			List<Object[]> l = query.setParameter("idLibro", idLibro).list();
+			List<Leido> list = new ArrayList<>(l.size());
+			for (Object[] result : l) {
+				Leido e = new Leido();
+				e.setUsuario(new Usuario(null, null, null, null, (String)result[0], null, null));
+				e.setFechaMinTxt(int2Presentation(Integer.valueOf((String)result[1])));
+				e.setFechaMaxTxt(int2Presentation((Integer)result[2]));
+				list.add(e);
+			}
+			s.getTransaction().commit();
+			return list;
 		} catch (Exception e) {
 			s.getTransaction().rollback();
 			throw e;

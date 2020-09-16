@@ -15,6 +15,10 @@
  */
 package es.magDevs.myLibrary.model.dao;
 
+import java.util.List;
+
+import es.magDevs.myLibrary.model.beans.Leido;
+
 /**
  * Interfaz para el acceso a los datos de libros leidos
  * 
@@ -22,5 +26,14 @@ package es.magDevs.myLibrary.model.dao;
  * 
  */
 public interface LeidoDao extends AbstractDao {
+
+	/**
+	 * Obtiene el historial de prestamos de un libro
+	 * @param nombreUsuario texto para buscar usuarios
+	 * @param idLibro del libro para el que se buscaran los prestamos
+	 * @return datos de prestamos
+	 * @throws Exception 
+	 */
+	List<Leido> getHistorialPrestamos(String nombreUsuario, Integer idLibro) throws Exception;
 
 }

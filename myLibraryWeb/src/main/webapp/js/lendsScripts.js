@@ -79,7 +79,7 @@ var recargarUsuarios = function() {
 	ajaxRequest.open("POST", usersLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + usersSearch.value+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("getdata=" + document.getElementById('usersSearch').value+"&"+csrfParameterName+"="+csrfToken);
 }
 
 var addUserToList = function(nombre, username, list, asFirst) {
@@ -240,4 +240,91 @@ var returnBook = function() {
 if (returnBookButton != null) {
 	buttonLendReturn.onclick = returnBook;
 }
+}
+
+/* ************************************************************************************
+			Gestion de historico de prestamos
+** ************************************************************************************/
+
+var lendsHistoryButton = document.getElementById("lendsHistoryButton");
+if (lendsHistoryButton != null) {
+	// Registramos el evento para mostrar el historial
+	var showLendsHistory = function() {
+		document.getElementById("lendsHistoryFormBackground").style.display = "inline";
+		var input = document.getElementById('lendsHistorySearch');
+		input.focus();
+		input.select();
+		recargarHistorialPrestamos();
+	}
+	lendsHistoryButton.onclick = showLendsHistory;
+
+	//Registramos el evento de salir del historial
+	var buttonCloseUser = document.getElementById("closeButtonLendsHistory");
+	buttonCloseUser.onclick = function() {
+		document.getElementById("lendsHistoryFormBackground").style.display = "none";
+	};
+
+	//Metodo para buscar el historial de prestamos
+	var recargarHistorialPrestamos = function() {
+		//Creamos un peticion AJAX
+		var ajaxRequest = new XMLHttpRequest();
+		// Creamos la funcion que se lanzara cuando los datos esten listos
+		var processSearch = function() {
+			if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
+				// Transformamos los datos obtenidos a notacion JSON
+				var lendsHistoryData = JSON.parse(ajaxRequest.responseText);
+				// Obtenemos la tabla donde mostraremos los prestamos
+				var list = document.getElementById("lendsHistoryDataTable");
+				// Vaciamos la lista
+				while (list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				// Si no tenemos datos no hacemos nada
+				if (!lendsHistoryData || lendsHistoryData.length == 0) {
+					return;
+				}
+				// Recorremos todos los datos obtenidos
+				for (var i = 0; i < lendsHistoryData.length; i++) {
+					var historyData = lendsHistoryData[i];
+					addHistoryLendToList(historyData.usuario.nombre, historyData.fechaMinTxt, historyData.fechaMaxTxt, list);
+				}
+			} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
+				alert(errorMessage);
+			}
+		};
+		// Configuramos y enviamos la peticion
+		ajaxRequest.open("POST", readLink+"_getdata", true);
+		ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		ajaxRequest.onreadystatechange = processSearch;
+		ajaxRequest.send("getdata=" + document.getElementById('lendsHistorySearch').value+"&"+"id=" + document.getElementById("bookId").value+"&"+csrfParameterName+"="+csrfToken);
+	}
+	var lendsHistorySearch = document.getElementById("lendsHistorySearch");
+	lendsHistorySearch.oninput = recargarHistorialPrestamos;
+
+	var addHistoryLendToList = function(nombre, desde, hasta, list, asFirst) {
+		// Creamos la estructura para la tabla
+		var tr = document.createElement("tr");
+		
+		var td = document.createElement("td");
+		td.innerHTML = nombre;
+		td.title = nombre;
+		tr.appendChild(td);
+		
+		var td = document.createElement("td");
+		td.innerHTML = desde;
+		td.title = desde;
+		tr.appendChild(td);
+		
+		var td = document.createElement("td");
+		td.innerHTML = hasta;
+		td.title = hasta;
+		tr.appendChild(td);
+		
+		if (asFirst && list.childElementCount != 0) {
+			list.insertBefore(tr, list.childNodes[0]);
+		} else {
+			list.appendChild(tr);
+		}
+		return td;
+	}
 }
