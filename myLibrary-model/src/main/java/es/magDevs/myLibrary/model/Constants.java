@@ -49,6 +49,9 @@ public class Constants {
 	public static final String PRESENTATION_FORMAT = "dd/MM/yyyy";
 	
 	public static final boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+	
+	public static final Integer IS_NULL = -1;
+	public static final Integer IS_NOT_NULL = -2;
 
 	/**
 	 * Distintos tipos de acciones que se pueden realizar

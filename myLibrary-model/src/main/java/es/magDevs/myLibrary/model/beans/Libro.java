@@ -49,6 +49,7 @@ public class Libro extends Bean {
 	private String autoresTxt;
 	
 	private Usuario prestamo;
+	private boolean haTenidoPrestamos;
 	private String pendiente;
 	private Usuario usuarioRegistrado;
 	private List<String> leido;
@@ -256,6 +257,14 @@ public class Libro extends Bean {
 
 	public void setPrestamo(Usuario prestamo) {
 		this.prestamo = prestamo;
+	}
+
+	public boolean isHaTenidoPrestamos() {
+		return haTenidoPrestamos;
+	}
+
+	public void setHaTenidoPrestamos(boolean haTenidoPrestamos) {
+		this.haTenidoPrestamos = haTenidoPrestamos;
 	}
 
 	public String getPendiente() {

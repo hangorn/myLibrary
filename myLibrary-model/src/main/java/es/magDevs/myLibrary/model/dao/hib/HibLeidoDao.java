@@ -101,8 +101,12 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 		}
 		
 		// Sin prestamos
-		if (filter.getPrestado() != null && filter.getPrestado() == -1) {
+		if (filter.getPrestado() != null && filter.getPrestado() == Constants.IS_NULL) {
 			c.add(Restrictions.isNull("prestado"));
+		}
+		// Con prestamos
+		if (filter.getPrestado() != null && filter.getPrestado() == Constants.IS_NOT_NULL) {
+			c.add(Restrictions.isNotNull("prestado"));
 		}
 		
 		return c;

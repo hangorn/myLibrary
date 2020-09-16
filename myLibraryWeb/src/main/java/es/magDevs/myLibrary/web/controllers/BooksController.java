@@ -27,6 +27,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
+import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
@@ -38,6 +39,7 @@ import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
+import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Traductor;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
@@ -45,6 +47,7 @@ import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
+import es.magDevs.myLibrary.model.dao.PrestamoDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
@@ -730,13 +733,35 @@ public class BooksController extends AbstractController {
 	
 	@Override
 	protected Bean getCompleteData(Integer id) throws Exception {
+		// Cargamos los datos del libro
 		Libro book = (Libro) super.getCompleteData(id);
+		
+		// Cargamos los datos de los prestamos para saber si esta actualmente prestado
+		PrestamoDao prestamoDao = DaoFactory.getPrestamoDao();
+		Prestamo filterPrestamo = new Prestamo();
+		filterPrestamo.setLibro(new Libro());
+		filterPrestamo.getLibro().setId(book.getId());
+		@SuppressWarnings("unchecked")
+		List<Prestamo> prestamos = prestamoDao.getWithPag(filterPrestamo, 0, 0);
+		if (!prestamos.isEmpty()) {
+			book.setPrestamo(prestamos.get(0).getUsuario());
+		}
+		
+		// Comprobamos si el libro ha sido prestado previamente
+		Leido filterLeido = new Leido();
+		filterLeido.setLibro(new Libro());
+		filterLeido.getLibro().setId(book.getId());
+		filterLeido.setPrestado(Constants.IS_NOT_NULL);
+		book.setHaTenidoPrestamos(DaoFactory.getLeidoDao().getCount(filterLeido) != 0);
+		
 		String username = MainController.getUsername();
 		UsuarioDao usuarioDao = DaoFactory.getUsuarioDao();
 		if (username != null) {
+			// Cargamos los datos del usuario que ha hecho login
 			usuarioDao.beginTransaction();
 			Usuario user = usuarioDao.getUser(username);
 			usuarioDao.commitTransaction();
+			// Cargamos los datos de los libros pendientes para saber si este esta pendiente
 			Pendiente filterPendiente = new Pendiente();
 			filterPendiente.setLibro(new Libro());
 			filterPendiente.getLibro().setId(book.getId());
@@ -746,11 +771,12 @@ public class BooksController extends AbstractController {
 				book.setPendiente(((Pendiente) pendiente.get(0)).getFecha());
 			}
 			
-			Leido filterLeido = new Leido();
+			// Cargamos los datos de los libros leidos para saber si este esta leido
+			filterLeido = new Leido();
 			filterLeido.setLibro(new Libro());
 			filterLeido.getLibro().setId(book.getId());
 			filterLeido.setUsuario(user);
-			filterLeido.setPrestado(-1);
+			filterLeido.setPrestado(Constants.IS_NULL);
 			@SuppressWarnings("unchecked")
 			List<Leido> leido = (List<Leido>) DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0);
 			leido.stream().forEach(l->l.setFechaTxt(DatesManager.int2Presentation(l.getFecha())));
