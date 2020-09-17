@@ -35,6 +35,7 @@ public class Leido extends Bean {
 	private String autoresTxt;
 	
 	private Integer prestado;
+	private String prestadoTxt;
 
 	public Leido() {
 	}
@@ -134,6 +135,14 @@ public class Leido extends Bean {
 
 	public void setPrestado(Integer prestado) {
 		this.prestado = prestado;
+	}
+
+	public String getPrestadoTxt() {
+		return prestadoTxt;
+	}
+
+	public void setPrestadoTxt(String prestadoTxt) {
+		this.prestadoTxt = prestadoTxt;
 	}
 
 	public String toString() {

@@ -38,7 +38,7 @@
 					<td th:if="${multiselect}">  <input type="checkbox" onclick="setChecked(this, event)"/>  </td>
 					<td th:if="${userData} != null">
 						<div style="display: flex; flex-direction: row; justify-content: space-between;">
-							<img th:if="${adminData} != null AND ${bookData.prestamo} != null AND !${#strings.isEmpty(bookData.prestamo.nombre)}" th:alt-title="#{lend.to(${bookData.prestamo.nombre})}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
+							<img th:if="${adminData} != null AND ${bookData.prestamo} != null AND !${#strings.isEmpty(bookData.prestamo.nombre)}" th:alt-title="#{lent.to(${bookData.prestamo.nombre})}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
 							<img th:if="!${#strings.isEmpty(bookData.pendiente)}" th:alt-title="#{pending(${bookData.pendiente})}" th:src="@{img/menu/pending.png}" width="20px" height="20px"/>
 							<img th:if="!${#lists.isEmpty(bookData.leido)}" th:alt-title="#{read(${#strings.listJoin(bookData.leido, ', ')})}" th:src="@{img/menu/mark_read.png}" width="20px" height="20px"/>
 						</div>

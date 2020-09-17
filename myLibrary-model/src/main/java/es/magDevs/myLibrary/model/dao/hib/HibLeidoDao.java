@@ -147,6 +147,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
+					.add(Projections.property("prestado"))
 					.add(Projections.property("lib.id"))
 					.add(Projections.property("lib.titulo"))
 					.add(Projections.property("usuario.id"))
@@ -163,6 +164,8 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 				leido.setId((Integer) objects[i++]);
 				leido.setFecha((Integer) objects[i]);
 				leido.setFechaTxt(int2Presentation((Integer) objects[i++]));
+				leido.setPrestado((Integer) objects[i]);
+				leido.setPrestadoTxt(int2Presentation((Integer) objects[i++]));
 				leido.setLibro(new Libro());
 				leido.getLibro().setId((Integer) objects[i++]);
 				leido.getLibro().setTitulo((String) objects[i++]);

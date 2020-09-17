@@ -64,7 +64,9 @@
 					<td onclick="this.children[0].click();" th:title="${book.libro.titulo}">
 						<a th:text="${book.libro.titulo}" th:href="@{/books_readid?readid=}+${book.libro.id}"></a>
 					</td>
-					<td th:title="${book.fecha}" th:text="${book.fechaTxt}">
+					<td th:title="${book.fechaTxt}">
+						<span th:text="${book.fechaTxt}"></span>
+						<img th:if="${book.prestado} != null" th:alt-title="#{lent.date(${book.prestadoTxt})}" th:src="@{img/menu/lends.png}" style="margin: -5px 10px;" width="25px" height="25px"/>
 					</td>
 				</tr>
 			</tbody>
