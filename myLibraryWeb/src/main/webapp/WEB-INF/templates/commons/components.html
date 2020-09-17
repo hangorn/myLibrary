@@ -39,7 +39,7 @@
 </div>
 
 <div th:fragment="readOnlyLendsList(text, books)">
-	<label th:text="${text}"></label>
+	<label th:text="${text}+': '+${#lists.size(books)}"></label>
 	<div class="dataTable">
 		<table>
 			<tbody>
@@ -56,7 +56,7 @@
 </div>
 
 <div th:fragment="readOnlyReadList(text, books)">
-	<label th:text="${text}"></label>
+	<label th:text="${text}+': '+${#lists.size(books)}"></label>
 	<div class="dataTable">
 		<table>
 			<tbody>
