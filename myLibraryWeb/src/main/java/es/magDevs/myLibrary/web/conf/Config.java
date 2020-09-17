@@ -105,6 +105,7 @@ public class Config extends WebMvcConfigurerAdapter {
     @Bean
     public LiteDeviceDelegatingViewResolver getLiteDeviceDelegatingViewResolver() {
         ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver();
+        thymeleafViewResolver.setViewClass(CustomThymeleafView.class);
         thymeleafViewResolver.setTemplateEngine(getSpringTemplateEngine());
         thymeleafViewResolver.setCharacterEncoding("UTF-8");
         thymeleafViewResolver.setContentType("text/html;charset=UTF-8");
