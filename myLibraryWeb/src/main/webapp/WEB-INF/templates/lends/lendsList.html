@@ -40,7 +40,9 @@
 						</form>
 					</td>
 					<td th:text="${lendData.fecha}"></td>
-					<td th:text="${lendData.usuario.nombre}" th:title="${lendData.usuario.nombre}"></td>
+					<td th:title="${lendData.usuario.nombre}">
+						<div th:include="commons/components::readOnlySingleLink(${lendData.usuario.nombre}, @{/users_readid?readid=}+${lendData.usuario.id})"></div>
+					</td>
 					<td th:title="${lendData.libro.titulo}">
 						<div th:include="commons/components::readOnlySingleLink(${lendData.libro.titulo}, @{/books_readid?readid=}+${lendData.libro.id})"></div>
 					</td>
