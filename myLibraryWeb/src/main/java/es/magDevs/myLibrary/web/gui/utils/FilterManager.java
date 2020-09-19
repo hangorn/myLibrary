@@ -248,7 +248,7 @@ public class FilterManager {
 				}
 			}
 		}
-		if (filter != null) {
+		if (filter != null && filter.getLibro() != null && StringUtils.isBlank(filter.getLibro().getTitulo())) {
 			filter.setLibro(null);
 		}
 		if (isAdmin)  {

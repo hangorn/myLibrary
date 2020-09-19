@@ -71,6 +71,7 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 		Prestamo filter = (Prestamo)f;
 		Criteria c = session.createCriteria(Prestamo.class);
 		c.createAlias("usuario", "usr");
+		c.createAlias("libro", "lib");
 		if (filter == null) {
 			return c;
 		}
@@ -82,7 +83,7 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 		}
 		// Titulo del libro
 		if (filter.getLibro() != null && StringUtils.isNotEmpty(filter.getLibro().getTitulo())) {
-			c.createCriteria("libro").add(Restrictions.like("titulo", "%"+ filter.getLibro().getTitulo() + "%"));
+			c.add(Restrictions.like("lib.titulo", "%"+ filter.getLibro().getTitulo() + "%"));
 		}
 		// Usuario
 		if (filter.getUsuario() != null && filter.getUsuario().getId() != null) {
@@ -125,7 +126,6 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 				}
 			}
 			
-			query.createAlias("libro", "lib");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
