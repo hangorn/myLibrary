@@ -254,7 +254,8 @@ public class FilterManager {
 		if (isAdmin)  {
 			// Si es administrador y no hay filtros, no filtramos por nada
 			if (filter == null || (sinOrdenacion(filter)
-					&& (filter.getLibro() == null || StringUtils.isBlank(filter.getLibro().getTitulo())) && 
+					&& (filter.getLibro() == null || StringUtils.isBlank(filter.getLibro().getTitulo())) &&
+					StringUtils.isEmpty(filter.getAutoresTxt()) &&
 					(filter.getUsuario() == null || StringUtils.isBlank(filter.getUsuario().getNombre())))) {
 				return null;
 			}

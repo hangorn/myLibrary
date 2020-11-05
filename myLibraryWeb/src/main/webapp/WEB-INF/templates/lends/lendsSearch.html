@@ -32,6 +32,10 @@
 				<label for="libro.titulo" th:text="#{books.field.title}"></label>
 				<input type="text" th:field="*{libro.titulo}" th:errorclass="fieldError" />
 			</div>
+			<div class="searchField">
+				<label for="autoresTxt" th:text="#{books.table.head.author}"></label>
+				<input type="text" th:field="*{autoresTxt}" th:errorclass="fieldError" />
+			</div>
 			<div class="searchReset">
 				<img onclick="clearSearch()" th:alt-title="#{menu.search.reset}" th:src="@{img/searchmenu/reset.png}" />
 			</div>

@@ -72,7 +72,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 		Leido filter = (Leido)f;
 		Criteria c = session.createCriteria(Leido.class, "leido");
 		c.createAlias("usuario", "usuario");
-		c.createAlias("libro", "lib");
+		Criteria critLibros = c.createCriteria("libro", "lib");
 		if (filter == null) {
 			return c;
 		}
@@ -84,6 +84,10 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 		// Titulo del libro
 		if (filter.getLibro() != null && StringUtils.isNotEmpty(filter.getLibro().getTitulo())) {
 			c.add(Restrictions.like("lib.titulo", "%"+ filter.getLibro().getTitulo() + "%"));
+		}
+		// Autor del libro
+		if (StringUtils.isNotEmpty(filter.getAutoresTxt())) {
+			critLibros.add(Restrictions.sqlRestriction("{alias}.id IN (SELECT libro FROM libros_autores libA JOIN autores aut ON libA.autor=aut.id AND CONCAT(aut.nombre,aut.apellidos) like '%"+filter.getAutoresTxt()+"%')"));
 		}
 		// Usuario
 		if (filter.getUsuario() != null && filter.getUsuario().getId() != null) {

@@ -71,7 +71,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 		Pendiente filter = (Pendiente)f;
 		Criteria c = session.createCriteria(Pendiente.class, "pendiente");
 		c.createAlias("usuario", "usuario");
-		c.createAlias("pendiente.libro", "libro");
+		Criteria critLibros = c.createCriteria("pendiente.libro", "libro");
 		if (filter == null) {
 			return c;
 		}
@@ -84,6 +84,10 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 		// Titulo del libro
 		if (filter.getLibro() != null && StringUtils.isNotEmpty(filter.getLibro().getTitulo())) {
 			c.add(Restrictions.like("libro.titulo", "%"+ filter.getLibro().getTitulo() + "%"));
+		}
+		// Autor del libro
+		if (StringUtils.isNotEmpty(filter.getAutoresTxt())) {
+			critLibros.add(Restrictions.sqlRestriction("{alias}.id IN (SELECT libro FROM libros_autores libA JOIN autores aut ON libA.autor=aut.id AND CONCAT(aut.nombre,aut.apellidos) like '%"+filter.getAutoresTxt()+"%')"));
 		}
 		// Usuario
 		if (filter.getUsuario() != null && filter.getUsuario().getId() != null) {

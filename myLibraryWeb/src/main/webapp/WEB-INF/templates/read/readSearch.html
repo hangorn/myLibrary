@@ -29,6 +29,10 @@
 				<input type="text" th:field="*{libro.titulo}" th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
+				<label for="autoresTxt" th:text="#{books.table.head.author}"></label>
+				<input type="text" th:field="*{autoresTxt}" th:errorclass="fieldError" />
+			</div>
+			<div class="searchField">
 				<label for="fechaMinTxt" th:text="#{since}"></label>
 				<input type="date" th:field="*{fechaMinTxt}" th:errorclass="fieldError" />
 			</div>
