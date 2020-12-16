@@ -38,6 +38,7 @@ import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Pendiente;
+import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.PendienteDao;
@@ -131,6 +132,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 				}
 			}
 
+			query.createAlias("libro.ubicacion", "ubicacion");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
@@ -139,7 +141,8 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 					.add(Projections.property("usuario.id"))
 					.add(Projections.property("usuario.nombre"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
-							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
+							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
+					.add(Projections.property("ubicacion.codigo"));
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
 			List<Pendiente> data = new ArrayList<>();
@@ -156,6 +159,8 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 				pendiente.getUsuario().setId((Integer) objects[i++]);
 				pendiente.getUsuario().setNombre((String) objects[i++]);
 				pendiente.setAutoresTxt((String) objects[i++]);
+				pendiente.getLibro().setUbicacion(new Ubicacion());
+				pendiente.getLibro().getUbicacion().setCodigo((String) objects[i++]);
 				data.add(pendiente);
 			}
 			s.getTransaction().commit();

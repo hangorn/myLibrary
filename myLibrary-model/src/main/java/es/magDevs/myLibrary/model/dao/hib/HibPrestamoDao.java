@@ -38,6 +38,7 @@ import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.beans.Bean;
 import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Prestamo;
+import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.beans.Usuario;
 import es.magDevs.myLibrary.model.commons.SqlOrder;
 import es.magDevs.myLibrary.model.dao.PrestamoDao;
@@ -129,7 +130,8 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 					query.addOrder(order);
 				}
 			}
-			
+
+			query.createAlias("libro.ubicacion", "ubicacion");
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
@@ -138,7 +140,8 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 					.add(Projections.property("usr.id"))
 					.add(Projections.property("usr.nombre"))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(concat(ifnull(concat(a.nombre,' '), ''),a.apellidos) SEPARATOR ', ') "
-							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}));
+							+ "FROM libros_autores la JOIN autores a ON la.autor=a.id WHERE la.libro=this_.libro) AS autores_txt", new String[]{"autores_txt"}, new Type[]{StandardBasicTypes.STRING}))
+					.add(Projections.property("ubicacion.codigo"));
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
 			List<Prestamo> data = new ArrayList<>();
@@ -155,6 +158,8 @@ public class HibPrestamoDao extends HibAbstractDao implements PrestamoDao {
 				prestamo.getUsuario().setId((Integer) objects[i++]);
 				prestamo.getUsuario().setNombre((String) objects[i++]);
 				prestamo.setAutoresTxt((String) objects[i++]);
+				prestamo.getLibro().setUbicacion(new Ubicacion());
+				prestamo.getLibro().getUbicacion().setCodigo((String) objects[i++]);
 				data.add(prestamo);
 			}
 			s.getTransaction().commit();

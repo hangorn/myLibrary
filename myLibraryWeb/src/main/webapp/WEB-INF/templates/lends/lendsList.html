@@ -27,6 +27,7 @@
 					<th th:replace="commons/sorter :: sorter(#{login.form.username}, '6')"></th>
 					<th th:replace="commons/sorter :: sorter(#{books.field.title}, '4')"></th>
 					<th th:replace="commons/sorter :: sorter(#{books.table.head.author}, '7')"></th>
+					<th th:replace="commons/sorter :: sorter(#{books.table.head.place}, '8')"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -47,6 +48,7 @@
 						<div th:include="commons/components::readOnlySingleLink(${lendData.libro.titulo}, @{/books_readid?readid=}+${lendData.libro.id})"></div>
 					</td>
 					<td th:if="!${#strings.isEmpty(lendData.autoresTxt)}" th:text="${lendData.autoresTxt}" th:title="${lendData.autoresTxt}"></td>
+					<td th:text="${lendData.libro.ubicacion.codigo}"></td>
 				</tr>
 			</tbody>
 		</table>
