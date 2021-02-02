@@ -765,7 +765,8 @@ public class BooksController extends AbstractController {
 			Pendiente filterPendiente = new Pendiente();
 			filterPendiente.setLibro(new Libro());
 			filterPendiente.getLibro().setId(book.getId());
-			filterPendiente.setUsuario(user);
+			filterPendiente.setUsuario(new Usuario());
+			filterPendiente.getUsuario().setId(user.getId());
 			List<?> pendiente = DaoFactory.getPendienteDao().getWithPag(filterPendiente, 0, 0);
 			if (!pendiente.isEmpty()) {
 				book.setPendiente(((Pendiente) pendiente.get(0)).getFecha());
@@ -775,7 +776,8 @@ public class BooksController extends AbstractController {
 			filterLeido = new Leido();
 			filterLeido.setLibro(new Libro());
 			filterLeido.getLibro().setId(book.getId());
-			filterLeido.setUsuario(user);
+			filterLeido.setUsuario(new Usuario());
+			filterLeido.getUsuario().setId(user.getId());
 			filterLeido.setPrestado(Constants.IS_NULL);
 			@SuppressWarnings("unchecked")
 			List<Leido> leido = (List<Leido>) DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0);

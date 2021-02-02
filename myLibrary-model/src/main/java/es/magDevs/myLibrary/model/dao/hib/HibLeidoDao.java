@@ -32,6 +32,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 
@@ -149,7 +150,7 @@ public class HibLeidoDao extends HibAbstractDao implements LeidoDao {
 				}
 			}
 
-			query.createAlias("libro.ubicacion", "ubicacion");
+			query.createAlias("libro.ubicacion", "ubicacion", JoinType.LEFT_OUTER_JOIN);
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))

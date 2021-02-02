@@ -31,6 +31,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 
@@ -132,7 +133,7 @@ public class HibPendienteDao extends HibAbstractDao implements PendienteDao {
 				}
 			}
 
-			query.createAlias("libro.ubicacion", "ubicacion");
+			query.createAlias("libro.ubicacion", "ubicacion", JoinType.LEFT_OUTER_JOIN);
 			ProjectionList projection = Projections.projectionList()
 					.add(Projections.property("id"))
 					.add(Projections.property("fecha"))
