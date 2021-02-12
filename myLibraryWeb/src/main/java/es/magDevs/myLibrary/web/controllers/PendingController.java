@@ -124,6 +124,25 @@ public class PendingController extends AbstractController {
 	}
 	
 	@Override
+	public String acceptUpdate(Bean newElement, Model model) {
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
+			PendienteDao dao = DaoFactory.getPendienteDao();
+			try {
+				dao.beginTransaction();
+				((Pendiente) newElement).setUsuario(new Usuario(userid, null, null, null, null, null, null));
+				dao.update(newElement);
+				dao.commitTransaction();
+			} catch (Exception e) {
+				dao.rollbackTransaction();
+				throw new RuntimeException(e);
+			}
+		}
+		model.addAllAttributes(FragmentManager.getEmptyBody(""));
+		return "commons/body";
+	}
+	
+	@Override
 	public String delete(Integer index, Model model) {
 		Integer userid = MainController.getUserid();
 		if (userid != null) {

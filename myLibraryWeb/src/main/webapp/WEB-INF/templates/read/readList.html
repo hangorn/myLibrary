@@ -34,12 +34,19 @@
 					<td>
 						<form th:action="@{/read_delete}" method="post" th:onsubmit="'return confirm(&#34;' + #{unmark.read.confirmation(${readData.libro.titulo})} + '&#34;);'">
 							<input type="hidden" name="delete" th:value="${readData.id}"></input>
-							<button type="submit" th:title="#{unmark.read(${readData.fecha})}" >
-								<img th:alt-title="#{unmark.read(${readData.fecha})}" th:src="@{img/menu/unmark_read.png}" width="20px" height="20px"/>
+							<button type="submit" th:title="#{unmark.read(${readData.fechaTxt})}" >
+								<img th:alt-title="#{unmark.read(${readData.fechaTxt})}" th:src="@{img/menu/unmark_read.png}" width="20px" height="20px"/>
 							</button>
 						</form>
 					</td>
-					<td th:text="${readData.fechaTxt}"></td>
+					<td>
+						<span th:text="${readData.fechaTxt}"></span>
+						<input type="hidden" name="libro.id" th:value="${readData.libro.id}"></input>
+						<input type="hidden" name="id" th:value="${readData.id}"></input>
+						<button type="button" th:title="#{pending.update.date}" onclick="modificarFechaLista(this);" style="margin-left:20px;">
+							<img th:alt-title="#{pending.update.date}" th:src="@{img/crudmenu/update.png}" width="20px" height="20px"/>
+						</button>
+					</td>
 					<td th:title="${readData.libro.titulo}">
 						<div th:include="commons/components::readOnlySingleLink(${readData.libro.titulo}, @{/books_readid?readid=}+${readData.libro.id})"></div>
 					</td>
@@ -49,5 +56,37 @@
 			</tbody>
 		</table>
 	</div>
+	
+	<!-- dialogo para seleccionara una fecha -->
+	<div id="selectDateFormBackground" class="background" style="display: none;">
+		<div id="selectDateFormContainer" class="dataFormContainer" style="height: 20%; overflow: hidden;">
+			<div id="selectDateBookForm" class="dataForm" style="height: 90%;">
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
+					<div class="dataFormField" style="display:inline;">
+						<label for="selectedDate" th:text="#{date}"> </label>
+						<input type="date" id="selectedDate"/>
+					</div>
+					<button th:title="#{accept}" type="button" id="acceptSelectDate">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
+							th:text="#{accept}"></label>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelSelectDate">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+    	pendingLink = /*[[@{/read}]]*/;
+		
+	    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+	    csrfToken=/*[[${_csrf.token}]]*/;
+	/*]]>*/
+	</script>
+	<script th:src="@{#{js.pendingListScripts}}" type="text/javascript"></script>
 </div>
 </html>

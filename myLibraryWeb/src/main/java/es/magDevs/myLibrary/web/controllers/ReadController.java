@@ -37,6 +37,7 @@ import es.magDevs.myLibrary.model.dao.PendienteDao;
 import es.magDevs.myLibrary.web.controllers.main.MainController;
 import es.magDevs.myLibrary.web.gui.utils.DatesManager;
 import es.magDevs.myLibrary.web.gui.utils.FilterManager;
+import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 
 /**
@@ -152,6 +153,32 @@ public class ReadController extends AbstractController {
 			}
 		}
 		return list(model);
+	}
+	
+	@Override
+	public String acceptUpdate(Bean newElement, Model model) {
+		Leido leido = (Leido) newElement;
+		if (StringUtils.isEmpty(leido.getFechaTxt())) {
+			leido.setFecha(DatesManager.getIntToday());
+		} else {
+			leido.setFecha(DatesManager.string2Int(leido.getFechaTxt()));
+		}
+		
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
+			LeidoDao dao = DaoFactory.getLeidoDao();
+			try {
+				dao.beginTransaction();
+				(leido).setUsuario(new Usuario(userid, null, null, null, null, null, null));
+				dao.update(leido);
+				dao.commitTransaction();
+			} catch (Exception e) {
+				dao.rollbackTransaction();
+				throw new RuntimeException(e);
+			}
+		}
+		model.addAllAttributes(FragmentManager.getEmptyBody(""));
+		return "commons/body";
 	}
 	
 	@Override
