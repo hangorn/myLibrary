@@ -31,7 +31,7 @@ buttonQuitTranslator.onclick = function() {
 		// Creamos un peticion AJAX
 		var ajaxRequest = new XMLHttpRequest();
 		// Configuramos y enviamos la peticion
-		ajaxRequest.open("POST", booksLink+"_related_quit_translators", true);
+		ajaxRequest.open("POST", booksLink+"_related_delete_translators", true);
 		ajaxRequest.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded");
 		ajaxRequest.send("data=" + translatorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);

@@ -31,7 +31,7 @@ buttonQuitAuthor.onclick = function() {
 		// Creamos un peticion AJAX
 		var ajaxRequest = new XMLHttpRequest();
 		// Configuramos y enviamos la peticion
-		ajaxRequest.open("POST", booksLink+"_related_quit_authors", true);
+		ajaxRequest.open("POST", booksLink+"_related_delete_authors", true);
 		ajaxRequest.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded");
 		ajaxRequest.send("data=" + authorsIdToRemove+"&"+csrfParameterName+"="+csrfToken);
