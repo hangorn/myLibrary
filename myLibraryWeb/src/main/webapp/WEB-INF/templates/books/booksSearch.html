@@ -47,6 +47,7 @@
 					<option th:each="dataPlace : ${dataPlaces}" th:value="${dataPlace.codigo}"
 						th:text="${dataPlace.codigo}+' '+${#strings.defaultString(dataPlace.descripcion,'')}"
 						th:selected="*{ubicacion.codigo} == ${dataPlace.codigo}"></option>
+					<option th:text="#{places.without}" value="-1"></option>
 				</select>
 			</div>
 			<div class="searchField">

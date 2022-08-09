@@ -191,9 +191,11 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		// Ubicacion
 		if (filter.getUbicacion() != null
 				&& !StringUtils.isBlank(filter.getUbicacion().getCodigo())) {
-			c.createCriteria("ubicacion").add(
-					Restrictions
-							.eq("codigo", filter.getUbicacion().getCodigo()));
+			if (filter.getUbicacion().getCodigo().equals("-1")) {
+				c.add(Restrictions.isNull("ubicacion"));
+			} else {
+				c.createCriteria("ubicacion").add(Restrictions.eq("codigo", filter.getUbicacion().getCodigo()));
+			}
 		}
 		// Coleccion
 		if (filter.getColeccion() != null
