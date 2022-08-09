@@ -225,6 +225,9 @@ body {
 	background-color: #fff6a2;
 	height: 63px;
 }
+.subMenuMultiselect {
+	position: fixed;
+}
 
 .crudmenu {
 	float: left;

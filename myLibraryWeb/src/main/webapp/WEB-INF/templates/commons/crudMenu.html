@@ -17,7 +17,7 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:style="${multiselect} ? 'position: fixed;' : '' " class="subMenu" th:fragment="crudMenu">
+<div th:class="'subMenu' + (${multiselect} ? ' subMenuMultiselect' : '')" th:fragment="crudMenu">
 	<div th:if="!${multiselect} AND !${sectionsNoCrud.contains(section)}" class="crudmenu">
 		<form th:action="@{'/'+${section}}" method="post" id="crudForm">
 			<nav>
