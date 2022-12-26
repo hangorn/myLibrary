@@ -33,5 +33,8 @@
     multiselect = /*[[${multiselect}]]*/;
 	/*]]>*/
 	</script>
+	<script th:inline="javascript" th:if="${data} != null AND ${data.size()} == 1">
+		document.getElementById('row_0').onclick();
+	</script>
 </div>
 </html>
