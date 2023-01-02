@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -43,7 +43,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
  */
 @EnableWebMvc @Configuration
 @ComponentScan(value={"es.magDevs.myLibrary.*"})
-public class Config extends WebMvcConfigurerAdapter {
+public class Config implements WebMvcConfigurer {
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	//Establece directorios de recursos
