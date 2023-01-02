@@ -44,9 +44,9 @@ public class UserBean extends Usuario {
 	public Set<GrantedAuthority> getAuths() {
 		if (auths == null) {
 			auths = new HashSet<GrantedAuthority>();
-			if (isEnabled()) {
+			if (isEnabledNotNull()) {
 				auths.add(new SimpleGrantedAuthority(Constants.ROLE_ROLE_USER));
-				if (isAdmin()) {
+				if (isAdminNotNull()) {
 					auths.add(new SimpleGrantedAuthority(Constants.ROLE_ROLE_ADMIN));
 				}
 			}

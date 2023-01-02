@@ -49,7 +49,7 @@ public class ConfUserDetailsService implements UserDetailsService {
 			UserBean user = new UserBean(dao.getUser(username));
 			// Creamos los detalles del usuario para Spring
 			User userDetails = new AuthenticatedUser(user.getId(), user.getUsername(), user.getPassword(),
-					user.isEnabled(), true, true, true, user.getAuths());
+					user.isEnabledNotNull(), true, true, true, user.getAuths());
 			dao.commitTransaction();
 			return userDetails;
 		} catch (Exception e) {

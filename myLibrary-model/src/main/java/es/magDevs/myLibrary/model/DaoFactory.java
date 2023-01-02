@@ -20,8 +20,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,18 +115,15 @@ public class DaoFactory {
 		if (dataAccessType == HIBERNATE) {
 			try {
 				// Cargamos la configuracion de hibernate de donde corresponda
-				Configuration hibernateConfiguration = new Configuration()
-						.configure(conf
-								.getProperty("hibernate.configurationFile"));
-				// Cargamos las credenciales del fichero correspondiente
-				setHibernateProperty(hibernateConfiguration, "hibernate.connection.password", conf.getProperty("password"));
-				setHibernateProperty(hibernateConfiguration, "hibernate.connection.username", conf.getProperty("username"));
-				setHibernateProperty(hibernateConfiguration, "hibernate.connection.url", conf.getProperty("url"));
-				// Creamos una factorias de sesiones
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-						.applySettings(hibernateConfiguration.getProperties()).build();
-				SessionFactory factory = hibernateConfiguration
-						.buildSessionFactory(serviceRegistry);
+						.configure(conf.getProperty("hibernate.configurationFile"))
+						// Cargamos las credenciales del fichero correspondiente
+						.applySetting(AvailableSettings.PASS, conf.getProperty("password"))
+						.applySetting(AvailableSettings.USER, conf.getProperty("username"))
+						.build();
+				
+				// Creamos una factorias de sesiones
+				SessionFactory factory = new MetadataSources(serviceRegistry).buildMetadata().buildSessionFactory();
 				log.info("Iniciada factoria hibernate para la instanciacion de los DAO disponibles.");
 				return factory;
 			} catch (Exception ex) {
@@ -137,22 +135,6 @@ public class DaoFactory {
 		}
 	}
 	
-	/**
-	 * Fija una propiedad de configuracion de Hibernate
-	 * 
-	 * @param configuration de Hibernate
-	 * @param key
-	 *            clave de la propiedad de configuracion de Hibernate
-	 * @param value
-	 *            valor de la propiedad de configuracion de Hibernate, si es
-	 *            <code>null</code> no se realizara ninguna operacion
-	 */
-	private static void setHibernateProperty(Configuration configuration, String key, String value) {
-		if(value != null) {
-			configuration.getProperties().setProperty(key, value);
-		}
-	}
-
 	/**
 	 * Proporciona el dao correspondiente para acceder a los datos de los
 	 * autores

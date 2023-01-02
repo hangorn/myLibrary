@@ -206,14 +206,14 @@ public class Usuario extends Bean {
 		return getUsername().hashCode();
 	}
 
-	public boolean isEnabled() {
+	public boolean isEnabledNotNull() {
 		if (getEnabled() == null) {
 			return false;
 		}
 		return getEnabled();
 	}
 
-	public boolean isAdmin() {
+	public boolean isAdminNotNull() {
 		if (getAdmin() == null) {
 			return false;
 		}
