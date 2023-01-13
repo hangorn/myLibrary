@@ -191,7 +191,7 @@ document.getElementById("acceptLendBook").onclick = function() {
 			img.src = img.src.replace("lend","return");
 			img.title = messageReturn.replace("{0}",nombreSelected);
 			img.alt = messageReturn.replace("{0}",nombreSelected);
-			var label = buttonLendReturn.getElementsByTagName("label")[0];
+			var label = buttonLendReturn.getElementsByTagName("span")[0];
 			label.innerText = messageReturn.replace("{0}",nombreSelected);
 			hideLoading();
 		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
@@ -225,7 +225,7 @@ var returnBook = function() {
 			img.src = img.src.replace("return","lend");
 			img.title = messageLend;
 			img.alt = messageLend;
-			var label = buttonLendReturn.getElementsByTagName("label")[0];
+			var label = buttonLendReturn.getElementsByTagName("span")[0];
 			label.innerText = messageLend;
 			hideLoading();
 		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {

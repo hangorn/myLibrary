@@ -68,7 +68,7 @@ var acceptMarkRead = function() {
 			button.id = "unmarkReadBookButton-"+idMarkRead;
 			button.innerHTML = 
 				'<img width="32px" height="32px" alt="'+txt+'" title="'+txt+'" src="'+imgSrc+'"/>'+
-				'<label>'+txt+'</label>';
+				'<span>'+txt+'</span>';
 			button.onclick = unmarkRead;
 			markReadButton.parentElement.appendChild(button);
 			
@@ -80,7 +80,7 @@ var acceptMarkRead = function() {
 				img.src = img.src.replace("no_pending","pending");
 				img.title = messageMarkPending;
 				img.alt = messageMarkPending;
-				var label = buttonPending.getElementsByTagName("label")[0];
+				var label = buttonPending.getElementsByTagName("span")[0];
 				label.innerText = messageMarkPending;
 			}
 			hideLoading();

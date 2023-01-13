@@ -133,7 +133,8 @@ public class Constants {
 		LENDS("lends"),
 		USERS("users"),
 		PENDING("pending"),
-		READ("read");
+		READ("read"),
+		CART("cart");
 		
 		private static Map<String, CONTROLLER> instances;
 		private static void saveInstance(String s,CONTROLLER c) {

@@ -93,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ((AuthorizedUrl)r.antMatchers(new String[]{"/css/**"})).permitAll();
 
         // Para usuario normal
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/booksCart\\??"})).hasRole(Constants.ROLE_USER);
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/passwordChange\\??"})).hasRole(Constants.ROLE_USER);
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/passwordacceptChange\\??"})).hasRole(Constants.ROLE_USER);
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/logout\\??"})).hasRole(Constants.ROLE_USER);
@@ -100,6 +101,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         for (SECTION section : Arrays.asList(SECTION.PENDING, SECTION.READ)) {
             ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, "/" + section.get() + "_acceptCreation", "/" + section.get() + "_delete")).hasRole(Constants.ROLE_USER);
         }
+        // Los usuarios normales pueden usar el carrito
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/cart\\??"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_multiupdate"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_related_[a-z_]+"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_delete"})).hasRole(Constants.ROLE_USER);
         
         //Para todo lo demas se necesita rol de usuario administrador
         ((AuthorizedUrl)r.antMatchers(new String[]{"/**"})).hasRole(Constants.ROLE_ADMIN);

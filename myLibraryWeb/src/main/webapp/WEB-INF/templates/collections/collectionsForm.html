@@ -41,8 +41,8 @@
 			</select>
 			<button th:if="${editable}" id="addNewPublisher" class="addQuitButton" th:title="#{books.crud.newPublisher}"
 				type="button">
-				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <label
-					th:text="#{books.crud.newPublisher}"></label>
+				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <span
+					th:text="#{books.crud.newPublisher}"></span>
 			</button>
 			<div th:if="!${editable}"
 				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, (*{editorial} != null AND *{editorial.id} != null) ? @{/publishers_readid?readid=}+*{editorial.id} : null)"></div>
@@ -66,11 +66,11 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewPublisher}" type="button" id="acceptNewPublisher">
-						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewPublisher">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>

@@ -1,0 +1,87 @@
+<!--
+
+    Copyright (c) 2014-2015, Javier Vaquero
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    required by applicable law or agreed to in writing, software
+    under the License is distributed on an "AS IS" BASIS,
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    the License for the specific language governing permissions and
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="cartList">
+	<div class="subMenu">
+		<div class="crudmenu">
+			<nav>
+				<ul>
+					<li>
+						<div class="submenuitem">
+							<form th:action="@{/cart_multiupdate}" method="post">
+								<button type="submit" th:title="#{cart.empty}">
+									<img th:alt-title="#{cart.empty}" th:src="@{img/crudmenu/delete.png}"/>
+									<span th:text="#{cart.empty}"></span>
+								</button>
+							</form>
+						</div>
+					</li>
+				
+<!-- 					<li th:if="${adminData} != null"><a onclick="submit('crudForm','create',index,'')"> -->
+<!-- 							<div class="submenuitem"> -->
+<!-- 								<img th:alt-title="#{${section}+'.menu.create'}" th:src="@{img/crudmenu/create.png}" /> -->
+<!-- 							</div> -->
+<!-- 						</a></li> -->
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+
+	<div class="dataTable" th:if="(${data} != null AND !${#lists.isEmpty(data)})">
+		<table>
+			<thead>
+				<tr>
+					<th style="width: min-content" th:if="${userData} != null"></th>
+					<th th:text="#{books.table.head.title}"></th>
+					<th th:text="#{books.table.head.author}"></th>
+					<th th:text="#{books.table.head.publisher}"></th>
+					<th th:text="#{books.table.head.type}"></th>
+					<th th:text="#{books.table.head.place}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bookData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
+					<td>
+						<div style="display: flex; flex-direction: row; justify-content: space-between;">
+							<form th:action="@{/cart_delete}" method="post">
+								<input type="hidden" name="delete" th:value="${bookData.id}"></input>
+								<button type="submit" th:title="#{cart.remove}">
+									<img th:alt-title="#{cart.remove}" th:src="@{img/menu/cart_remove.png}" width="20px" height="20px" style="margin-bottom: -4px;"/>
+								</button>
+							</form>
+						</div>
+					</td>
+					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
+						th:title="${bookData.titulo}"></td>
+					<td th:if="!${#strings.isEmpty(bookData.autoresTxt)}" th:text="${bookData.autoresTxt}" th:title="${bookData.autoresTxt}"></td>
+					<td th:if="${#strings.isEmpty(bookData.autoresTxt)}" th:text="#{authors.anonymous}" th:title="#{authors.anonymous}"></td>
+					<td th:text="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
+						th:title="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"></td>
+					<td th:text="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"
+						th:title="${bookData.tipo}!=null?${bookData.tipo.descripcion}:''"></td>
+					<td th:text="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"
+						th:title="${bookData.ubicacion}!=null?${bookData.ubicacion.codigo}:''"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{cart.table.empty}"></div>
+</div>
+</html>

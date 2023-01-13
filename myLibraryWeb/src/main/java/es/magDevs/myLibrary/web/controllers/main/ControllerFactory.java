@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import es.magDevs.myLibrary.model.Constants.CONTROLLER;
 import es.magDevs.myLibrary.web.controllers.AuthorsController;
 import es.magDevs.myLibrary.web.controllers.BooksController;
+import es.magDevs.myLibrary.web.controllers.CartController;
 import es.magDevs.myLibrary.web.controllers.CollectionsController;
 import es.magDevs.myLibrary.web.controllers.LendsController;
 import es.magDevs.myLibrary.web.controllers.PendingController;
@@ -56,6 +57,7 @@ public class ControllerFactory {
 		controllers.put(CONTROLLER.USERS, new UsersController(messageSource, passwordEncoder));
 		controllers.put(CONTROLLER.PENDING, new PendingController(messageSource));
 		controllers.put(CONTROLLER.READ, new ReadController(messageSource));
+		controllers.put(CONTROLLER.CART, new CartController(messageSource));
 	}
 
 	/**

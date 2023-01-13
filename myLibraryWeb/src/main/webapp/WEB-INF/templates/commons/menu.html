@@ -59,18 +59,25 @@
 					<button class="menuBtn" type="submit"
 						th:onmouseover="'document.getElementById(\'loginImg\').src=\''+@{img/menu/lock_open.png}+'\''"
 						th:onmouseout="'document.getElementById(\'loginImg\').src=\''+@{img/menu/lock_closed.png}+'\''">
-						<img id="loginImg" th:src="@{img/menu/lock_closed.png}" /> <label th:text="#{login.form.login}"></label>
+						<img id="loginImg" th:src="@{img/menu/lock_closed.png}" /> <span th:text="#{login.form.login}"></span>
 					</button>
 					<!-- 					cache para imagen del boton de login -->
 					<img id="loginImgCache" th:src="@{img/menu/lock_open.png}" style="display: none" />
 				</form>
 			</div>
 			<div th:if="${userData} != null" class="loginMenu">
+				<form th:action="@{cart}" method="get">
+					<button class="menuBtn" type="submit" th:title="#{cart}">
+						<img th:src="@{img/menu/cart.png}" style="float:left;" />
+						<span th:text="${cartBooks.size()}" class="numCartBooks" id="numBooksInCart"></span><span th:text="#{cart}"></span>
+					</button>
+				</form>
+			
 				<form th:action="@{passwordChange}" method="get">
 					<button class="menuBtn" type="submit" th:title="#{login.form.config}"
 						th:onmouseover="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.gif}+'\''"
 						th:onmouseout="'document.getElementById(\'userConfigImg\').src=\''+@{img/menu/gear.png}+'\''">
-						<img id="userConfigImg" th:src="@{img/menu/gear.png}" /> <label th:text="#{login.form.settings}"></label>
+						<img id="userConfigImg" th:src="@{img/menu/gear.png}" /> <span th:text="#{login.form.settings}"></span>
 						<!-- 					cache para imagen del boton de configuracion -->
 						<img id="logoutImgCache" th:src="@{img/menu/gear.gif}" style="display: none" />
 					</button>
@@ -79,7 +86,7 @@
 					<button class="menuBtn" type="submit"
 						th:onmouseover="'document.getElementById(\'logoutImg\').src=\''+@{img/menu/lock_open.png}+'\''"
 						th:onmouseout="'document.getElementById(\'logoutImg\').src=\''+@{img/menu/lock_closed.png}+'\''">
-						<img id="logoutImg" th:src="@{img/menu/lock_closed.png}" /> <label th:text="#{login.form.logout}"></label>
+						<img id="logoutImg" th:src="@{img/menu/lock_closed.png}" /> <span th:text="#{login.form.logout}"></span>
 					</button>
 					<!-- 					cache para imagen del boton de login -->
 					<img id="logoutImgCache" th:src="@{img/menu/lock_open.png}" style="display: none" />

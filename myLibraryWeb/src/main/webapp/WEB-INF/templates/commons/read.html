@@ -27,14 +27,14 @@
 				<form th:if="${adminData} != null" th:action="@{'/'+${section}+'_updateid'}" method="get">
 					<input type="hidden" th:value="${elementData.id}" name="update"/>
 					<button th:title="#{${section}+'.menu.update'}" type="submit" formnovalidate="formnovalidate">
-						<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" /> <label
-							th:text="#{modify}"></label>
+						<img th:alt-title="#{${section}+'.menu.update'}" th:src="@{img/crudmenu/update.png}" /> <span
+							th:text="#{modify}"></span>
 					</button>
 				</form>
 				<form th:action="@{'/'+${section}}" method="get">
 					<button th:title="#{${section}+'.crud.closeRead'}" type="submit" formnovalidate="formnovalidate" name="">
-						<img th:alt-title="#{${section}+'.crud.closeRead'}" th:src="@{img/searchmenu/reset.png}" /> <label
-							th:text="#{close}"></label>
+						<img th:alt-title="#{${section}+'.crud.closeRead'}" th:src="@{img/searchmenu/reset.png}" /> <span
+							th:text="#{close}"></span>
 					</button>
 				</form>
 			</div>

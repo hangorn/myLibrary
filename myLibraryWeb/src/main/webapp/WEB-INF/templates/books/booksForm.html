@@ -119,8 +119,8 @@
 			</select>
 			<button th:if="${editable}" id="addNewPublisher" class="addQuitButton" th:title="#{books.crud.newPublisher}"
 				type="button">
-				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <label
-					th:text="#{books.crud.newPublisher}"></label>
+				<img th:alt-title="#{books.crud.newPublisher}" th:src="@{img/crudmenu/add.png}" /> <span
+					th:text="#{books.crud.newPublisher}"></span>
 			</button>
 			<div th:if="!${editable}"
 				th:include="commons/components::readOnlySingleLink(*{editorial} != null ? *{editorial.nombre} : null, (*{editorial} != null AND *{editorial.id} != null) ? @{/publishers_readid?readid=}+*{editorial.id} : null)"></div>
@@ -141,8 +141,8 @@
 			</select>
 			<button th:if="${editable}" id="addNewCollection" class="addQuitButton" th:title="#{books.crud.newCollection}"
 				type="button">
-				<img th:alt-title="#{books.crud.newCollection}" th:src="@{img/crudmenu/add.png}" /> <label
-					th:text="#{books.crud.newCollection}"></label>
+				<img th:alt-title="#{books.crud.newCollection}" th:src="@{img/crudmenu/add.png}" /> <span
+					th:text="#{books.crud.newCollection}"></span>
 			</button>
 			<div th:if="!${editable}"
 				th:include="commons/components::readOnlySingleLink(*{coleccion} != null ? *{coleccion.nombre}+' ('+(*{coleccion.editorial} == null?'':*{#strings.defaultString(coleccion.editorial.nombre,'')})+')', *{coleccion} != null ? @{/collections_readid?readid=}+*{coleccion.id} : null)"></div>
@@ -156,12 +156,12 @@
 					th:title="${#strings.defaultString(autor.nombre,'')}+' '+${autor.apellidos}" th:value="${autor.id}"></option>
 			</select>
 			<button th:if="${editable}" id="addAuthor" class="addQuitButton" th:title="#{books.crud.addAuthor}" type="button">
-				<img th:alt-title="#{books.crud.addAuthor}" th:src="@{img/crudmenu/add.png}" /> <label
-					th:text="#{books.crud.addAuthor}"></label>
+				<img th:alt-title="#{books.crud.addAuthor}" th:src="@{img/crudmenu/add.png}" /> <span
+					th:text="#{books.crud.addAuthor}"></span>
 			</button>
 			<button th:if="${editable}" id="quitAuthor" class="addQuitButton" th:title="#{books.crud.quitAuthor}" type="button">
-				<img th:alt-title="#{books.crud.quitAuthor}" th:src="@{img/crudmenu/quit.png}" /> <label
-					th:text="#{books.crud.quitAuthor}"></label>
+				<img th:alt-title="#{books.crud.quitAuthor}" th:src="@{img/crudmenu/quit.png}" /> <span
+					th:text="#{books.crud.quitAuthor}"></span>
 			</button>
 			<div th:if="!${editable} AND *{autores.size()} > 1" class="dataTable">
 				<table>
@@ -190,13 +190,13 @@
 			</select>
 			<button th:if="${editable}" id="addTranslator" class="addQuitButton" th:title="#{books.crud.addTranslator}"
 				type="button">
-				<img th:alt-title="#{books.crud.addTranslator}" th:src="@{img/crudmenu/add.png}" /> <label
-					th:text="#{books.crud.addTranslator}"></label>
+				<img th:alt-title="#{books.crud.addTranslator}" th:src="@{img/crudmenu/add.png}" /> <span
+					th:text="#{books.crud.addTranslator}"></span>
 			</button>
 			<button th:if="${editable}" id="quitTranslator" class="addQuitButton" th:title="#{books.crud.quitTranslator}"
 				type="button">
-				<img th:alt-title="#{books.crud.quitTranslator}" th:src="@{img/crudmenu/quit.png}" /> <label
-					th:text="#{books.crud.quitTranslator}"></label>
+				<img th:alt-title="#{books.crud.quitTranslator}" th:src="@{img/crudmenu/quit.png}" /> <span
+					th:text="#{books.crud.quitTranslator}"></span>
 			</button>
 			<div th:if="!${editable} AND *{traductores.size()} > 1" class="dataTable">
 				<table>
@@ -217,31 +217,31 @@
 			<div class="crudButtons">
 				<!-- Historial de prestamos -->
 				<button th:if="*{haTenidoPrestamos} OR *{prestamo} != null" th:title="#{lend}" type="button" id="lendsHistoryButton" style="float: left;margin-left: 20px;margin-right: -50%;">
-					<img th:alt-title="#{lends.history}" th:src="@{img/menu/lends.png}" width="32px" height="32px"/> <label th:text="#{lends.history}"></label>
+					<img th:alt-title="#{lends.history}" th:src="@{img/menu/lends.png}" width="32px" height="32px"/> <span th:text="#{lends.history}"></span>
 				</button>
 				<!-- Prestamo -->
 				<button th:if="${adminData} != null AND *{prestamo} == null" th:title="#{lend}" type="button" id="lendBookButton">
-					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <label th:text="#{lend}"></label>
+					<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <span th:text="#{lend}"></span>
 				</button>
 				<button th:if="${adminData} != null AND *{prestamo} != null" th:title="#{return(*{prestamo.nombre})}" type="button" id="returnBookButton">
-					<img th:alt-title="#{return(*{prestamo.nombre})}" th:src="@{img/crudmenu/return.png}" /> <label th:text="#{return(*{prestamo.nombre})}"></label>
+					<img th:alt-title="#{return(*{prestamo.nombre})}" th:src="@{img/crudmenu/return.png}" /> <span th:text="#{return(*{prestamo.nombre})}"></span>
 				</button>
 				
 				<!-- Pendiente -->
 				<button th:if="${userData} != null AND *{pendiente} == null" th:title="#{mark.pending}" type="button" id="markPendingBookButton">
-					<img width="32px" height="32px" th:alt-title="#{mark.pending}" th:src="@{img/menu/pending.png}" /> <label th:text="#{mark.pending}"></label>
+					<img width="32px" height="32px" th:alt-title="#{mark.pending}" th:src="@{img/menu/pending.png}" /> <span th:text="#{mark.pending}"></span>
 				</button>
 				<button th:if="${userData} != null AND *{pendiente} != null" th:title="#{unmark.pending(*{pendiente})}" type="button" id="unmarkPendingBookButton">
 					<img width="32px" height="32px" th:alt-title="#{unmark.pending(*{pendiente})}" th:src="@{img/menu/no_pending.png}"/>
-					<label th:text="#{unmark.pending(*{pendiente})}"></label>
+					<span th:text="#{unmark.pending(*{pendiente})}"></span>
 				</button>
 				<!-- Leido -->
 				<button th:if="${userData} != null" th:title="#{mark.read}" type="button" id="markReadButton">
-					<img width="32px" height="32px" th:alt-title="#{mark.read}" th:src="@{img/menu/mark_read.png}" /> <label th:text="#{mark.read}"></label>
+					<img width="32px" height="32px" th:alt-title="#{mark.read}" th:src="@{img/menu/mark_read.png}" /> <span th:text="#{mark.read}"></span>
 				</button>
 				<button th:each="leido : *{leidos}" th:if="${userData} != null" th:title="#{unmark.read(${leido.fechaTxt})}" type="button" class="unmarkReadBookButton" th:id="'unmarkReadBookButton-'+${leido.id}">
 					<img width="32px" height="32px" th:alt-title="#{unmark.read(${leido.fechaTxt})}" th:src="@{img/menu/unmark_read.png}"/>
-					<label th:text="#{unmark.read(${leido.fechaTxt})}"></label>
+					<span th:text="#{unmark.read(${leido.fechaTxt})}"></span>
 				</button>
 			</div>
 		</div>
@@ -261,11 +261,11 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewPublisher}" type="button" id="acceptNewPublisher">
-						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptNewPublisher}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewPublisher">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -282,11 +282,11 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewCollection}" type="button" id="acceptNewCollection">
-						<img th:alt-title="#{books.crud.acceptNewCollection}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptNewCollection}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewCollection">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -300,8 +300,8 @@
 				<label for="authorSearch" th:text="#{books.crud.labelAuthorSearch}"> </label> <input type="text" id="authorSearch"
 					class="searchInput" />
 				<button id="addNewAuthor" class="addQuitButton" th:title="#{books.crud.newAuthor}" type="button">
-					<img th:alt-title="#{books.crud.newAuthor}" th:src="@{img/crudmenu/add.png}" /> <label
-						th:text="#{books.crud.newAuthor}"></label>
+					<img th:alt-title="#{books.crud.newAuthor}" th:src="@{img/crudmenu/add.png}" /> <span
+						th:text="#{books.crud.newAuthor}"></span>
 				</button>
 				<div class="closeButton" id="closeButtonAuthors">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -358,10 +358,10 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewAuthor}" type="button" id="acceptNewAuthor">
-						<img th:alt-title="#{books.crud.acceptNewAuthor}" th:src="@{img/crudmenu/create.png}" /> <label th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptNewAuthor}" th:src="@{img/crudmenu/create.png}" /> <span th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewAuthor">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -375,8 +375,8 @@
 				<label for="translatorSearch" th:text="#{books.crud.labelTranslatorSearch}"> </label> <input type="text"
 					id="translatorSearch" class="searchInput" />
 				<button id="addNewTranslator" class="addQuitButton" th:title="#{books.crud.newTranslator}" type="button">
-					<img th:alt-title="#{books.crud.newTranslator}" th:src="@{img/crudmenu/add.png}" /> <label
-						th:text="#{books.crud.newTranslator}"></label>
+					<img th:alt-title="#{books.crud.newTranslator}" th:src="@{img/crudmenu/add.png}" /> <span
+						th:text="#{books.crud.newTranslator}"></span>
 				</button>
 				<div class="closeButton" id="closeButtonTranslators">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -409,11 +409,11 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{books.crud.acceptNewTranslator}" type="button" id="acceptNewTranslator">
-						<img th:alt-title="#{books.crud.acceptNewTranslator}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{add}"></label>
+						<img th:alt-title="#{books.crud.acceptNewTranslator}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewTranslator">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -428,7 +428,7 @@
 				<input type="text" id="usersSearch" class="searchInput" />
 				<button id="addNewUser" class="addQuitButton" th:title="#{user.new}" type="button">
 					<img th:alt-title="#{user.new}" th:src="@{img/crudmenu/add.png}"/>
-					<label th:text="#{user.new}"></label>
+					<span th:text="#{user.new}"></span>
 				</button>
 				<div class="closeButton" id="closeButtonLendBook">
 					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
@@ -450,11 +450,11 @@
 						<input type="date" id="lendDate"/>
 					</div>
 					<button th:title="#{lend}" type="button" id="acceptLendBook">
-						<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{lend}"></label>
+						<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{lend}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelLendBook">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -471,11 +471,11 @@
 				</div>
 				<div class="dataFormButtons">
 					<button th:title="#{accept}" type="button" id="acceptNewUser">
-						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{add}"></label>
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelNewUser">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>
@@ -492,11 +492,11 @@
 						<input type="date" id="selectedDate"/>
 					</div>
 					<button th:title="#{accept}" type="button" id="acceptSelectDate">
-						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <label
-							th:text="#{accept}"></label>
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{accept}"></span>
 					</button>
 					<button th:title="#{cancel}" type="button" id="cancelSelectDate">
-						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <label th:text="#{cancel}"></label>
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
 					</button>
 				</div>
 			</div>

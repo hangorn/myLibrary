@@ -103,7 +103,7 @@
 					<form th:action="@{'/'+${section}}" th:object="${elementData}" method="post" id="crudForm">
 						<button th:title="#{${section}+'.menu.acceptMultiupdateSelection'}" type="button" name="acceptUpdate">
 							<img th:alt-title="#{${section}+'.menu.acceptMultiupdateSelection'}" th:src="@{img/crudmenu/create.png}" />
-							<label th:text="#{accept}"></label>
+							<span th:text="#{accept}"></span>
 						</button>
 					</form>
 				</li>
@@ -111,7 +111,7 @@
 					<form th:action="@{'/'+${section}+'_acceptMultiupdateSelection'}" th:object="${elementData}" method="post"
 						id="crudForm">
 						<button th:title="#{cancel}" type="submit" formnovalidate="formnovalidate" name="">
-							<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /><label th:text="#{cancel}"></label>
+							<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /><span th:text="#{cancel}"></span>
 						</button>
 					</form>
 				</li>

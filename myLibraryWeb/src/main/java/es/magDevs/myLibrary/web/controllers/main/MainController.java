@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,6 +59,7 @@ import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.DaoFactory;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Tipo;
 import es.magDevs.myLibrary.model.beans.Ubicacion;
 import es.magDevs.myLibrary.model.dao.TipoDao;
@@ -341,6 +344,12 @@ public class MainController implements InitializingBean, Serializable {
 			controller.setUserAgent(userAgent);
 		}
 		return controller;
+	}
+	
+	@ModelAttribute("cartBooks")
+	public Set<Integer> getNumCartBooks() {
+		List<Libro> cartBooks = factory.getController(CONTROLLER.CART).getData(null);
+		return cartBooks.stream().map(book->book.getId()).collect(Collectors.toSet());
 	}
 	
 	/* *****************************************

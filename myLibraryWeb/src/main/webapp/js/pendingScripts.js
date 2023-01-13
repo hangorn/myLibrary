@@ -64,7 +64,7 @@ var acceptMarkPending = function() {
 			img.src = img.src.replace("pending","no_pending");
 			img.title = buttonPending.title;
 			img.alt = buttonPending.title;
-			var label = buttonPending.getElementsByTagName("label")[0];
+			var label = buttonPending.getElementsByTagName("span")[0];
 			label.innerText = buttonPending.title;
 			hideLoading();
 		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {
@@ -89,7 +89,7 @@ var unmarkPending = function() {
 			img.src = img.src.replace("no_pending","pending");
 			img.title = messageMarkPending;
 			img.alt = messageMarkPending;
-			var label = buttonPending.getElementsByTagName("label")[0];
+			var label = buttonPending.getElementsByTagName("span")[0];
 			label.innerText = messageMarkPending;
 			hideLoading();
 		} else if (ajaxRequest.readyState === 4 && ajaxRequest.status !== 200) {

@@ -41,6 +41,13 @@
 							<img th:if="${adminData} != null AND ${bookData.prestamo} != null AND !${#strings.isEmpty(bookData.prestamo.nombre)}" th:alt-title="#{lent.to(${bookData.prestamo.nombre})}" th:src="@{img/crudmenu/lend.png}" width="20px" height="20px"/>
 							<img th:if="!${#strings.isEmpty(bookData.pendiente)}" th:alt-title="#{pending(${bookData.pendiente})}" th:src="@{img/menu/pending.png}" width="20px" height="20px"/>
 							<img th:if="!${#lists.isEmpty(bookData.leido)}" th:alt-title="#{read(${#strings.listJoin(bookData.leido, ', ')})}" th:src="@{img/menu/mark_read.png}" width="20px" height="20px"/>
+							
+							<button th:if="${!cartBooks.contains(bookData.id)}" th:title="#{cart.add}" th:onclick="'addBookToCart(this, '+${bookData.id}+')'">
+								<img th:alt-title="#{cart.add}" th:src="@{img/menu/cart_add.png}" width="20px" height="20px" style="margin-bottom: -4px;"/>
+							</button>
+							<button th:if="${cartBooks.contains(bookData.id)}" th:title="#{cart.remove}" th:onclick="'removeBookFromCart(this, '+${bookData.id}+')'">
+								<img th:alt-title="#{cart.remove}" th:src="@{img/menu/cart_remove.png}" width="20px" height="20px" style="margin-bottom: -4px;"/>
+							</button>
 						</div>
 					</td>
 					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
@@ -58,5 +65,20 @@
 		</table>
 	</div>
 	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{books.table.empty}"></div>
+	
+	
+	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
+	<script th:if="${userData} != null" th:inline="javascript">
+	/*<![CDATA[*/
+		messageAddCart = /*[[#{cart.add}]]*/;
+		messageRemoveCart = /*[[#{cart.remove}]]*/;
+	
+    	cartLink = /*[[@{/cart}]]*/;
+		
+	    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+	    csrfToken=/*[[${_csrf.token}]]*/;
+	/*]]>*/
+	</script>
+	<script th:if="${userData} != null" th:src="@{#{js.cartScripts}}" type="text/javascript"></script>
 </div>
 </html>

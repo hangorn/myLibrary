@@ -177,6 +177,17 @@ body {
 	clear: right;
 }
 
+.numCartBooks {
+	position: relative;
+	top: -3px;
+	left: -4px;
+	background-color: red;
+	color: white;
+	border-radius: 100%;
+	padding: 2px 5px;
+	font-size: 10px;
+}
+
 /************************************
  Personalizacion del pie
  ************************************/
@@ -254,7 +265,7 @@ body {
 	cursor: pointer;
 }
 
-.crudmenu button label {
+.crudmenu button span {
 	margin-left: 15px;
 	float: right;
 	height: 32px;
@@ -382,7 +393,7 @@ body {
 	margin-right: 2px;
 }
 
-.searchField label {
+.searchField label, .searchField span {
 	float: left;
 	width: 130px;
 	text-align: right;
@@ -410,7 +421,7 @@ body {
 	line-height: 22px;
 }
 
-.searchSubmit label {
+.searchSubmit span {
 	text-align: center;
 }
 
@@ -456,7 +467,7 @@ body {
 	padding: 5px;
 }
 
-.crudButtons label {
+.crudButtons span {
 	margin-left: 15px;
 	float: right;
 	height: 32px;
@@ -496,7 +507,7 @@ body {
 	width: 450px !important;
 }
 
-.formField label {
+.formField label, .formField span {
 	float: left;
 	margin-left: 5px;
 	margin-right: 15px;
@@ -767,7 +778,7 @@ button {
 	border-radius: 10px;
 	box-shadow: inset 0 2px #ababff;
 }
-button, button label {
+button, button label, button span {
 	cursor: pointer;
 }
 
