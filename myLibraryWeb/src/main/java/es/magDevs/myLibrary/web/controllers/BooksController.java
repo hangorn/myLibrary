@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.MessageSource;
@@ -57,6 +58,7 @@ import es.magDevs.myLibrary.web.gui.utils.FilterManager;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
 import es.magDevs.myLibrary.web.gui.utils.NewDataManager;
 import es.magDevs.myLibrary.web.gui.utils.PaginationManager;
+import es.magDevs.myLibrary.web.isbn.IsbnDataProcesor;
 
 /**
  * Controlador para la seccion de libros
@@ -149,8 +151,33 @@ public class BooksController extends AbstractController {
 
 		// Mensaje a mostrar en caso de error
 		String msg = "";
-		// Si tenemos un indice valido
-		if (index >= 0 && data != null) {
+		// Si hay un codigo de barras
+		if (filter != null && StringUtils.isNotBlank(((Libro) filter).getCb())) {
+			try {
+				// Obtenemos todos los datos del libro seleccionado
+				bookData =  new IsbnDataProcesor().getData(((Libro) filter).getCb());
+				bookData.setId(null);
+				// Guardamos los autores que ya tiene asignados el nuevo libro
+				if (bookData.getAutores() != null
+						&& bookData.getAutores().size() > 0) {
+					for (Autor autor : bookData.getAutores()) {
+						newAuthors.put(autor.getId(), autor);
+					}
+				}
+				// Guardamos los traductores que ya tiene asignados el nuevo
+				// libro
+				if (bookData.getTraductores() != null
+						&& bookData.getTraductores().size() > 0) {
+					for (Traductor traductor : bookData.getTraductores()) {
+						newTranslators.put(traductor.getId(), traductor);
+					}
+				}
+			} catch (Exception e) {
+				bookData = new BooksFilter();
+				msg = manageException("create", e);
+			}
+		} else if (index >= 0 && data != null) {
+			// Si tenemos un indice valido
 			try {
 				// Obtenemos todos los datos del libro seleccionado
 				bookData = (Libro) getDao().get(

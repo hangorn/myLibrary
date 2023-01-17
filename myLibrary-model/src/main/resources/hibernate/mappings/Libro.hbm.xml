@@ -16,6 +16,10 @@
 			type="java.lang.String">
 			<column name="isbn" />
 		</property>
+		<property generated="never" lazy="false" name="cb"
+			type="java.lang.String">
+			<column name="cb" />
+		</property>
 		<property generated="never" lazy="false" name="annoCompra"
 			type="java.lang.Integer">
 			<column name="anno_compra" />

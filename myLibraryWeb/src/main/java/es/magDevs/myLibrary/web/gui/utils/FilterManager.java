@@ -91,6 +91,7 @@ public class FilterManager {
 						.getTipo().getDescripcion()))
 				&& StringUtils.isBlank(filter.getNotas())
 				&& StringUtils.isBlank(filter.getIsbn())
+				&& StringUtils.isBlank(filter.getCb())
 				&& filter.getAnnoCompra() == null
 				&& filter.getNumPaginas() == null) {
 			return null;

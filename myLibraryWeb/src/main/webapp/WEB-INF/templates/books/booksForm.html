@@ -63,6 +63,11 @@
 			<label for="isbn" th:text="#{books.field.isbn}"></label> <input th:maxlength="#{ISBN_MAX_LENGHT}" type="text"
 				th:field="*{isbn}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{isbn}" />
 		</div>
+		<!-- cb -->
+		<div class="formField">
+			<label for="cb" th:text="#{books.field.cb}"></label> <input th:maxlength="#{ISBN_MAX_LENGHT}" type="text"
+				th:field="*{cb}" th:readonly="!${editable}" th:errorclass="fieldError" th:title="${editable}?'':*{cb}" />
+		</div>
 		<!-- notas -->
 		<div class="formField">
 			<label for="notas" th:text="#{books.field.notes}"></label> <input th:maxlength="#{NOTES_MAX_LENGHT}"

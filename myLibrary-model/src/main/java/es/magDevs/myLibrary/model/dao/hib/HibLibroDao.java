@@ -219,6 +219,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		if (!StringUtils.isBlank(filter.getIsbn())) {
 			c.add(Restrictions.like("isbn", "%" + filter.getIsbn() + "%"));
 		}
+		// Codigo de barras
+		if (!StringUtils.isBlank(filter.getCb())) {
+			c.add(Restrictions.eq("cb", filter.getCb()));
+		}
 		// Año de compra
 		if (filter.getAnnoCompra() != null) {
 			c.add(Restrictions.eq("annoCompra", filter.getAnnoCompra()));
@@ -277,6 +281,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		if (StringUtils.isNotEmpty(nue.getIsbn()) && !vie.getIsbn().equals(nue.getIsbn())) {
 			cambios.put("isbn", vie.getIsbn());
 			vie.setIsbn(nue.getIsbn());
+		}
+		if (StringUtils.isNotEmpty(nue.getCb()) && !vie.getCb().equals(nue.getCb())) {
+			cambios.put("cb", vie.getCb());
+			vie.setCb(nue.getCb());
 		}
 		if (nue.getAnnoCompra() != null && !vie.getAnnoCompra().equals(nue.getAnnoCompra())) {
 			cambios.put("anno_compra", vie.getAnnoCompra()==null?null:""+vie.getAnnoCompra());

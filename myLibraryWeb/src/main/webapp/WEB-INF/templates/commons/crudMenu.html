@@ -55,6 +55,27 @@
 			</nav>
 		</form>
 	</div>
+	
+	<div th:if="!${multiselect} AND ${section}=='books'" class="crudmenu">
+		<form th:action="@{/books_search}" th:object="${filter}" method="post">
+			<ul>
+				<li>
+					<div>
+						<div style="float:left; margin-left: 5px;">
+							<label style="display: block;" for="cb" th:text="#{books.field.cb}"></label> <input onload="this.focus();" type="text" th:field="*{cb}"
+								th:errorclass="fieldError" autocomplete="off" autofocus="autofocus"
+								onchange="for (var e of document.querySelectorAll('[name=cb]')) {if(e!=this)e.value=this.value;}"
+								onfocus="this.select()"
+								th:style= "'background-image: url(&#34;'+@{img/crudmenu/barcode.png}+'&#34;); background-position: 4px; background-repeat: no-repeat; padding-left: 50px;
+								width:100px; border: 1px solid #9b9b9b; border-radius: 2px;'"/>
+						</div>
+						<img style="cursor:pointer; margin: 6px;"
+							onclick="for (var e of document.querySelectorAll('[name=cb]')) {e.value=''}" th:alt-title="#{menu.search.reset}" th:src="@{img/searchmenu/reset.png}" />
+					</div>
+				</li>
+			</ul>
+		</form>
+	</div>
 
 	<div class="pagmenu" th:if="(${data} != null AND !${#lists.isEmpty(data)} AND !${multiselect})">
 		<nav>

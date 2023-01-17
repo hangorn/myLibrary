@@ -92,8 +92,8 @@ public class NewDataManager {
 		}
 
 		// Convertimos todos los textos a mayusculas
-		libro.setTitulo(StringUtils.upperCase(libro.getTitulo()));
-		libro.setNotas(StringUtils.upperCase(libro.getNotas()));
+		libro.setTitulo(StringUtils.trim(StringUtils.upperCase(libro.getTitulo())));
+		libro.setNotas(StringUtils.trim(StringUtils.upperCase(libro.getNotas())));
 
 		// Cortamos los textos por el tamaño maximo
 		if (libro.getTitulo().length() > Integer.parseInt(messageSource
@@ -124,6 +124,9 @@ public class NewDataManager {
 		if(StringUtils.isBlank(libro.getNotas())) {
 			libro.setNotas(null);
 		}
+		if(StringUtils.isBlank(libro.getCb())) {
+			libro.setCb(null);
+		}
 		
 		return true;
 	}
@@ -138,8 +141,8 @@ public class NewDataManager {
 	public static boolean processPublisher(Editorial publisher,
 			MessageSource messageSource) {
 		// Convertimos los textos a mayusculas
-		publisher.setNombre(StringUtils.upperCase(publisher.getNombre()));
-		publisher.setCiudad(StringUtils.upperCase(publisher.getCiudad()));
+		publisher.setNombre(StringUtils.trim(StringUtils.upperCase(publisher.getNombre())));
+		publisher.setCiudad(StringUtils.trim(StringUtils.upperCase(publisher.getCiudad())));
 
 		// Cortamos los textos por el tamaño maximo
 		if (publisher.getNombre() != null && publisher.getNombre().length() > Integer.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
@@ -171,7 +174,7 @@ public class NewDataManager {
 	public static boolean processCollection(Coleccion collection,
 			MessageSource messageSource) {
 		// Convertimos los textos a mayusculas
-		collection.setNombre(StringUtils.upperCase(collection.getNombre()));
+		collection.setNombre(StringUtils.trim(StringUtils.upperCase(collection.getNombre())));
 
 		// Para los datos relacionados, si no tenemos una relacion valida,
 		// ponemos a null su valor para que no de fallos Hibernate
@@ -202,11 +205,11 @@ public class NewDataManager {
 	public static boolean processAuthor(Autor author,
 			MessageSource messageSource) {
 		// Convertimos los textos a mayusculas
-		author.setNombre(StringUtils.upperCase(author.getNombre()));
-		author.setApellidos(StringUtils.upperCase(author.getApellidos()));
-		author.setPais(StringUtils.upperCase(author.getPais()));
-		author.setCiudad(StringUtils.upperCase(author.getCiudad()));
-		author.setNotas(StringUtils.upperCase(author.getNotas()));
+		author.setNombre(StringUtils.trim(StringUtils.upperCase(author.getNombre())));
+		author.setApellidos(StringUtils.trim(StringUtils.upperCase(author.getApellidos())));
+		author.setPais(StringUtils.trim(StringUtils.upperCase(author.getPais())));
+		author.setCiudad(StringUtils.trim(StringUtils.upperCase(author.getCiudad())));
+		author.setNotas(StringUtils.trim(StringUtils.upperCase(author.getNotas())));
 		// Cortamos los textos por el tamaño maximo
 		if (author.getNombre() != null && author.getNombre().length() > Integer
 				.parseInt(messageSource.getMessage("TEXT_MAX_LENGHT", null, null))) {
@@ -267,7 +270,7 @@ public class NewDataManager {
 			return false;
 		}
 		// Convertimos los textos a mayusculas
-		translator.setNombre(StringUtils.upperCase(translator.getNombre()));
+		translator.setNombre(StringUtils.trim(StringUtils.upperCase(translator.getNombre())));
 		// Cortamos los textos por el tamaño maximo
 		if (translator.getNombre().length() > Integer.parseInt(messageSource
 				.getMessage("TITLE_MAX_LENGHT", null, null))) {
@@ -291,7 +294,7 @@ public class NewDataManager {
 			return false;
 		}
 		// Convertimos los textos a mayusculas
-		type.setDescripcion(StringUtils.upperCase(type.getDescripcion()));
+		type.setDescripcion(StringUtils.trim(StringUtils.upperCase(type.getDescripcion())));
 		// Cortamos los textos por el tamaño maximo
 		if (type.getDescripcion().length() > Integer.parseInt(messageSource
 				.getMessage("TITLE_MAX_LENGHT", null, null))) {
@@ -316,8 +319,8 @@ public class NewDataManager {
 			return false;
 		}
 		// Convertimos los textos a mayusculas
-		place.setDescripcion(StringUtils.upperCase(place.getDescripcion()));
-		place.setCodigo(StringUtils.upperCase(place.getCodigo()));
+		place.setDescripcion(StringUtils.trim(StringUtils.upperCase(place.getDescripcion())));
+		place.setCodigo(StringUtils.trim(StringUtils.upperCase(place.getCodigo())));
 		// Cortamos los textos por el tamaño maximo
 		if (place.getDescripcion() != null && place.getDescripcion().length() > Integer.parseInt(messageSource
 				.getMessage("TITLE_MAX_LENGHT", null, null))) {

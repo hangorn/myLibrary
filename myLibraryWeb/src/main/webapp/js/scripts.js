@@ -113,6 +113,7 @@ function submit(formID, paramName, paramValue, msg) {
 	form.action = form.action +'_'+ paramName;
 	form.appendChild(hidden);
 	form.submit();
+	showLoading();
 }
 
 // Vacia todos los campos de busqueda (todos los tags INPUT o SELECT que esten

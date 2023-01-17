@@ -30,6 +30,7 @@ public class Libro extends Bean {
 
 	private String titulo;
 	private String isbn;
+	private String cb;
 	private Integer annoCompra;
 	private Integer annoPublicacion;
 	private Integer annoCopyright;
@@ -87,6 +88,7 @@ public class Libro extends Bean {
 		super(bean.getId());
 		this.titulo = bean.getTitulo();
 		this.isbn = bean.getIsbn();
+		this.cb = bean.getCb();
 		this.annoCompra = bean.getAnnoCompra();
 		this.annoPublicacion = bean.getAnnoPublicacion();
 		this.annoCopyright = bean.getAnnoCopyright();
@@ -129,6 +131,14 @@ public class Libro extends Bean {
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	public String getCb() {
+		return cb;
+	}
+
+	public void setCb(String cb) {
+		this.cb = cb;
 	}
 
 	public Integer getAnnoCompra() {
