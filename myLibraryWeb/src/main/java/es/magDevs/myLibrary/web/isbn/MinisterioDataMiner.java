@@ -43,7 +43,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 	private static final String URL_MINISTERIO = "https://www.culturaydeporte.gob.es";
 	private static final String URL_ACCESO_INICIAL = URL_MINISTERIO+"/webISBN/tituloSimpleFilter.do?cache=init&prev_layout=busquedaisbn&layout=busquedaisbn&language=es";
 
-	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+") (\\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?(;.+)?";
+	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+") (\\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
 	private static final String REGEX_PRECIO = "([0-9.]+) Euros";
 	private static final String REGEX_PAGINAS = "(\\d+) p\\..*";
 	private static final String REGEX_FH_EDIC = "\\d{2}/(\\d{4})";

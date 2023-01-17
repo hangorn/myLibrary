@@ -434,12 +434,11 @@ public abstract class AbstractController implements Controller {
 		// Volvemos a listar
 		try {
 			// Iniciamos paginacion
-			pagManager.reset(dao.getCount());
+			pagManager.reset(dao.getCount(filter));
 			// Buscamos los datos
-			data = dao.getWithPag(pagManager.getPage() - 1,
+			data = dao.getWithPag(filter, pagManager.getPage() - 1,
 					pagManager.getPageSize());
 			// Reiniciamos el filtro de busqueda
-			//filter = null;
 		} catch (Exception e) {
 			msg = manageException("delete", e);
 		}
