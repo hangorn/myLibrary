@@ -79,7 +79,7 @@ var recargarUsuarios = function() {
 	ajaxRequest.open("POST", usersLink+"_getdata", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + document.getElementById('usersSearch').value+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("getdata=" + encodeURIComponent(document.getElementById('usersSearch').value)+"&"+csrfParameterName+"="+csrfToken);
 }
 
 var addUserToList = function(nombre, username, list, asFirst) {
@@ -156,7 +156,7 @@ document.getElementById("acceptNewUser").onclick = function() {
 	ajaxRequest.open("POST", lendsLink + "_related_new_users", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addUser;
-	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+encodeURIComponent(json)+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newUserFormBackground").style.display = "none";
 };
 document.getElementById("newUserFormBackground").onkeydown = function() {
@@ -296,7 +296,7 @@ if (lendsHistoryButton != null) {
 		ajaxRequest.open("POST", readLink+"_getdata", true);
 		ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		ajaxRequest.onreadystatechange = processSearch;
-		ajaxRequest.send("getdata=" + document.getElementById('lendsHistorySearch').value+"&"+"id=" + document.getElementById("bookId").value+"&"+csrfParameterName+"="+csrfToken);
+		ajaxRequest.send("getdata=" + encodeURIComponent(document.getElementById('lendsHistorySearch').value)+"&"+"id=" + document.getElementById("bookId").value+"&"+csrfParameterName+"="+csrfToken);
 	}
 	var lendsHistorySearch = document.getElementById("lendsHistorySearch");
 	lendsHistorySearch.oninput = recargarHistorialPrestamos;

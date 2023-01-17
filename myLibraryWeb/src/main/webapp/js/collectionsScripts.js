@@ -69,7 +69,7 @@ inputCollectionSearch.oninput = function() {
 	ajaxRequest.onreadystatechange = processSearch;
 	var publishersList = document.getElementById("editorial.id");
 	var publisherId = publishersList.options[publishersList.selectedIndex].value;
-	ajaxRequest.send("getdata=" + inputCollectionSearch.value + "&id="
+	ajaxRequest.send("getdata=" + encodeURIComponent(inputCollectionSearch.value) + "&id="
 			+ publisherId+"&"+csrfParameterName+"="+csrfToken);
 };
 
@@ -123,7 +123,7 @@ document.getElementById("acceptNewCollection").onclick = function() {
 	ajaxRequest.open("POST", booksLink + "_related_new_collections", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addCollection;
-	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+encodeURIComponent(json)+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newCollectionFormBackground").style.display = "none";
 };
 document.getElementById("newCollectionFormBackground").onkeydown =  function(event) {

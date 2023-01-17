@@ -65,7 +65,7 @@ inputPublisherSearch.oninput = function() {
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + inputPublisherSearch.value+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("getdata=" + encodeURIComponent(inputPublisherSearch.value)+"&"+csrfParameterName+"="+csrfToken);
 };
 
 // Añadimos la opcion de abrir el dialogo para crear una nueva editorial
@@ -120,7 +120,7 @@ document.getElementById("acceptNewPublisher").onclick = function() {
 	ajaxRequest.open("POST", currentSectionLink + "_related_new_publishers", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addPublisher;
-	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+encodeURIComponent(json)+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newPublisherFormBackground").style.display = "none";
 };
 document.getElementById("newPublisherFormBackground").onkeydown =  function(event) {

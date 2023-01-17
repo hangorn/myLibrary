@@ -124,7 +124,7 @@ inputTranslatorSearch.oninput = function() {
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + inputTranslatorSearch.value+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("getdata=" + encodeURIComponent(inputTranslatorSearch.value)+"&"+csrfParameterName+"="+csrfToken);
 };
 
 // Añadimos el evento de abrir el dialogo para crear un nuevo traductor
@@ -173,7 +173,7 @@ document.getElementById("acceptNewTranslator").onclick = function() {
 	ajaxRequest.open("POST", booksLink + "_related_new_translators", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addTranslator;
-	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+encodeURIComponent(json)+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newTranslatorFormBackground").style.display = "none";
 };
 document.getElementById("newTranslatorFormBackground").onkeydown =  function(event) {

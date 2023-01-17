@@ -130,7 +130,7 @@ inputAuthorSearch.oninput = function() {
 	ajaxRequest.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = processSearch;
-	ajaxRequest.send("getdata=" + inputAuthorSearch.value+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("getdata=" + encodeURIComponent(inputAuthorSearch.value)+"&"+csrfParameterName+"="+csrfToken);
 };
 
 // Añadimos el evento de abrir el dialogo para crear un nuevo autor
@@ -190,7 +190,7 @@ document.getElementById("acceptNewAuthor").onclick = function() {
 	ajaxRequest.open("POST", booksLink+"_related_new_authors", true);
 	ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	ajaxRequest.onreadystatechange = addAuthor;
-	ajaxRequest.send("data="+json+"&"+csrfParameterName+"="+csrfToken);
+	ajaxRequest.send("data="+encodeURIComponent(json)+"&"+csrfParameterName+"="+csrfToken);
 	document.getElementById("newAuthorFormBackground").style.display = "none";
 };
 document.getElementById("newAuthorFormBackground").onkeydown =  function(event) {
