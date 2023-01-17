@@ -70,6 +70,9 @@ public class HibEditorialDao extends HibAbstractDao implements EditorialDao {
 		if (!StringUtils.isBlank(filter.getNombre())) {
 			c.add(Restrictions.like("nombre", "%" + filter.getNombre() + "%"));
 		}
+		if (!StringUtils.isBlank(filter.getNombreExacto())) {
+			c.add(Restrictions.eq("nombre", filter.getNombreExacto()));
+		}
 		// Ciudad
 		if (!StringUtils.isBlank(filter.getCiudad())) {
 			c.add(Restrictions.like("ciudad", "%" + filter.getCiudad() + "%"));
@@ -88,7 +91,7 @@ public class HibEditorialDao extends HibAbstractDao implements EditorialDao {
 			s.beginTransaction();
 			List<Editorial> l = s
 					.createQuery("FROM Editorial WHERE nombre LIKE :nombre ORDER BY nombre")
-					.setParameter("nombre", start + "%").list();
+					.setParameter("nombre", "%" + start + "%").list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

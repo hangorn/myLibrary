@@ -272,7 +272,7 @@ public class HibUsuarioDao extends HibAbstractDao implements UsuarioDao {
 			s.beginTransaction();
 			List<Object[]> l;
 			if (StringUtils.isNotBlank(start)) {
-				l = s.createQuery("SELECT id, username, nombre FROM Usuario WHERE nombre LIKE :nombre ORDER BY nombre").setParameter("nombre", start + "%").list();
+				l = s.createQuery("SELECT id, username, nombre FROM Usuario WHERE nombre LIKE :nombre ORDER BY nombre").setParameter("nombre", "%" + start + "%").list();
 			} else {
 				l = s.createQuery("SELECT id, username, nombre FROM Usuario ORDER BY nombre").list();
 			}

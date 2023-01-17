@@ -19,6 +19,7 @@ package es.magDevs.myLibrary.model.beans;
 public class Editorial extends Bean {
 	private String nombre;
 	private String ciudad;
+	private String nombreExacto;
 
 	public Editorial() {
 	}
@@ -49,6 +50,14 @@ public class Editorial extends Bean {
 
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
+	}
+
+	public String getNombreExacto() {
+		return nombreExacto;
+	}
+
+	public void setNombreExacto(String nombreExacto) {
+		this.nombreExacto = nombreExacto;
 	}
 
 	public String toString() {

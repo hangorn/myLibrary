@@ -94,7 +94,7 @@ public class HibColeccionDao extends HibAbstractDao implements ColeccionDao {
 			s.beginTransaction();
 			List<Coleccion> l = s
 					.createQuery("FROM Coleccion WHERE nombre LIKE :nombre ORDER BY nombre")
-					.setParameter("nombre", start + "%").list();
+					.setParameter("nombre", "%" + start + "%").list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {
@@ -118,7 +118,7 @@ public class HibColeccionDao extends HibAbstractDao implements ColeccionDao {
 			List<Coleccion> l = s
 					.createQuery(
 							"FROM Coleccion WHERE nombre LIKE :nombre AND editorial.id = :id ORDER BY nombre")
-					.setParameter("nombre", start + "%")
+					.setParameter("nombre", "%" + start + "%")
 					.setParameter("id", idEditorial).list();
 			s.getTransaction().commit();
 			return l;

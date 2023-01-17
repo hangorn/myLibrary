@@ -125,10 +125,18 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 		if (!StringUtils.isBlank(filter.getNombre())) {
 			c.add(Restrictions.like("nombre", "%" + filter.getNombre() + "%"));
 		}
+		// Nombre exacto
+		if (!StringUtils.isBlank(filter.getNombreExacto())) {
+			c.add(Restrictions.eq("nombre", filter.getNombreExacto()));
+		}
 		// Apellidos
 		if (!StringUtils.isBlank(filter.getApellidos())) {
 			c.add(Restrictions.like("apellidos", "%" + filter.getApellidos()
 					+ "%"));
+		}
+		// Apellidos exacto
+		if (!StringUtils.isBlank(filter.getApellidosExacto())) {
+			c.add(Restrictions.eq("apellidos", filter.getApellidosExacto()));
 		}
 		// Pais
 		if (!StringUtils.isBlank(filter.getPais())) {
@@ -165,8 +173,8 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			List<Autor> l = s
 					.createQuery(
 							"FROM Autor WHERE nombre LIKE :nombre OR apellidos LIKE :apellidos ORDER BY apellidos,nombre")
-					.setParameter("nombre", start+"%")
-					.setParameter("apellidos", start+"%").list();
+					.setParameter("nombre", "%"+start+"%")
+					.setParameter("apellidos", "%"+start+"%").list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

@@ -71,6 +71,9 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 		if (!StringUtils.isBlank(filter.getNombre())) {
 			c.add(Restrictions.like("nombre", "%" + filter.getNombre() + "%"));
 		}
+		if (!StringUtils.isBlank(filter.getNombreExacto())) {
+			c.add(Restrictions.eq("nombre", filter.getNombreExacto()));
+		}
 		return c;
 	}
 
@@ -84,7 +87,7 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 			s.beginTransaction();
 			List<Traductor> l = s
 					.createQuery("FROM Traductor WHERE nombre LIKE :nombre ORDER BY nombre")
-					.setParameter("nombre", start + "%").list();
+					.setParameter("nombre", "%" + start + "%").list();
 			s.getTransaction().commit();
 			return l;
 		} catch (Exception e) {

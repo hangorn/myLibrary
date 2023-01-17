@@ -23,6 +23,7 @@ package es.magDevs.myLibrary.model.beans;
 @SuppressWarnings("serial")
 public class Traductor extends Bean {
 	private String nombre;
+	private String nombreExacto;
 
 	public Traductor() {
 	}
@@ -43,6 +44,14 @@ public class Traductor extends Bean {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getNombreExacto() {
+		return nombreExacto;
+	}
+
+	public void setNombreExacto(String nombreExacto) {
+		this.nombreExacto = nombreExacto;
 	}
 
 	public String toString() {

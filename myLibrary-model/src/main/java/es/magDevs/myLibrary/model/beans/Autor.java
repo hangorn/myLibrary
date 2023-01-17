@@ -31,6 +31,8 @@ public class Autor extends Bean {
 	private Integer annoNacimiento;
 	private Integer annoFallecimiento;
 	private String notas;
+	
+	private String nombreExacto, apellidosExacto;
 
 	public Autor() {
 	}
@@ -113,6 +115,22 @@ public class Autor extends Bean {
 
 	public void setNotas(String notas) {
 		this.notas = notas;
+	}
+
+	public String getNombreExacto() {
+		return nombreExacto;
+	}
+
+	public void setNombreExacto(String nombreExacto) {
+		this.nombreExacto = nombreExacto;
+	}
+
+	public String getApellidosExacto() {
+		return apellidosExacto;
+	}
+
+	public void setApellidosExacto(String apellidosExacto) {
+		this.apellidosExacto = apellidosExacto;
 	}
 
 	public String toString() {
