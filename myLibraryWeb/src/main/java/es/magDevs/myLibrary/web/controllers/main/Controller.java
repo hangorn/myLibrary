@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Libro;
 
 /**
  * Interfaz que define las acciones que pueden realizar todos los controladores
@@ -287,4 +288,12 @@ public interface Controller {
 	public Class<? extends Bean> getBeanClass();
 	
 	public void setUserAgent(String userAgent);
+
+	/**
+	 * Realiza la operacion correspondiente a los libros del carrito
+	 * @param model
+	 * @param list 
+	 * @return
+	 */
+	public String cartBooks(Model model, List<Libro> list);
 }

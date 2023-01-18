@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,6 +107,14 @@ public class CartController extends AbstractController {
 	
 	@Override
 	public String list(Model model) {
+		try {
+			for (ListIterator<Libro> iterator = cartBooks.listIterator(); iterator.hasNext();) {
+				iterator.set((Libro) getDao().get(iterator.next().getId()));
+			}
+		} catch (Exception e) {
+			model.addAttribute("scriptMessage", manageException("create", e));
+		}
+		
 		model.addAttribute("data", cartBooks);
 		// Enlazamos fragmentos de plantillas
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));

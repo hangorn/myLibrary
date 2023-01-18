@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 
 import es.magDevs.myLibrary.model.Constants;
 import es.magDevs.myLibrary.model.Constants.ACTION;
@@ -812,5 +814,36 @@ public class BooksController extends AbstractController {
 			book.setLeidos(leido);
 		}
 		return book;
+	}
+	
+	@Override
+	public String cartBooks(Model model, List<Libro> list) {
+		Bean elementData = null;
+		String msg = "";
+		// Si tenemos un indice valido
+		if (!CollectionUtils.isEmpty(list)) {
+			try {
+				// Obtenemos todos los datos seleccionados
+				modifiedElementsIds = new ArrayList<>(list.size());
+				for (Libro l : list) {
+					modifiedElementsIds.add(l.getId());
+				}
+				elementData = getNewFilter();
+			} catch (Exception e) {
+				elementData = getNewFilter();
+				msg = manageException("cartBooks-acceptMultiupdateSelection", e);
+			}
+		} else {
+			// Creamos un elemento vacio, para que no de fallos al intentar
+			// acceder a algunos campos
+			elementData = getNewFilter();
+			msg = messageSource.getMessage(getSection().get() + ".menu.multiupdate.noIndexMsg", null, LocaleContextHolder.getLocale());
+		}
+		// Enlazamos fragmentos de plantillas
+		model.addAllAttributes(FragmentManager.get(msg, ACTION.MULTIUPDATE, getSection()));
+		model.addAttribute("confirmMsg", messageSource.getMessage("multiUpdateConfirmMessage", null, LocaleContextHolder.getLocale())+list.size()+" "+
+				messageSource.getMessage("menu."+getSection().get()+".text", null, LocaleContextHolder.getLocale())+"?");
+		model.addAttribute("elementData", elementData);
+		return "commons/body";
 	}
 }

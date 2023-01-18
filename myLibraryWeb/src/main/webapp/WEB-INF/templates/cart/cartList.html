@@ -33,11 +33,16 @@
 						</div>
 					</li>
 				
-<!-- 					<li th:if="${adminData} != null"><a onclick="submit('crudForm','create',index,'')"> -->
-<!-- 							<div class="submenuitem"> -->
-<!-- 								<img th:alt-title="#{${section}+'.menu.create'}" th:src="@{img/crudmenu/create.png}" /> -->
-<!-- 							</div> -->
-<!-- 						</a></li> -->
+					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
+						<div class="submenuitem">
+							<form th:action="@{/books_cartBooks}" method="post">
+								<button type="submit" th:title="#{books.menu.multiupdate}">
+									<img th:alt-title="#{books.menu.multiupdate}" th:src="@{img/crudmenu/multiUpdate.png}" />
+									<span th:text="#{modify}"></span>
+								</button>
+							</form>
+						</div>
+					</li>
 				</ul>
 			</nav>
 		</div>

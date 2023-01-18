@@ -28,6 +28,7 @@ import es.magDevs.myLibrary.model.Constants.ACTION;
 import es.magDevs.myLibrary.model.Constants.RELATED_ACTION;
 import es.magDevs.myLibrary.model.Constants.SECTION;
 import es.magDevs.myLibrary.model.beans.Bean;
+import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.dao.AbstractDao;
 import es.magDevs.myLibrary.web.controllers.main.Controller;
 import es.magDevs.myLibrary.web.gui.utils.FragmentManager;
@@ -712,5 +713,10 @@ public abstract class AbstractController implements Controller {
 	@SuppressWarnings("rawtypes")
 	public List getData(String hint, Integer id) {
 		return getData(hint);
+	}
+	
+	@Override
+	public String cartBooks(Model model, List<Libro> list) {
+		return "";
 	}
 }
