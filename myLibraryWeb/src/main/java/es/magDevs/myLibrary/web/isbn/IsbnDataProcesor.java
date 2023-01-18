@@ -150,6 +150,7 @@ public class IsbnDataProcesor {
 		return data.replaceAll("\\s+", " ").replaceAll("[ÁÀÂ]", "A").replaceAll("[ÉÈÊ]", "E").replaceAll("[ÍÌÎ]", "I").replaceAll("[ÓÒÔ]", "O").replaceAll("[ÚÙÛ]", "U").trim();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void linkData(Libro libro, List<Editorial> editoriales) throws Exception {
 		// Autor
 		if (libro.getAutores() != null) {
@@ -201,7 +202,6 @@ public class IsbnDataProcesor {
 		// Editorial
 		for (Editorial e : editoriales) {
 			if (libro.getEditorial() == null) {
-				Editorial editorial = null;
 				EditorialDao dao = DaoFactory.getEditorialDao();
 				Editorial editorialQry = new Editorial();
 				editorialQry.setNombreExacto(e.getNombre());

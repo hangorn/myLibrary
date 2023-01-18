@@ -16,10 +16,13 @@
 package es.magDevs.myLibrary.web.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
@@ -94,6 +97,7 @@ public class CartController extends AbstractController {
 
 	// Libros en el carrito
 	private List<Libro> cartBooks = new ArrayList<>();
+	private Set<Integer> cartBooksIds = new HashSet<>();
 
 	/* *****************************************
 	 * ************** ACCIONES *****************
@@ -107,7 +111,27 @@ public class CartController extends AbstractController {
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));
 		model.addAttribute("mainTemplate", "cart/cartList");
 		model.addAttribute("mainFragment", "cartList");
+		model.addAttribute("filter", new Libro());
 		return "commons/body";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public String filter(Bean f, Model model) {
+		if (f != null && f instanceof Libro) {
+			String bc = ((Libro) f).getCb();
+			if (StringUtils.isNotBlank(bc)) {
+				try {
+					List<Libro> bcBooks = DaoFactory.getLibroDao().getWithPag(f, 0, 2);
+					if (bcBooks.size() == 1) {
+						addBook2Cart(bcBooks.get(0).getId());
+					}
+				} catch (Exception e) {
+					model.addAttribute("scriptMessage", manageException("create", e));
+				}
+			}
+		}
+		return list(model);
 	}
 	
 	@Override
@@ -122,6 +146,7 @@ public class CartController extends AbstractController {
 	public String multiupdate(Model model) {
 		// Reutilizamos el evento de modificacion multiple para vaciar el carrito
 		cartBooks.clear();
+		cartBooksIds.clear();
 		// Para que se recargue el numero de libros en el carrito
 		model.addAttribute("cartBooks", cartBooks.stream().map(book->book.getId()).collect(Collectors.toSet()));
 		return list(model);
@@ -151,12 +176,16 @@ public class CartController extends AbstractController {
 	}
 
 	protected void addBook2Cart(Integer bookId) throws Exception {
-		cartBooks.add((Libro) getDao().get(bookId));
+		if (!cartBooksIds.contains(bookId)) {
+			cartBooks.add((Libro) getDao().get(bookId));
+			cartBooksIds.add(bookId);
+		}
 	}
 
 	protected void removeBookFromCart(Integer bookId) {
 		for (Iterator<Libro> iterator = cartBooks.iterator(); iterator.hasNext();) {
 			if (iterator.next().getId().equals(bookId)) {
+				cartBooksIds.remove(bookId);
 				iterator.remove();
 			}
 		}

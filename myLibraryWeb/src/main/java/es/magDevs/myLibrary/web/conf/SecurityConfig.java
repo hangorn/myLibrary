@@ -106,6 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_multiupdate"})).hasRole(Constants.ROLE_USER);
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_related_[a-z_]+"})).hasRole(Constants.ROLE_USER);
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_delete"})).hasRole(Constants.ROLE_USER);
+        ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/cart_search"})).hasRole(Constants.ROLE_USER);
         
         //Para todo lo demas se necesita rol de usuario administrador
         ((AuthorizedUrl)r.antMatchers(new String[]{"/**"})).hasRole(Constants.ROLE_ADMIN);
