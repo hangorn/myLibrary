@@ -716,7 +716,7 @@ public abstract class AbstractController implements Controller {
 	}
 	
 	@Override
-	public String cartBooks(Model model, List<Libro> list) {
+	public String cartBooks(Model model, Bean newData, List<Libro> list) {
 		return "";
 	}
 }

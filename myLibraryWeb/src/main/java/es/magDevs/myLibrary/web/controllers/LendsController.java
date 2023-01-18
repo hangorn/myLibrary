@@ -16,10 +16,12 @@
 package es.magDevs.myLibrary.web.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -129,49 +131,65 @@ public class LendsController extends AbstractController {
 	public String acceptCreation(Bean newElement, Model model) {
 		PrestamoDao dao = DaoFactory.getPrestamoDao();
 		try {
+			createLend(dao, (Prestamo) newElement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		model.addAllAttributes(FragmentManager.getEmptyBody(""));
+		return "commons/body";
+	}
+
+	private void createLend(PrestamoDao dao, Prestamo prestamo) throws Exception {
+		try {
 			dao.beginTransaction();
-			Usuario usuario = ((Prestamo) newElement).getUsuario();
+			Usuario usuario = prestamo.getUsuario();
 			if(newUsers.containsKey(usuario.getUsername())) {
 				usuario.setNombre(newUsers.get(usuario.getUsername()));
 				usuario.setUsername(null);
 				NewDataManager.processUser(usuario, messageSource);
 				DaoFactory.getUsuarioDao().insert(usuario);
 			}
-			((Prestamo) newElement).setUsuario(DaoFactory.getUsuarioDao().getUser(usuario.getUsername()));
-			dao.insert(newElement);
+			prestamo.setUsuario(DaoFactory.getUsuarioDao().getUser(usuario.getUsername()));
+			dao.insert(prestamo);
 			dao.commitTransaction();
 		} catch (Exception e) {
 			dao.rollbackTransaction();
-			throw new RuntimeException(e);
+			throw e;
 		}
-		model.addAllAttributes(FragmentManager.getEmptyBody(""));
-		return "commons/body";
 	}
 	
 	@Override
 	public String delete(Integer index, Model model) {
 		PrestamoDao dao = DaoFactory.getPrestamoDao();
-		LeidoDao leidoDao = DaoFactory.getLeidoDao();
 		try {
-			Prestamo query = new Prestamo(null, new Libro(), null, null);
-			query.getLibro().setId(index);
-			Prestamo prestamo = (Prestamo) dao.getWithPag(query, 0, 0).get(0);
+			returnLend(index, dao);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return list(model);
+	}
 
-			Leido leido = new Leido();
-			leido.setUsuario(prestamo.getUsuario());
-			leido.setLibro(prestamo.getLibro());
-			leido.setFecha(DatesManager.getIntToday());
-			leido.setPrestado(DatesManager.presentation2Int(prestamo.getFecha()));
-			
+	protected void returnLend(Integer bookId, PrestamoDao dao) throws Exception {
+		LeidoDao leidoDao = DaoFactory.getLeidoDao();
+		Prestamo query = new Prestamo(null, new Libro(), null, null);
+		query.getLibro().setId(bookId);
+		Prestamo prestamo = (Prestamo) dao.getWithPag(query, 0, 0).get(0);
+
+		Leido leido = new Leido();
+		leido.setUsuario(prestamo.getUsuario());
+		leido.setLibro(prestamo.getLibro());
+		leido.setFecha(DatesManager.getIntToday());
+		leido.setPrestado(DatesManager.presentation2Int(prestamo.getFecha()));
+		
+		try {
 			dao.beginTransaction();
 			dao.delete(prestamo);
 			leidoDao.insert(leido);
 			dao.commitTransaction();
 		} catch (Exception e) {
 			dao.rollbackTransaction();
-			throw new RuntimeException(e);
+			throw e;
 		}
-		return list(model);
 	}
 	
 	@Override
@@ -189,5 +207,55 @@ public class LendsController extends AbstractController {
 			}
 		}
 		return result;
+	}
+	
+	@Override
+	public String cartBooks(Model model, Bean newData, List<Libro> list) {
+		Prestamo p = (Prestamo) newData;
+		boolean prestar;
+		if (p.getLibro().getId() == 1) {
+			prestar = true;
+		} else if (p.getLibro().getId() == -1) {
+			prestar = false;
+		} else {
+			throw new RuntimeException("Valor no esperado para prestar/devolver libros desde el carrito");
+		}
+		PrestamoDao dao = DaoFactory.getPrestamoDao();
+		String msg = "";
+		try {
+			int count = 0;
+			for (Libro libro : list) {
+				Prestamo query = new Prestamo(null, new Libro(), null, null);
+				query.getLibro().setId(libro.getId());
+				boolean prestado = dao.getCount(query) != 0;
+				if (prestar) {
+					if (!prestado) {				
+						Prestamo prestamo = new Prestamo(p);
+						prestamo.setLibro(libro);
+						createLend(dao, prestamo);
+						count++;
+					} else {
+						msg += messageSource.getMessage("book.already.lent", new Object[] {libro.getTitulo()}, LocaleContextHolder.getLocale()) + "\n";
+					}
+				} else {
+					if (!prestado) {				
+						msg += messageSource.getMessage("book.already.returned", new Object[] {libro.getTitulo()}, LocaleContextHolder.getLocale()) + "\n";
+					} else {
+						returnLend(libro.getId(), dao);
+						count++;
+					}
+				}
+			}
+			if (prestar) {
+				msg += messageSource.getMessage("books.lent", new Object[] {count}, LocaleContextHolder.getLocale()) + "\n";
+			} else {
+				msg += messageSource.getMessage("books.returned", new Object[] {count}, LocaleContextHolder.getLocale()) + "\n";
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		list(model);
+		model.addAttribute("scriptMessage", msg);
+		return "commons/body";
 	}
 }

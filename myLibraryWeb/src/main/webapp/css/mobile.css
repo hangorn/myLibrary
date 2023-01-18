@@ -18,6 +18,9 @@
 /************************************
  Estilos generales
  ************************************/
+html {
+	height: 100%;
+}
 body {
 	background-color: #fff690;
 	margin: 0px;

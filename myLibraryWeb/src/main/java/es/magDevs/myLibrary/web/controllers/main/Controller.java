@@ -292,8 +292,9 @@ public interface Controller {
 	/**
 	 * Realiza la operacion correspondiente a los libros del carrito
 	 * @param model
+	 * @param newData 
 	 * @param list 
 	 * @return
 	 */
-	public String cartBooks(Model model, List<Libro> list);
+	public String cartBooks(Model model, Bean newData, List<Libro> list);
 }

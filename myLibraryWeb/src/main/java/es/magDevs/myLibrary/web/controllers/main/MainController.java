@@ -506,8 +506,8 @@ public class MainController implements InitializingBean, Serializable {
 	}
 	
 	@RequestMapping(value = CTL_PATH_VAR+"_cartBooks")
-	public String cartBooks(Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
-		return getController(controllerName, userAgent).cartBooks(model, factory.getController(CONTROLLER.CART).getData(null));
+	public String cartBooks(@ModelAttribute(CTL_NAME) Bean newData, Model model, @PathVariable(CTL_NAME) String controllerName, @RequestHeader("user-agent") String userAgent) {
+		return getController(controllerName, userAgent).cartBooks(model, newData, factory.getController(CONTROLLER.CART).getData(null));
 	}
 	
 	

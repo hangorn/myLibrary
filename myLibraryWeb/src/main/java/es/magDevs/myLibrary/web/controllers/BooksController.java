@@ -817,7 +817,7 @@ public class BooksController extends AbstractController {
 	}
 	
 	@Override
-	public String cartBooks(Model model, List<Libro> list) {
+	public String cartBooks(Model model, Bean newData, List<Libro> list) {
 		Bean elementData = null;
 		String msg = "";
 		// Si tenemos un indice valido

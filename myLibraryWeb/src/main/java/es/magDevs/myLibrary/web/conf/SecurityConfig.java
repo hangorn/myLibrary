@@ -99,7 +99,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, new String[]{"/logout\\??"})).hasRole(Constants.ROLE_USER);
         // Los usuarios normales pueden marcar como pendiente/leido un libro
         for (SECTION section : Arrays.asList(SECTION.PENDING, SECTION.READ)) {
-            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, "/" + section.get() + "_acceptCreation", "/" + section.get() + "_delete")).hasRole(Constants.ROLE_USER);
+            ((AuthorizedUrl)r.regexMatchers(HttpMethod.POST, 
+            		"/" + section.get() + "_acceptCreation",
+            		"/" + section.get() + "_delete",
+            		"/" + section.get() + "_cartBooks"
+            )).hasRole(Constants.ROLE_USER);
         }
         // Los usuarios normales pueden usar el carrito
         ((AuthorizedUrl)r.regexMatchers(HttpMethod.GET, new String[]{"/cart\\??"})).hasRole(Constants.ROLE_USER);

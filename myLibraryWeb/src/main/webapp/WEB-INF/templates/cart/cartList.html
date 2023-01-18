@@ -43,6 +43,20 @@
 							</form>
 						</div>
 					</li>
+					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})" >
+						<!-- Prestamo -->
+						<button th:title="#{lend}" type="button" id="lendBookButton">
+							<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <span th:text="#{lend}"></span>
+						</button>
+					</li>
+					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
+						<form th:action="@{lends_cartBooks}" method="post">
+							<input type="hidden" name="libro.id" value="-1"></input>
+							<button type="submit" th:title="#{return.cart}">
+								<img th:alt-title="#{return.cart}" th:src="@{img/crudmenu/return.png}" /> <span th:text="#{return.cart}"></span>
+							</button>
+						</form>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -91,8 +105,10 @@
 							</form>
 						</div>
 					</td>
-					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"
-						th:title="${bookData.titulo}"></td>
+					
+					<td th:title="${bookData.titulo}">
+						<div th:include="commons/components::readOnlySingleLink(${bookData.titulo}, @{/books_readid?readid=}+${bookData.id})"></div>
+					</td>
 					<td th:if="!${#strings.isEmpty(bookData.autoresTxt)}" th:text="${bookData.autoresTxt}" th:title="${bookData.autoresTxt}"></td>
 					<td th:if="${#strings.isEmpty(bookData.autoresTxt)}" th:text="#{authors.anonymous}" th:title="#{authors.anonymous}"></td>
 					<td th:text="${bookData.editorial}!=null?${bookData.editorial.nombre}:''"
@@ -104,7 +120,94 @@
 				</tr>
 			</tbody>
 		</table>
+		<div style="margin-top: 5px;" th:text="#{menu.books.text}+': '+${#lists.size(data)}"></div>
 	</div>
 	<div class="dataTable" th:if="(${data} == null OR ${#lists.isEmpty(data)})" th:text="#{cart.table.empty}"></div>
+	
+	
+	<!-- dialogo para prestar un libro -->
+	<div th:if="${adminData} != null" id="lendBookFormBackground" class="background" style="display: none;">
+		<div id="lendBookFormContainer" class="dataFormContainer">
+			<div id="lendBookForm" class="dataForm" style="height: 90%;">
+				<label for="usersSearch" th:text="#{user.search}"> </label>
+				<input type="text" id="usersSearch" class="searchInput" />
+				<button id="addNewUser" class="addQuitButton" th:title="#{user.new}" type="button">
+					<img th:alt-title="#{user.new}" th:src="@{img/crudmenu/add.png}"/>
+					<span th:text="#{user.new}"></span>
+				</button>
+				<div class="closeButton" id="closeButtonLendBook">
+					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
+				</div>
+				<div class="dataTable" style="overflow-y: auto; height: 52%;">
+					<table>
+						<thead>
+							<tr>
+								<th th:text="#{users}"></th>
+							</tr>
+						</thead>
+						<tbody id="usersDataTable">
+						</tbody>
+					</table>
+				</div>
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; bottom: 10px;/*position: absolute;width: 85%;*/">
+					<div class="dataFormField" style="display:inline;">
+						<label for="lendDate" th:text="#{date}"> </label>
+						<input type="date" id="lendDate"/>
+					</div>
+					<button th:title="#{lend}" type="button" id="acceptLendBook">
+						<img th:alt-title="#{lend}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{lend}"></span>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelLendBook">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- dialogo para añadir un nuevo usuario -->
+	<div th:if="${adminData} != null" id="newUserFormBackground" class="background" style="display: none;">
+		<div id="newUserFormContainer" class="dataFormContainer">
+			<div id="newUserForm" class="dataForm">
+				<div class="dataFormField">
+					<label for="newUserName" th:text="#{login.form.username}"> </label>
+					<input maxlength="60" type="text" id="newUserName"></input>
+				</div>
+				<div class="dataFormButtons">
+					<button th:title="#{accept}" type="button" id="acceptNewUser">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{add}"></span>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelNewUser">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+    messageUserEmpty = /*[[#{users.empty}]]*/;
+    messageUserNoSelected = /*[[#{lends.user.noIndexMsg}]]*/;
+    messageLend = /*[[#{lend}]]*/;
+    messageReturn = /*[[#{return}]]*/;
+    messageMarkPending = /*[[#{mark.pending}]]*/;
+    messageMarkRead = /*[[#{mark.read}]]*/;
+    
+    usersLink = /*[[@{/users}]]*/;
+    lendsLink = /*[[@{/lends}]]*/;
+    
+    pendingLink = /*[[@{/pending}]]*/;
+    readLink = /*[[@{/read}]]*/;
+    
+    csrfParameterName=/*[[${_csrf.parameterName}]]*/;
+    csrfToken=/*[[${_csrf.token}]]*/;
+/*]]>*/
+	</script>
+	
+	<script th:if="${adminData} != null" th:src="@{#{js.cartLendsScripts}}" type="text/javascript"></script>
 </div>
 </html>
