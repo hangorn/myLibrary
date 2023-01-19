@@ -15,8 +15,11 @@
  */
 package es.magDevs.myLibrary.web.controllers;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.SECTION;
@@ -108,19 +111,23 @@ public class PendingController extends AbstractController {
 	public String acceptCreation(Bean newElement, Model model) {
 		Integer userid = MainController.getUserid();
 		if (userid != null) {
-			PendienteDao dao = DaoFactory.getPendienteDao();
-			try {
-				dao.beginTransaction();
-				((Pendiente) newElement).setUsuario(new Usuario(userid, null, null, null, null, null, null));
-				dao.insert(newElement);
-				dao.commitTransaction();
-			} catch (Exception e) {
-				dao.rollbackTransaction();
-				throw new RuntimeException(e);
-			}
+			markPending((Pendiente) newElement, userid);
 		}
 		model.addAllAttributes(FragmentManager.getEmptyBody(""));
 		return "commons/body";
+	}
+
+	protected void markPending(Pendiente newElement, Integer userid) {
+		PendienteDao dao = DaoFactory.getPendienteDao();
+		try {
+			dao.beginTransaction();
+			newElement.setUsuario(new Usuario(userid, null, null, null, null, null, null));
+			dao.insert(newElement);
+			dao.commitTransaction();
+		} catch (Exception e) {
+			dao.rollbackTransaction();
+			throw e;
+		}
 	}
 	
 	@Override
@@ -161,5 +168,36 @@ public class PendingController extends AbstractController {
 			}
 		}
 		return list(model);
+	}
+	
+	@Override
+	public String cartBooks(Model model, Bean newData, List<Libro> list) {
+		String msg = "";
+		Integer userid = MainController.getUserid();
+		try {
+			if (userid != null) {
+				PendienteDao dao = DaoFactory.getPendienteDao();
+				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
+				query.getUsuario().setId(userid);
+				int count = 0;
+				for (Libro libro : list) {
+					query.getLibro().setId(libro.getId());
+					if (dao.getCount(query) != 0) {				
+						msg += messageSource.getMessage("book.already.pending", new Object[] {libro.getTitulo()}, LocaleContextHolder.getLocale()) + "\n";
+					} else {
+						Pendiente pendiente = (Pendiente) newData;
+						pendiente.setLibro(libro);
+						markPending(pendiente , userid);
+						count++;
+					}
+				}
+				msg += messageSource.getMessage("books.marked.pending", new Object[] {count}, LocaleContextHolder.getLocale()) + "\n";
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		list(model);
+		model.addAttribute("scriptMessage", msg);
+		return "commons/body";
 	}
 }

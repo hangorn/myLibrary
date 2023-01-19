@@ -22,6 +22,7 @@
 		<div class="crudmenu">
 			<nav>
 				<ul>
+					<!-- Vaciar carrito -->
 					<li>
 						<div class="submenuitem">
 							<form th:action="@{/cart_multiupdate}" method="post">
@@ -32,7 +33,7 @@
 							</form>
 						</div>
 					</li>
-				
+					<!-- Modificar libros -->
 					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
 						<div class="submenuitem">
 							<form th:action="@{/books_cartBooks}" method="post">
@@ -43,12 +44,13 @@
 							</form>
 						</div>
 					</li>
+					<!-- Prestamo -->
 					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})" >
-						<!-- Prestamo -->
 						<button th:title="#{lend}" type="button" id="lendBookButton">
 							<img th:alt-title="#{lend}" th:src="@{img/crudmenu/lend.png}" /> <span th:text="#{lend}"></span>
 						</button>
 					</li>
+					<!-- Devolucion -->
 					<li th:if="${adminData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
 						<form th:action="@{lends_cartBooks}" method="post">
 							<input type="hidden" name="libro.id" value="-1"></input>
@@ -57,10 +59,24 @@
 							</button>
 						</form>
 					</li>
+					<!-- Pendiente -->
+					<li th:if="${userData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
+						<button th:if="${userData} != null AND *{pendiente} == null" th:title="#{mark.pending}" type="button" id="markPendingBookButton">
+							<img width="32px" height="32px" th:alt-title="#{mark.pending}" th:src="@{img/menu/pending.png}" /> <span th:text="#{mark.pending}"></span>
+						</button>
+					</li>
+					<!-- Leido -->
+					<li th:if="${userData} != null AND (${data} != null AND !${#lists.isEmpty(data)})">
+						<button th:if="${userData} != null" th:title="#{mark.read}" type="button" id="markReadButton">
+							<img width="32px" height="32px" th:alt-title="#{mark.read}" th:src="@{img/menu/mark_read.png}" /> <span th:text="#{mark.read}"></span>
+						</button>
+					</li>
+				
 				</ul>
 			</nav>
 		</div>
 		<div class="crudmenu">
+			<!-- Añadir al carrito con CB -->
 			<form th:action="@{/cart_search}" th:object="${filter}" method="post">
 				<ul>
 					<li>
@@ -187,6 +203,27 @@
 		</div>
 	</div>
 
+	<!-- dialogo para seleccionara una fecha -->
+	<div th:if="${userData} != null" id="selectDateFormBackground" class="background" style="display: none;">
+		<div id="selectDateFormContainer" class="dataFormContainer" style="height: 20%; overflow: hidden;">
+			<div id="selectDateBookForm" class="dataForm" style="height: 90%;">
+				<div class="dataFormButtons" style="display: flex; align-items: center; justify-content: space-evenly; padding: 10px; position: absolute;bottom: 10px;width: 85%;">
+					<div class="dataFormField" style="display:inline;">
+						<label for="selectedDate" th:text="#{date}"> </label>
+						<input type="date" id="selectedDate"/>
+					</div>
+					<button th:title="#{accept}" type="button" id="acceptSelectDate">
+						<img th:alt-title="#{accept}" th:src="@{img/crudmenu/create.png}" /> <span
+							th:text="#{accept}"></span>
+					</button>
+					<button th:title="#{cancel}" type="button" id="cancelSelectDate">
+						<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" /> <span th:text="#{cancel}"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
 	<script th:inline="javascript">
 	/*<![CDATA[*/
@@ -209,5 +246,7 @@
 	</script>
 	
 	<script th:if="${adminData} != null" th:src="@{#{js.cartLendsScripts}}" type="text/javascript"></script>
+	<script th:if="${adminData} != null" th:src="@{#{js.cartPendingScripts}}" type="text/javascript"></script>
+	<script th:if="${adminData} != null" th:src="@{#{js.cartReadScripts}}" type="text/javascript"></script>
 </div>
 </html>

@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 
 import es.magDevs.myLibrary.model.Constants.SECTION;
@@ -116,6 +117,14 @@ public class ReadController extends AbstractController {
 	
 	@Override
 	public String acceptCreation(Bean newElement, Model model) {
+		Integer userid = MainController.getUserid();
+		if (userid != null) {
+			markRead(newElement, userid);
+		}
+		return list(model);
+	}
+
+	protected void markRead(Bean newElement, Integer userid) {
 		Leido leido = (Leido) newElement;
 		if (StringUtils.isEmpty(leido.getFechaTxt())) {
 			leido.setFecha(DatesManager.getIntToday());
@@ -123,36 +132,32 @@ public class ReadController extends AbstractController {
 			leido.setFecha(DatesManager.string2Int(leido.getFechaTxt()));
 		}
 		
-		Integer userid = MainController.getUserid();
-		if (userid != null) {
-			LeidoDao dao = DaoFactory.getLeidoDao();
-			PendienteDao daoPendiente = DaoFactory.getPendienteDao();
-			try {
-				// Buscamos si el libro este pendiente
-				Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
-				query.getLibro().setId(leido.getLibro().getId());
-				query.getUsuario().setId(userid);
-				List<?> pendientes = daoPendiente.getWithPag(query, 0, 0);
-				
-				dao.beginTransaction();
-				// Guardamos el bean en un mapa con un ID ficticio por si hay que borrarlo
-				newReadBooks.put(newElement.getId(), leido);
-				leido.setUsuario(new Usuario(userid, null, null, null, null, null, null));
-				// Guardamos el libro como leido
-				dao.insert(newElement);
-				
-				// Si estaba marcado como pendiente, lo desmarcamos
-				if (!pendientes.isEmpty()) {
-					Pendiente prestamo = (Pendiente) pendientes.get(0);
-					daoPendiente.delete(prestamo);
-				}
-				dao.commitTransaction();
-			} catch (Exception e) {
-				dao.rollbackTransaction();
-				throw new RuntimeException(e);
+		LeidoDao dao = DaoFactory.getLeidoDao();
+		PendienteDao daoPendiente = DaoFactory.getPendienteDao();
+		try {
+			// Buscamos si el libro este pendiente
+			Pendiente query = new Pendiente(null, new Libro(), new Usuario(), null);
+			query.getLibro().setId(leido.getLibro().getId());
+			query.getUsuario().setId(userid);
+			List<?> pendientes = daoPendiente.getWithPag(query, 0, 0);
+			
+			dao.beginTransaction();
+			// Guardamos el bean en un mapa con un ID ficticio por si hay que borrarlo
+			newReadBooks.put(newElement.getId(), leido);
+			leido.setUsuario(new Usuario(userid, null, null, null, null, null, null));
+			// Guardamos el libro como leido
+			dao.insert(newElement);
+			
+			// Si estaba marcado como pendiente, lo desmarcamos
+			if (!pendientes.isEmpty()) {
+				Pendiente prestamo = (Pendiente) pendientes.get(0);
+				daoPendiente.delete(prestamo);
 			}
+			dao.commitTransaction();
+		} catch (Exception e) {
+			dao.rollbackTransaction();
+			throw new RuntimeException(e);
 		}
-		return list(model);
 	}
 	
 	@Override
@@ -214,5 +219,36 @@ public class ReadController extends AbstractController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public String cartBooks(Model model, Bean newData, List<Libro> list) {
+		String msg = "";
+		Integer userid = MainController.getUserid();
+		try {
+			if (userid != null) {
+				LeidoDao dao = DaoFactory.getLeidoDao();
+				Leido query = new Leido(null, new Libro(), new Usuario(), null);
+				query.getUsuario().setId(userid);
+				int count = 0;
+				for (Libro libro : list) {
+					query.getLibro().setId(libro.getId());
+					if (dao.getCount(query) != 0) {				
+						msg += messageSource.getMessage("book.already.read", new Object[] {libro.getTitulo()}, LocaleContextHolder.getLocale()) + "\n";
+					} else {
+						Leido read = (Leido) newData;
+						read.setLibro(libro);
+						markRead(read , userid);
+						count++;
+					}
+				}
+				msg += messageSource.getMessage("books.marked.read", new Object[] {count}, LocaleContextHolder.getLocale()) + "\n";
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		list(model);
+		model.addAttribute("scriptMessage", msg);
+		return "commons/body";
 	}
 }
