@@ -210,11 +210,18 @@ public class IsbnDataProcesor {
 					libro.setEditorial(editorialesBBDD.get(0));
 					break;
 				} else {
-					editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORIAL", "").trim());
+					editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORIALES", "").trim());
 					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
 					if (editorialesBBDD.size() == 1) {
 						libro.setEditorial(editorialesBBDD.get(0));
 						break;
+					} else {
+						editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORIAL", "").trim());
+						editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+						if (editorialesBBDD.size() == 1) {
+							libro.setEditorial(editorialesBBDD.get(0));
+							break;
+						}
 					}
 				}
 			}

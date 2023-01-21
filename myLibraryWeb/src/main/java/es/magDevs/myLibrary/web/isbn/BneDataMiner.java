@@ -199,7 +199,7 @@ public class BneDataMiner implements IsbnDataMiner {
 			}
 		}
 		if (indexDesc >= 0) {
-			String textoIsbn = elementoDetalles.children().get(indexDesc+1).text();
+			String textoIsbn = elementoRegistro.children().get(indexDesc+1).text();
 			if (StringUtils.isNotBlank(textoIsbn)) {
 				libro.setIsbn(textoIsbn);
 			}
