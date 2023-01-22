@@ -144,20 +144,26 @@ public class BneDataMiner implements IsbnDataMiner {
 			}
 		}
 		// Editorial
-		String textoEditorial = elementoDetalles.getElementsByClass("publisher").get(0).text();
-		if (StringUtils.isNotBlank(textoEditorial)) {
-			Editorial editorial = new Editorial();
-			libro.setEditorial(editorial);
-			editorial.setNombre(textoEditorial);
+		Elements elementoEditorial = elementoDetalles.getElementsByClass("publisher");
+		if (!elementoEditorial.isEmpty()) {
+			String textoEditorial = elementoEditorial.get(0).text();
+			if (StringUtils.isNotBlank(textoEditorial)) {
+				Editorial editorial = new Editorial();
+				libro.setEditorial(editorial);
+				editorial.setNombre(textoEditorial);
+			} 
 		}
 		// Fh publicacion
-		String fhPublicacion = elementoDetalles.getElementsByClass("publishing_date").get(0).text();
-		if (StringUtils.isNotBlank(fhPublicacion)) {
-			fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replace("imp. ", "").trim();
-			try {
-				libro.setAnnoPublicacion(Integer.valueOf(fhPublicacion));
-			} catch (NumberFormatException e) {
-				throw new Exception("Formato del año de edicion desconocido: "+fhPublicacion);
+		Elements elementoFhPub = elementoDetalles.getElementsByClass("publishing_date");
+		if (!elementoFhPub.isEmpty()) {
+			String fhPublicacion = elementoFhPub.get(0).text();
+			if (StringUtils.isNotBlank(fhPublicacion)) {
+				fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replace("imp. ", "").trim();
+				try {
+					libro.setAnnoPublicacion(Integer.valueOf(fhPublicacion));
+				} catch (NumberFormatException e) {
+					throw new Exception("Formato del año de edicion desconocido: " + fhPublicacion);
+				}
 			}
 		}
 		// Paginas

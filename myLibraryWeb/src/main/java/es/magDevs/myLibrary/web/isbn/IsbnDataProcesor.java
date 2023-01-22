@@ -227,6 +227,13 @@ public class IsbnDataProcesor {
 							if (editorialesBBDD.size() == 1) {
 								libro.setEditorial(editorialesBBDD.get(0));
 								break;
+							} else {
+								editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORES", "").trim());
+								editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+								if (editorialesBBDD.size() == 1) {
+									libro.setEditorial(editorialesBBDD.get(0));
+									break;
+								}
 							}
 						}
 					}

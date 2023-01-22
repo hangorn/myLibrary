@@ -157,57 +157,63 @@ public class BooksController extends AbstractController {
 		if (filter != null && StringUtils.isNotBlank(((Libro) filter).getCb())) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				bookData =  new IsbnDataProcesor().getData(((Libro) filter).getCb());
-				bookData.setId(null);
-				// Guardamos los autores que ya tiene asignados el nuevo libro
-				if (bookData.getAutores() != null
-						&& bookData.getAutores().size() > 0) {
-					for (Autor autor : bookData.getAutores()) {
-						newAuthors.put(autor.getId(), autor);
+				bookData = new IsbnDataProcesor().getData(((Libro) filter).getCb());
+				if (bookData != null) {
+					bookData.setId(null);
+					// Guardamos los autores que ya tiene asignados el nuevo libro
+					if (bookData.getAutores() != null && bookData.getAutores().size() > 0) {
+						for (Autor autor : bookData.getAutores()) {
+							newAuthors.put(autor.getId(), autor);
+						}
 					}
-				}
-				// Guardamos los traductores que ya tiene asignados el nuevo
-				// libro
-				if (bookData.getTraductores() != null
-						&& bookData.getTraductores().size() > 0) {
-					for (Traductor traductor : bookData.getTraductores()) {
-						newTranslators.put(traductor.getId(), traductor);
-					}
-				}
-			} catch (Exception e) {
-				bookData = new BooksFilter();
-				msg = manageException("create", e);
-			}
-		} else if (index >= 0 && data != null) {
-			// Si tenemos un indice valido
-			try {
-				// Obtenemos todos los datos del libro seleccionado
-				bookData = (Libro) getDao().get(
-						((Bean) data.get(index)).getId());
-				bookData.setId(null);
-				// Guardamos los autores que ya tiene asignados el nuevo libro
-				if (bookData.getAutores() != null
-						&& bookData.getAutores().size() > 0) {
-					for (Autor autor : bookData.getAutores()) {
-						newAuthors.put(autor.getId(), autor);
-					}
-				}
-				// Guardamos los traductores que ya tiene asignados el nuevo
-				// libro
-				if (bookData.getTraductores() != null
-						&& bookData.getTraductores().size() > 0) {
-					for (Traductor traductor : bookData.getTraductores()) {
-						newTranslators.put(traductor.getId(), traductor);
-					}
+					// Guardamos los traductores que ya tiene asignados el nuevo
+					// libro
+					if (bookData.getTraductores() != null && bookData.getTraductores().size() > 0) {
+						for (Traductor traductor : bookData.getTraductores()) {
+							newTranslators.put(traductor.getId(), traductor);
+						}
+					} 
 				}
 			} catch (Exception e) {
 				bookData = new BooksFilter();
 				msg = manageException("create", e);
 			}
-		} else {
-			// Creamos un libro vacio, para que no de fallos al intentar acceder
-			// a algunos campos
-			bookData = new BooksFilter();
+		}
+		if (bookData == null) {
+			if (index >= 0 && data != null) {
+				// Si tenemos un indice valido
+				try {
+					// Obtenemos todos los datos del libro seleccionado
+					bookData = (Libro) getDao().get(
+							((Bean) data.get(index)).getId());
+					bookData.setId(null);
+					// Guardamos los autores que ya tiene asignados el nuevo libro
+					if (bookData.getAutores() != null
+							&& bookData.getAutores().size() > 0) {
+						for (Autor autor : bookData.getAutores()) {
+							newAuthors.put(autor.getId(), autor);
+						}
+					}
+					// Guardamos los traductores que ya tiene asignados el nuevo
+					// libro
+					if (bookData.getTraductores() != null
+							&& bookData.getTraductores().size() > 0) {
+						for (Traductor traductor : bookData.getTraductores()) {
+							newTranslators.put(traductor.getId(), traductor);
+						}
+					}
+				} catch (Exception e) {
+					bookData = new BooksFilter();
+					msg = manageException("create", e);
+				}
+			} else {
+				// Creamos un libro vacio, para que no de fallos al intentar acceder
+				// a algunos campos
+				bookData = new BooksFilter();
+			}
+		}
+		if (filter != null && StringUtils.isNotBlank(((Libro) filter).getCb())) {
+			bookData.setCb(((Libro) filter).getCb());
 		}
 
 		// Enlazamos fragmentos de plantillas
