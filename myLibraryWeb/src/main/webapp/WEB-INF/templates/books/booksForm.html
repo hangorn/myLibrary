@@ -221,7 +221,7 @@
 		<div th:if="*{id} != null">
 			<div class="crudButtons">
 				<!-- Historial de prestamos -->
-				<button th:if="*{haTenidoPrestamos} OR *{prestamo} != null" th:title="#{lend}" type="button" id="lendsHistoryButton" style="float: left;margin-left: 20px;margin-right: -50%;">
+				<button th:if="(*{haTenidoPrestamos} OR *{prestamo} != null) AND ${userData} != null" th:title="#{lend}" type="button" id="lendsHistoryButton" style="float: left;margin-left: 20px;margin-right: -50%;">
 					<img th:alt-title="#{lends.history}" th:src="@{img/menu/lends.png}" width="32px" height="32px"/> <span th:text="#{lends.history}"></span>
 				</button>
 				<!-- Prestamo -->
