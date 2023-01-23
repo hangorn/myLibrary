@@ -15,6 +15,7 @@
  */
 package es.magDevs.myLibrary.web.isbn;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 	private static final String URL_ACCESO_INICIAL = URL_MINISTERIO+"/webISBN/tituloSimpleFilter.do?cache=init&prev_layout=busquedaisbn&layout=busquedaisbn&language=es";
 
 	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+") (\\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
-	private static final String REGEX_PRECIO = "([0-9.]+) Euros";
+	private static final String REGEX_PRECIO = "([0-9.,]+) Euros";
 	private static final String REGEX_PAGINAS = "(\\d+) p\\..*";
 	private static final String REGEX_FH_EDIC = "\\d{2}/(\\d{4})";
 	
@@ -86,7 +87,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 	}
 
 	@Override
-	public List<Libro> getData(String isbn) throws Exception {
+	public List<Libro> getData(String isbn) throws IOException {
 		Document doc = Jsoup.connect("https://www.culturaydeporte.gob.es/webISBN/tituloSimpleDispatch.do")
 							.sslSocketFactory(sslSocketFactory)
 							.userAgent(USER_AGENT)
@@ -161,7 +162,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 										try {
 											autor.setAnnoNacimiento(Integer.valueOf(fnac));
 										} catch (NumberFormatException e) {
-											throw new Exception("Formato del año de nacimiento del autor desconocido: "+textoAutor);
+											handleError(isbn, new Exception("Formato del año de nacimiento del autor desconocido: "+textoAutor));
 										}
 									}
 									String fex = m.group(7);
@@ -172,12 +173,12 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 										try {
 											autor.setAnnoFallecimiento(Integer.valueOf(fex));
 										} catch (NumberFormatException e) {
-											throw new Exception("Formato del año de fallec. del autor desconocido: "+textoAutor);
+											handleError(isbn, new Exception("Formato del año de fallec. del autor desconocido: "+textoAutor));
 										}
 									}
 								}
 							} else {
-								throw new Exception("Formato del dato del autor desconocido: "+textoAutor);
+								handleError(isbn, new Exception("Formato del dato del autor desconocido: "+textoAutor));
 							}
 						}
 					} else if (cabeceraDato.equals("Fecha Edición:")) {
@@ -188,10 +189,10 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 							try {
 								libro.setAnnoPublicacion(Integer.valueOf(fhEd));
 							} catch (NumberFormatException e) {
-								throw new Exception("Formato del año de edicion desconocido: "+textoFhEd);
+								handleError(isbn, new Exception("Formato del año de edicion desconocido: "+textoFhEd));
 							}
 						} else {
-							throw new Exception("Formato de la fecha de edicion desconocido: "+textoFhEd);
+							handleError(isbn, new Exception("Formato de la fecha de edicion desconocido: "+textoFhEd));
 						}
 					} else if (cabeceraDato.equals("Descripción:")) {
 						String textoDesc = filaDato.getElementsByTag("td").get(0).text();
@@ -201,10 +202,10 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 							try {
 								libro.setNumPaginas(Integer.valueOf(paginas));
 							} catch (NumberFormatException e) {
-								throw new Exception("Formato del numero de paginas desconocido: "+textoDesc);
+								handleError(isbn, new Exception("Formato del numero de paginas desconocido: "+textoDesc));
 							}
 						} else {
-							throw new Exception("Formato de la descripcion con el numero de paginas desconocido: "+textoDesc);
+							handleError(isbn, new Exception("Formato de la descripcion con el numero de paginas desconocido: "+textoDesc));
 						}
 					} else if (cabeceraDato.equals("Precio:")) {
 						String textoPrecio = filaDato.getElementsByTag("td").get(0).text();
@@ -212,12 +213,12 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 						if (m.matches()) {
 							String precio = m.group(1);
 							try {
-								libro.setPrecio(Float.valueOf(precio));
+								libro.setPrecio(Float.valueOf(precio.replace(',', '.')));
 							} catch (NumberFormatException e) {
-								throw new Exception("Formato del valor del precio desconocido: "+textoPrecio);
+								handleError(isbn, new Exception("Formato del valor del precio desconocido: "+textoPrecio));
 							}
 						} else {
-							throw new Exception("Formato del precio desconocido: "+textoPrecio);
+							handleError(isbn, new Exception("Formato del precio desconocido: "+textoPrecio));
 						}
 					} else if (cabeceraDato.equals("Publicación:")) {
 						String textoEditorial = filaDato.getElementsByTag("td").get(0).text();

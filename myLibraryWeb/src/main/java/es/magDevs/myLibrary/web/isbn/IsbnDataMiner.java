@@ -17,13 +17,24 @@ package es.magDevs.myLibrary.web.isbn;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.web.controllers.AuthorsController;
+import es.magDevs.myLibrary.web.gui.utils.MailManager;
 
 public interface IsbnDataMiner {
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
 	public static final String REGEX_LETRAS = "[a-zA-Zá-úÁ-ÚçÇà-ùÀ-Ùâ-ûÂ-Û '-]+";
-
+	public static final Logger log = Logger.getLogger(AuthorsController.class);
+	
 	String getName();
 	
 	List<Libro> getData(String isbn) throws Exception;
+	
+	default void handleError(String isbn, Exception e) {
+		String message = "Error al obtener datos a partir del ISBN '" + isbn + "'";
+		log.error(message, e);
+		MailManager.enviarError(new Exception(message,e), null);
+	}
 }

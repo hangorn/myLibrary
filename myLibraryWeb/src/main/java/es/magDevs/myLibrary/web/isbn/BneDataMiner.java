@@ -94,19 +94,19 @@ public class BneDataMiner implements IsbnDataMiner {
 						.data("form_type", "")
 						.data(nombreElemento, "Detalles")
 						.post();
-				extraeDatos(libros, docDetalles);
+				extraeDatos(isbn, libros, docDetalles);
 			}
 		} else if (doc.getElementById("detail_item_information") != null) {
 			// Si no buscamos directamente los datos del libro
-			extraeDatos(libros, doc);
+			extraeDatos(isbn, libros, doc);
 		} else if (doc.getElementsByClass("searchsum_container").isEmpty()) {
-			throw new Exception("Datos con formato desconocido");
+			handleError(isbn, new Exception("Datos con formato desconocido"));
 		}
 
 		return libros;
 	}
 
-	private void extraeDatos(List<Libro> libros, Document doc) throws Exception {
+	private void extraeDatos(String isbn, List<Libro> libros, Document doc) {
 		Element elementoDetalles = doc.getElementById("detail_item_information").getElementsByTag("dl").get(0);
 
 		Libro libro = new Libro();
@@ -128,7 +128,7 @@ public class BneDataMiner implements IsbnDataMiner {
 					try {
 						autor.setAnnoNacimiento(Integer.valueOf(fnac));
 					} catch (NumberFormatException e) {
-						throw new Exception("Formato del año de nacimiento del autor desconocido: "+textoAutor);
+						handleError(isbn, new Exception("Formato del año de nacimiento del autor desconocido: "+textoAutor));
 					}
 				}
 				String fex = m.group(6);
@@ -136,11 +136,11 @@ public class BneDataMiner implements IsbnDataMiner {
 					try {
 						autor.setAnnoFallecimiento(Integer.valueOf(fex));
 					} catch (NumberFormatException e) {
-						throw new Exception("Formato del año de fallec. del autor desconocido: "+textoAutor);
+						handleError(isbn, new Exception("Formato del año de fallec. del autor desconocido: "+textoAutor));
 					}
 				}
 			} else {
-				throw new Exception("Formato del dato del autor desconocido: "+textoAutor);
+				handleError(isbn, new Exception("Formato del dato del autor desconocido: "+textoAutor));
 			}
 		}
 		// Editorial
@@ -158,11 +158,11 @@ public class BneDataMiner implements IsbnDataMiner {
 		if (!elementoFhPub.isEmpty()) {
 			String fhPublicacion = elementoFhPub.get(0).text();
 			if (StringUtils.isNotBlank(fhPublicacion)) {
-				fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replace("imp. ", "").trim();
+				fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replace("imp. ", "").replace("D.L. ", "").trim();
 				try {
 					libro.setAnnoPublicacion(Integer.valueOf(fhPublicacion));
 				} catch (NumberFormatException e) {
-					throw new Exception("Formato del año de edicion desconocido: " + fhPublicacion);
+					handleError(isbn, new Exception("Formato del año de edicion desconocido: " + fhPublicacion));
 				}
 			}
 		}
@@ -187,10 +187,10 @@ public class BneDataMiner implements IsbnDataMiner {
 				try {
 					libro.setNumPaginas(Integer.valueOf(paginas));
 				} catch (NumberFormatException e) {
-					throw new Exception("Formato del numero de paginas desconocido: "+textoDesc);
+					handleError(isbn, new Exception("Formato del numero de paginas desconocido: "+textoDesc));
 				}
 			} else if (!textoDesc.matches("\\d+ recurso en línea.*")) {
-				throw new Exception("Formato de la descripcion con el numero de paginas desconocido: "+textoDesc);
+				handleError(isbn, new Exception("Formato de la descripcion con el numero de paginas desconocido: "+textoDesc));
 			}
 		}
 		

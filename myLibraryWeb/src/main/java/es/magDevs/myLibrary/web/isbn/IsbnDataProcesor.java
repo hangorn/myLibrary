@@ -16,6 +16,7 @@
 package es.magDevs.myLibrary.web.isbn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +44,7 @@ public class IsbnDataProcesor {
 		
 		List<Libro> libros = ministerioDataMiner.getData(isbn);
 		libros.addAll(bneDataMiner.getData(isbn));
+		libros.addAll(new IberDataMiner().getData(isbn));
 		
 		if (libros.isEmpty()) {
 			return null;
@@ -200,46 +202,32 @@ public class IsbnDataProcesor {
 			libro.setTraductores(traductores);
 		}
 		// Editorial
+		EditorialDao dao = DaoFactory.getEditorialDao();
 		for (Editorial e : editoriales) {
 			if (libro.getEditorial() == null) {
-				EditorialDao dao = DaoFactory.getEditorialDao();
 				Editorial editorialQry = new Editorial();
-				editorialQry.setNombreExacto(e.getNombre());
-				List<Editorial> editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
-				if (editorialesBBDD.size() == 1) {
-					libro.setEditorial(editorialesBBDD.get(0));
+				Editorial ed = buscaEditorial(e.getNombre(), editorialQry, dao);
+				if (ed != null) {
+					libro.setEditorial(ed);
 					break;
-				} else {
-					editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORIALES", "").trim());
-					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
-					if (editorialesBBDD.size() == 1) {
-						libro.setEditorial(editorialesBBDD.get(0));
-						break;
-					} else {
-						editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORIAL", "").trim());
-						editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
-						if (editorialesBBDD.size() == 1) {
-							libro.setEditorial(editorialesBBDD.get(0));
-							break;
-						} else {
-							editorialQry.setNombreExacto(e.getNombre().replaceAll("EDICIONES", "").trim());
-							editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
-							if (editorialesBBDD.size() == 1) {
-								libro.setEditorial(editorialesBBDD.get(0));
-								break;
-							} else {
-								editorialQry.setNombreExacto(e.getNombre().replaceAll("EDITORES", "").trim());
-								editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
-								if (editorialesBBDD.size() == 1) {
-									libro.setEditorial(editorialesBBDD.get(0));
-									break;
-								}
-							}
-						}
-					}
 				}
 			}
 		}
+	}
+	
+	private static final List<String> TXTS_REPLACE = Arrays.asList("", "EDITORIALES","EDITORIAL", "EDICIONES", "EDITORES");
+	@SuppressWarnings("unchecked")
+	private Editorial buscaEditorial(String nombreEd, Editorial editorialQry, EditorialDao dao) throws Exception {
+		for (String txt : TXTS_REPLACE) {
+			if (txt.isEmpty() || nombreEd.contains(txt)) {
+				editorialQry.setNombreExacto(txt.replaceAll(txt, "").trim());
+				List<Editorial> editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+				if (editorialesBBDD.size() == 1) {
+					return editorialesBBDD.get(0);
+				}
+			}
+		}
+		return null;
 	}
 
 }
