@@ -32,7 +32,7 @@
 			<tbody>
 				<tr th:each="readData,dataStat : ${data}" th:id="'row_'+${dataStat.index}">
 					<td>
-						<form th:action="@{/read_delete}" method="post" th:onsubmit="'return confirm(&#34;' + #{unmark.read.confirmation(${readData.libro.titulo})} + '&#34;);'">
+						<form th:if="${readData.prestado} == null" th:action="@{/read_delete}" method="post" th:onsubmit="'return confirm(&#34;' + #{unmark.read.confirmation(${readData.libro.titulo})} + '&#34;);'">
 							<input type="hidden" name="delete" th:value="${readData.id}"></input>
 							<button type="submit" th:title="#{unmark.read(${readData.fechaTxt})}" >
 								<img th:alt-title="#{unmark.read(${readData.fechaTxt})}" th:src="@{img/menu/unmark_read.png}" width="20px" height="20px"/>
@@ -43,7 +43,7 @@
 						<span th:text="${readData.fechaTxt}"></span>
 						<input type="hidden" name="libro.id" th:value="${readData.libro.id}"></input>
 						<input type="hidden" name="id" th:value="${readData.id}"></input>
-						<button type="button" th:title="#{pending.update.date}" onclick="modificarFechaLista(this);" style="margin-left:20px;">
+						<button th:if="${readData.prestado} == null" type="button" th:title="#{pending.update.date}" onclick="modificarFechaLista(this);" style="margin-left:20px;">
 							<img th:alt-title="#{pending.update.date}" th:src="@{img/crudmenu/update.png}" width="20px" height="20px"/>
 						</button>
 					</td>
