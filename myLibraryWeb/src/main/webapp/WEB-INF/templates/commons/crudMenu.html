@@ -46,7 +46,12 @@
 							</div>
 						</a></li>
 					
-					<li th:if="${adminData} != null AND !${multiUpdateDisabled}"><a onclick="showLoading();submit('crudForm','multiupdate',index,'');this.onclick=null;">
+					<li th:if="${adminData} != null AND !${multiUpdateDisabled}"><a th:onclick="
+					${elementsCount} &lt;= 200 ?
+					'showLoading();submit(&#34;crudForm&#34;,&#34;multiupdate&#34;,index,&#34;&#34;);this.onclick=null;'
+					:
+					'if (confirm(&#34;'+#{multiUpdateTooMuchMessage}+'&#34;)) {showLoading();submit(&#34;crudForm&#34;,&#34;multiupdate&#34;,index,&#34;&#34;);this.onclick=null;}'
+					">
 							<div class="submenuitem">
 								<img th:alt-title="#{${section}+'.menu.multiupdate'}" th:src="@{img/crudmenu/multiUpdate.png}" />
 							</div>

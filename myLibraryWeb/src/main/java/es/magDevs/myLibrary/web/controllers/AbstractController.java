@@ -62,6 +62,7 @@ public abstract class AbstractController implements Controller {
 		model.addAttribute("data", data);
 		model.addAttribute("page", pagManager.getPageLabel());
 		model.addAttribute("pageCount", pagManager.getPageCountLabel());
+		model.addAttribute("elementsCount", pagManager.getElementsCount());
 		model.addAttribute("selectedPageSize", "" + pagManager.getPageSize());
 		model.addAttribute("filter", filter == null ? getNewFilter() : filter);
 		model.addAttribute("currentURL", getSection().get());
