@@ -129,6 +129,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 						libro.setTitulo(filaDato.getElementsByTag("td").text());
 					} else if (cabeceraDato.equals("Autor/es:")) {
 						libro.setAutores(new HashSet<>(1));
+						int i = 0;
 						for (Element valorDato : filaDato.getElementsByTag("td").get(0).getElementsByTag("span")) {
 							String textoAutor = valorDato.ownText().trim();
 							Matcher m = patAutor.matcher(textoAutor);
@@ -143,6 +144,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 											nomTrad += " ";
 										}
 										nomTrad += apesTrad;
+										traductor.setId(i++);
 										traductor.setNombre(nomTrad);
 										if (libro.getTraductores() == null) {
 											libro.setTraductores(new HashSet<>(1));
@@ -152,6 +154,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 								} else {
 									Autor autor = new Autor();
 									libro.getAutores().add(autor);
+									autor.setId(i++);
 									autor.setApellidos(m.group(2));
 									autor.setNombre(m.group(3));
 									String fnac = m.group(5);

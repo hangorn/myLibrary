@@ -38,7 +38,7 @@ public class IberDataMiner implements IsbnDataMiner {
 	private static final String NAME = "IBER";
 
 	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+")";
-	private static final String REGEX_EDITORIAL = "("+REGEX_LETRAS+")(, (\\d{4}))?";
+	private static final String REGEX_EDITORIAL = "("+REGEX_LETRAS+")(, "+REGEX_LETRAS+")?(, (\\d{4}))?";
 	private static final String REGEX_PAGINAS = ".* (\\d+) p\\..*";
 
 	private Pattern patAutor, patEditorial, patPaginas;
@@ -102,6 +102,29 @@ public class IberDataMiner implements IsbnDataMiner {
 					libro.getAutores().add(autor);
 					autor.setApellidos(m.group(2));
 					autor.setNombre(m.group(3));
+				} else if (textoAutor.contains("|") || StringUtils.countMatches(textoAutor, ",") > 1) {
+					int i = 0;
+					String regex = "\\|";
+					if (StringUtils.countMatches(textoAutor, ",") > 1) {
+						regex = "[\\|,]+";
+					}
+					for (String splitted : textoAutor.split(regex)) {
+						if (StringUtils.isNotBlank(splitted)) {
+							m = patAutor.matcher(splitted);
+							if (m.matches()) {
+								if (libro.getAutores() == null) {
+									libro.setAutores(new HashSet<>());
+								}
+								Autor autor = new Autor();
+								autor.setId(i++);
+								autor.setApellidos(m.group(2));
+								autor.setNombre(m.group(3));
+								libro.getAutores().add(autor);
+							} else {
+								handleError(isbn, new Exception("Formato del dato del autor desconocido: "+splitted));
+							}
+						}
+					}
 				} else {
 					handleError(isbn, new Exception("Formato del dato del autor desconocido: "+textoAutor));
 				}
@@ -118,7 +141,7 @@ public class IberDataMiner implements IsbnDataMiner {
 					libro.setEditorial(editorial);
 					editorial.setNombre(m.group(1));
 					// Fh publicacion
-					String textoFhPub = m.group(3);
+					String textoFhPub = m.group(4);
 					if (StringUtils.isNotBlank(textoFhPub)) {
 						try {
 							libro.setAnnoPublicacion(Integer.valueOf(textoFhPub));
@@ -141,6 +164,15 @@ public class IberDataMiner implements IsbnDataMiner {
 				} catch (NumberFormatException e) {
 					handleError(isbn, new Exception("Formato del numero de paginas desconocido: "+txtDescripcion));
 				}
+			}
+		}
+		
+		// ISBN
+		Element elementoIsbn = doc.getElementById("isbn");
+		if (elementoIsbn != null) {
+			Elements elementosIsbn = elementoIsbn.getElementsByTag("a");
+			if (!elementosIsbn.isEmpty()) {
+				libro.setIsbn(elementosIsbn.get(1).text());
 			}
 		}
 		
