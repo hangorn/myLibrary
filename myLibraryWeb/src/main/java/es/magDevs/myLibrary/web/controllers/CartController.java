@@ -140,6 +140,8 @@ public class CartController extends AbstractController {
 				}
 			}
 		}
+		// Actualizamos el numero de libros que hay en el carrito
+		model.addAttribute("cartBooks", cartBooks.stream().map(book->book.getId()).collect(Collectors.toSet()));
 		return list(model);
 	}
 	

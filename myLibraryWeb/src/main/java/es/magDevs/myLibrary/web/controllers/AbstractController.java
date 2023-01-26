@@ -464,7 +464,7 @@ public abstract class AbstractController implements Controller {
 		Bean elementData = null;
 		String msg = "";
 		// Si tenemos un indice valido
-		if (id != null && id >= 0 && data != null) {
+		if (id != null && id >= 0) {
 			try {
 				// Obtenemos todos los datos del elemento seleccionado
 				elementData = getCompleteData(id);
