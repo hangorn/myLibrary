@@ -108,11 +108,11 @@ public class IberDataMiner implements IsbnDataMiner {
 					libro.getAutores().add(autor);
 					autor.setApellidos(m.group(2));
 					autor.setNombre(m.group(3));
-				} else if (textoAutor.contains("|") || textoAutor.contains(";") || StringUtils.countMatches(textoAutor, ",") > 1) {
+				} else if (textoAutor.contains("|") || textoAutor.contains(";") || textoAutor.contains("/") || StringUtils.countMatches(textoAutor, ",") > 1) {
 					int i = 0;
-					String regex = "[\\|;]";
+					String regex = "[\\|;/]+";
 					if (StringUtils.countMatches(textoAutor, ",") > 1) {
-						regex = "[\\|;,]+";
+						regex = "[\\|;,/]+";
 					}
 					for (String splitted : textoAutor.split(regex)) {
 						if (StringUtils.isNotBlank(splitted)) {

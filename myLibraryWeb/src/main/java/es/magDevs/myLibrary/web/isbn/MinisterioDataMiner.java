@@ -44,7 +44,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 	private static final String URL_MINISTERIO = "https://www.culturaydeporte.gob.es";
 	private static final String URL_ACCESO_INICIAL = URL_MINISTERIO+"/webISBN/tituloSimpleFilter.do?cache=init&prev_layout=busquedaisbn&layout=busquedaisbn&language=es";
 
-	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+") (\\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
+	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+")( \\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
 	private static final String REGEX_PRECIO = "([0-9.,]+) Euros";
 	private static final String REGEX_PAGINAS = "(\\d+) p\\..*";
 	private static final String REGEX_FH_EDIC = "\\d{2}/(\\d{4})";
@@ -107,6 +107,29 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 		
 		List<Libro> libros = new ArrayList<>();
 		
+		if (listaLibros == null) {
+			if (isbn.contains("-")) {
+				isbn = "978-" + isbn;
+			} else {
+				isbn = "978" + isbn;
+			}
+			doc = Jsoup.connect("https://www.culturaydeporte.gob.es/webISBN/tituloSimpleDispatch.do")
+					.sslSocketFactory(sslSocketFactory)
+					.userAgent(USER_AGENT)
+					.cookie(SESSION_COOKIE, sessionCookie)
+					.timeout(3000)
+					.data("params.forzaQuery", "N")
+					.data("params.cdispo", "A")
+					.data("params.cisbnExt", isbn)
+					.data("params.orderByFormId", "1")
+					.data("action", "Buscar")
+					.data("language", "es")
+					.data("prev_layout", "busquedaisbn")
+					.data("layout", "busquedaisbn")
+					.post();
+			listaLibros = doc.getElementById("tituloListaForm");
+		}
+		
 		if (listaLibros != null) {
 			for (Element filaLista : listaLibros.getElementsByAttributeValueStarting("class", "isbnResultado")) {
 				String urlDetalles = filaLista.getElementsByClass("camposCheck").get(0).getElementsByTag("a").get(0).attr("href");
@@ -132,6 +155,9 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 						int i = 0;
 						for (Element valorDato : filaDato.getElementsByTag("td").get(0).getElementsByTag("span")) {
 							String textoAutor = valorDato.ownText().trim();
+							if (textoAutor.contains("?")) {
+								textoAutor = textoAutor.replace("?", "");
+							}
 							Matcher m = patAutor.matcher(textoAutor);
 							if (m.matches()) {
 								String masDatosAutor = m.group(7);

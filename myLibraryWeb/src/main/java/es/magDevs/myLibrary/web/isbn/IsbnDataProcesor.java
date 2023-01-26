@@ -40,10 +40,11 @@ public class IsbnDataProcesor {
 
 	public Libro getData(String isbn) throws Exception {
 		IsbnDataMiner ministerioDataMiner = new MinisterioDataMiner();
-		IsbnDataMiner bneDataMiner = new BneDataMiner();
-		
 		List<Libro> libros = ministerioDataMiner.getData(isbn);
+		
+		IsbnDataMiner bneDataMiner = new BneDataMiner();
 		libros.addAll(bneDataMiner.getData(isbn));
+		
 		libros.addAll(new IberDataMiner().getData(isbn));
 		
 		if (libros.isEmpty()) {
@@ -52,6 +53,7 @@ public class IsbnDataProcesor {
 		// Primero rellenamos los datos de un libro con todos los datos que hemos obtenido
 		Libro libro = new Libro();
 		List<Editorial> editoriales = new ArrayList<>();
+		int i = 1;
 		for (Libro l : libros) {
 			// Titulo
 			if (StringUtils.isEmpty(libro.getTitulo()) && StringUtils.isNotEmpty(l.getTitulo())) {
@@ -69,6 +71,7 @@ public class IsbnDataProcesor {
 					if (libro.getAutores() == null) {
 						// Si el libro no tiene autores lo añadimos directamente
 						libro.setAutores(new HashSet<>());
+						autor.setId(i++);
 						libro.getAutores().add(autor);
 					} else {
 						// Si el libro tiene autores, buscamos a ver si ya esta añadido
@@ -82,6 +85,7 @@ public class IsbnDataProcesor {
 							}
 						}
 						if (!existeAutor) {
+							autor.setId(i++);
 							libro.getAutores().add(autor);
 						}
 					}
@@ -238,6 +242,68 @@ public class IsbnDataProcesor {
 					}
 				}
 			}
+			// Si no ha encontrado ningun autor, intentamos buscar autores quitando apellidos
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					if (StringUtils.isNotBlank(autor.getApellidos()) && StringUtils.isNotBlank(autor.getNombre())) {
+						Autor autorQry = new Autor();
+						bucleSeparador : for (String separados : quitarApellidos(autor.getApellidos().replaceAll("\\.", ""))) {
+							autorQry.setNombreExacto(autor.getNombre());
+							autorQry.setApellidosExacto(separados);
+							List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+							if (autoresBBDD.size() == 1) {
+								Autor autorBBDD = autoresBBDD.get(0);
+								if (!idAutores.contains(autorBBDD.getId())) {
+									autores.add(autorBBDD);
+									idAutores.add(autorBBDD.getId());
+									break;
+								}
+							} else if (autoresBBDD.size() > 1) {
+								for (Autor autorBBDD : autoresBBDD) {
+									if (Objects.equals(autorBBDD.getAnnoNacimiento(), autor.getAnnoNacimiento())) {
+										autores.add(autorBBDD);
+										idAutores.add(autorBBDD.getId());
+										break bucleSeparador;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Si no ha encontrado ningun autor, intentamos buscar autores separando el apellido en nombre y apellidos y luego quitando apellidos
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					if (StringUtils.isNotBlank(autor.getApellidos()) && StringUtils.isBlank(autor.getNombre())) {
+						Autor autorQry = new Autor();
+						bucleSeparador : for (Autor separados : separaNombreApellidos(autor.getApellidos().replaceAll("\\.", ""))) {
+							if (!separados.getApellidos().contains(" ")) {
+								continue;
+							}
+							autorQry.setNombreExacto(separados.getNombre());
+							autorQry.setApellidosExacto(StringUtils.left(separados.getApellidos(), separados.getApellidos().lastIndexOf(" ")));
+							List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+							if (autoresBBDD.size() == 1) {
+								Autor autorBBDD = autoresBBDD.get(0);
+								if (!idAutores.contains(autorBBDD.getId())) {
+									autores.add(autorBBDD);
+									idAutores.add(autorBBDD.getId());
+									break;
+								}
+							} else if (autoresBBDD.size() > 1) {
+								for (Autor autorBBDD : autoresBBDD) {
+									if (Objects.equals(autorBBDD.getAnnoNacimiento(), autor.getAnnoNacimiento())) {
+										autores.add(autorBBDD);
+										idAutores.add(autorBBDD.getId());
+										break bucleSeparador;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			libro.setAutores(autores);
 		}
 		// Traductor
@@ -273,7 +339,7 @@ public class IsbnDataProcesor {
 		}
 	}
 	
-	private static final List<String> TXTS_REPLACE = Arrays.asList("", "EDITORIALES","EDITORIAL", "EDICIONES", "EDITORES");
+	private static final List<String> TXTS_REPLACE = Arrays.asList("", ".", "EDITORIALES","EDITORIAL","GRUPO EDITORIAL", "EDICIONES", "EDITORES", "LIBROS", "S.L", "S.L.");
 	@SuppressWarnings("unchecked")
 	private Editorial buscaEditorial(String nombreEd, Editorial editorialQry, EditorialDao dao) throws Exception {
 		for (String txt : TXTS_REPLACE) {
@@ -301,6 +367,17 @@ public class IsbnDataProcesor {
 				parte2 += " "+splitted[j];
 			}
 			separados.add(new Autor(null, parte1.trim(), parte2.trim(), null, null, null, null, null));
+		}
+		return separados;
+	}
+	
+	private List<String> quitarApellidos(String ape) {
+		String[] splitted = ape.split(" ");
+		List<String> separados = new ArrayList<>();
+		String aps = "";
+		for (int i = 0; i < splitted.length; i++) {
+			aps += " " +splitted[i];
+			separados.add(aps.trim());
 		}
 		return separados;
 	}

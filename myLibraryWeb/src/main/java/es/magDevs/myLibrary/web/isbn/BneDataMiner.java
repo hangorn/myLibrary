@@ -81,6 +81,26 @@ public class BneDataMiner implements IsbnDataMiner {
 		List<Libro> libros = new ArrayList<>();
 		
 		Element listaResultados = doc.getElementById("hitlist");
+		
+		if (listaResultados == null && doc.getElementById("detail_item_information") == null) {
+			if (isbn.contains("-")) {
+				isbn = "978-" + isbn;
+			} else {
+				isbn = "978" + isbn;
+			}
+			doc = Jsoup.connect(URL_BNE+currentAction)
+					.userAgent(USER_AGENT)
+					.cookie(SESSION_COOKIE, sessionCookie)
+					.data("query_type", "search")
+					.data("searchdata1", isbn)
+					.data("srchfield1", "NUMEROSBNE^TITLE^GENERAL^Title+Processing^ISBN,+ISSN,+etc.")
+//					.data("srchfield1", "GENERAL^SUBJECT^GENERAL^^Todos+los+campos")
+					.data("library", "TODAS")
+					.data("sort_by", "TI")
+					.post();
+			listaResultados = doc.getElementById("hitlist");
+		}
+		
 		if (listaResultados != null) {
 			currentAction = listaResultados.attr("action");
 			// Si hay lista de resultados la recorremos
