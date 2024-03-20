@@ -109,7 +109,9 @@ public class CartController extends AbstractController {
 	public String list(Model model) {
 		try {
 			for (ListIterator<Libro> iterator = cartBooks.listIterator(); iterator.hasNext();) {
-				iterator.set((Libro) getDao().get(iterator.next().getId()));
+				Libro libro = (Libro) getDao().get(iterator.next().getId());
+				libro.setAutoresTxt(libro.getAutores().stream().map(au->au.toString()).collect(Collectors.joining(", ")));
+				iterator.set(libro);
 			}
 		} catch (Exception e) {
 			model.addAttribute("scriptMessage", manageException("create", e));
@@ -188,7 +190,9 @@ public class CartController extends AbstractController {
 
 	protected void addBook2Cart(Integer bookId) throws Exception {
 		if (!cartBooksIds.contains(bookId)) {
-			cartBooks.add((Libro) getDao().get(bookId));
+			Libro libro = (Libro) getDao().get(bookId);
+			libro.setAutoresTxt(libro.getAutores().stream().map(au->au.toString()).collect(Collectors.joining(", ")));
+			cartBooks.add(libro);
 			cartBooksIds.add(bookId);
 		}
 	}
