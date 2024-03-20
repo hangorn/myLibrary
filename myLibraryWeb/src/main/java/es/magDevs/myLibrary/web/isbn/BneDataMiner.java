@@ -42,7 +42,7 @@ public class BneDataMiner implements IsbnDataMiner {
 
 	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+")( (\\d*)-(\\d*))?( .+)?";
 	private static final String REGEX_PAGINAS = "(\\d+) p\\..*";
-	private static final String REGEX_PAGINAS2 = "(\\d+) páginas.*";
+	private static final String REGEX_PAGINAS2 = ".*(\\d+) páginas.*";
 
 	private Pattern patAutor, patPaginas, patPaginas2;
 	private String sessionCookie, currentAction;
@@ -178,7 +178,7 @@ public class BneDataMiner implements IsbnDataMiner {
 		if (!elementoFhPub.isEmpty()) {
 			String fhPublicacion = elementoFhPub.get(0).text();
 			if (StringUtils.isNotBlank(fhPublicacion)) {
-				fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replace("imp. ", "").replace("D.L. ", "").trim();
+				fhPublicacion = fhPublicacion.replaceAll("[\\[\\]]", "").replaceAll("-\\d{4}", "").replace("imp. ", "").replace("D.L. ", "").replaceAll("[a-z]{4,10} de ", "").trim();
 				try {
 					libro.setAnnoPublicacion(Integer.valueOf(fhPublicacion));
 				} catch (NumberFormatException e) {

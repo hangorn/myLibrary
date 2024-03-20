@@ -34,6 +34,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import es.magDevs.myLibrary.model.beans.Autor;
 import es.magDevs.myLibrary.model.beans.Editorial;
@@ -41,10 +42,10 @@ import es.magDevs.myLibrary.model.beans.Libro;
 import es.magDevs.myLibrary.model.beans.Traductor;
 
 public class MinisterioDataMiner implements IsbnDataMiner {
-	private static final String URL_MINISTERIO = "https://www.culturaydeporte.gob.es";
+	private static final String URL_MINISTERIO = "https://www.cultura.gob.es";
 	private static final String URL_ACCESO_INICIAL = URL_MINISTERIO+"/webISBN/tituloSimpleFilter.do?cache=init&prev_layout=busquedaisbn&layout=busquedaisbn&language=es";
 
-	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+")( \\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
+	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), )?("+REGEX_LETRAS+")( ?\\(+(\\d*( a.C.)?)-(\\d*( a.C.)?)\\)+)?( ?;.+)?";
 	private static final String REGEX_PRECIO = "([0-9.,]+) Euros";
 	private static final String REGEX_PAGINAS = "(\\d+) p\\..*";
 	private static final String REGEX_FH_EDIC = "\\d{2}/(\\d{4})";
@@ -88,15 +89,16 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 
 	@Override
 	public List<Libro> getData(String isbn) throws IOException {
-		Document doc = Jsoup.connect("https://www.culturaydeporte.gob.es/webISBN/tituloSimpleDispatch.do")
+		Document doc = Jsoup.connect("https://www.cultura.gob.es/webISBN/tituloSimpleDispatch.do")
 							.sslSocketFactory(sslSocketFactory)
 							.userAgent(USER_AGENT)
 							.cookie(SESSION_COOKIE, sessionCookie)
-							.timeout(3000)
+							.timeout(1200000)
 							.data("params.forzaQuery", "N")
 							.data("params.cdispo", "A")
 							.data("params.cisbnExt", isbn)
 							.data("params.orderByFormId", "1")
+							.data("params.liConceptosExt[0].texto", "")
 							.data("action", "Buscar")
 							.data("language", "es")
 							.data("prev_layout", "busquedaisbn")
@@ -113,15 +115,15 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 			} else {
 				isbn = "978" + isbn;
 			}
-			doc = Jsoup.connect("https://www.culturaydeporte.gob.es/webISBN/tituloSimpleDispatch.do")
+			doc = Jsoup.connect("https://www.cultura.gob.es/webISBN/tituloSimpleDispatch.do")
 					.sslSocketFactory(sslSocketFactory)
 					.userAgent(USER_AGENT)
 					.cookie(SESSION_COOKIE, sessionCookie)
-					.timeout(3000)
 					.data("params.forzaQuery", "N")
 					.data("params.cdispo", "A")
 					.data("params.cisbnExt", isbn)
 					.data("params.orderByFormId", "1")
+					.data("params.liConceptosExt[0].texto", "")
 					.data("action", "Buscar")
 					.data("language", "es")
 					.data("prev_layout", "busquedaisbn")
@@ -131,9 +133,11 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 		}
 		
 		if (listaLibros != null) {
-			for (Element filaLista : listaLibros.getElementsByAttributeValueStarting("class", "isbnResultado")) {
+			Elements resultadosAnidados = listaLibros.getElementsByClass("isbnResultadoSub");
+			String tagResultado = (resultadosAnidados != null && !resultadosAnidados.isEmpty()) ? "isbnResultadoSub" : "isbnResultado";
+			for (Element filaLista : listaLibros.getElementsByAttributeValueStarting("class", tagResultado)) {
 				String urlDetalles = filaLista.getElementsByClass("camposCheck").get(0).getElementsByTag("a").get(0).attr("href");
-				Document docDetalles = Jsoup.connect("https://www.culturaydeporte.gob.es"+urlDetalles)
+				Document docDetalles = Jsoup.connect(URL_MINISTERIO+urlDetalles)
 											.sslSocketFactory(sslSocketFactory)
 											.userAgent(USER_AGENT)
 											.cookie(SESSION_COOKIE, sessionCookie).get();
@@ -158,10 +162,13 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 							if (textoAutor.contains("?")) {
 								textoAutor = textoAutor.replace("?", "");
 							}
+							if (textoAutor.contains("... [et al.]")) {
+								textoAutor = textoAutor.replace("... [et al.]", "");
+							}
 							Matcher m = patAutor.matcher(textoAutor);
 							if (m.matches()) {
-								String masDatosAutor = m.group(7);
-								if ("; tr.".equals(masDatosAutor)) {
+								String masDatosAutor = m.group(9);
+								if ("; tr.".equals(masDatosAutor) || " ; tr.".equals(masDatosAutor)) {
 									// Tambien salen los traductores en los datos del autor con el sufijo "; tr."
 									String apesTrad = StringUtils.defaultString(m.group(2)), nomTrad = StringUtils.defaultString(m.group(3));
 									if (StringUtils.isNotEmpty(apesTrad) || StringUtils.isNotEmpty(nomTrad)) {
@@ -250,7 +257,7 @@ public class MinisterioDataMiner implements IsbnDataMiner {
 							handleError(isbn, new Exception("Formato del precio desconocido: "+textoPrecio));
 						}
 					} else if (cabeceraDato.equals("Publicación:")) {
-						String textoEditorial = filaDato.getElementsByTag("td").get(0).text();
+						String textoEditorial = filaDato.getElementsByTag("td").get(0).getElementsByTag("a").get(0).text();
 						if (StringUtils.isNotEmpty(textoEditorial)) {
 							Editorial editorial = new Editorial();
 							editorial.setNombre(textoEditorial);

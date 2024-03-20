@@ -157,7 +157,7 @@ public class BooksController extends AbstractController {
 		if (filter != null && StringUtils.isNotBlank(((Libro) filter).getCb())) {
 			try {
 				// Obtenemos todos los datos del libro seleccionado
-				bookData = new IsbnDataProcesor().getData(((Libro) filter).getCb());
+				bookData = new IsbnDataProcesor(e->manageException("isbnDataMiner", e)).getData(((Libro) filter).getCb());
 				if (bookData != null) {
 					bookData.setId(null);
 					// Guardamos los autores que ya tiene asignados el nuevo libro

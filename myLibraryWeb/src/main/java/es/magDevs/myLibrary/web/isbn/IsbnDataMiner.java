@@ -25,7 +25,7 @@ import es.magDevs.myLibrary.web.gui.utils.MailManager;
 
 public interface IsbnDataMiner {
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-	public static final String REGEX_LETRAS = "[a-zA-Zá-úÁ-ÚçÇà-ùÀ-Ùâ-ûÂ-Û '.-]+";
+	public static final String REGEX_LETRAS = "[a-zA-Zá-úÁ-ÚçÇà-ùÀ-Ùâ-ûÂ-Ûä-üÄ-Ü& ':.-]+";
 	public static final Logger log = Logger.getLogger(AuthorsController.class);
 	
 	String getName();

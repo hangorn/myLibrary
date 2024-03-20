@@ -23,4 +23,6 @@ package es.magDevs.myLibrary.model.dao;
  * 
  */
 public interface LibroDao extends AbstractDao {
+
+	void updateCB(Integer id, String cb);
 }

@@ -221,7 +221,11 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		}
 		// Codigo de barras
 		if (!StringUtils.isBlank(filter.getCb())) {
-			c.add(Restrictions.eq("cb", filter.getCb()));
+			if (filter.getCb().equals("-1")) {
+				c.add(Restrictions.isNull("cb"));
+			} else {
+				c.add(Restrictions.eq("cb", filter.getCb()));
+			}
 		}
 		// Año de compra
 		if (filter.getAnnoCompra() != null) {
@@ -352,5 +356,17 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		}
 		
 		return cambios;
+	}
+	
+	@Override
+	public void updateCB(Integer id, String cb) {
+		Session session = getSession();
+		if (!session.isOpen() || session.getTransaction() == null) {
+			return;
+		}
+		session.createQuery("UPDATE Libro SET cb = :cb where id = :id")
+		 	.setParameter( "cb", cb )
+	        .setParameter( "id", id )
+	        .executeUpdate();
 	}
 }

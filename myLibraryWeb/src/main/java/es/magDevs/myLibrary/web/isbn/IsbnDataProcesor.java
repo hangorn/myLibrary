@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,19 +35,38 @@ import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
 
 public class IsbnDataProcesor {
+	
+	private Consumer<Exception> errorHandler;
 
-	public IsbnDataProcesor() {
+	public IsbnDataProcesor(Consumer<Exception> errorHandler) {
+		iberDataMiner = new IberDataMiner();
+		this.errorHandler = errorHandler;
 	}
-
+	
 	public Libro getData(String isbn) throws Exception {
 		IsbnDataMiner ministerioDataMiner = new MinisterioDataMiner();
-		List<Libro> libros = ministerioDataMiner.getData(isbn);
+		List<Libro> libros;
+		try {
+			libros = ministerioDataMiner.getData(isbn);
+		} catch (Exception e) {
+			errorHandler.accept(e);
+			libros = new ArrayList<>();
+		}
 		
-		IsbnDataMiner bneDataMiner = new BneDataMiner();
-		libros.addAll(bneDataMiner.getData(isbn));
+		try {
+			libros.addAll(iberDataMiner.getData(isbn));
+		} catch (Exception e) {
+			errorHandler.accept(e);
+		}
 		
-		libros.addAll(new IberDataMiner().getData(isbn));
-		
+		if (libros.isEmpty()) {
+			try {
+				IsbnDataMiner bneDataMiner = new BneDataMiner();
+				libros.addAll(bneDataMiner.getData(isbn));
+			} catch (Exception e) {
+				errorHandler.accept(e);
+			}
+		}
 		if (libros.isEmpty()) {
 			return null;
 		}
@@ -153,7 +173,7 @@ public class IsbnDataProcesor {
 			return null;
 		}
 		data = data.toUpperCase();
-		return data.replaceAll("\\s+", " ").replaceAll("[ÁÀÂ]", "A").replaceAll("[ÉÈÊ]", "E").replaceAll("[ÍÌÎ]", "I").replaceAll("[ÓÒÔ]", "O").replaceAll("[ÚÙÛ]", "U").trim();
+		return data.replaceAll("\\s+", " ").replaceAll("[ÁÀÂ]", "A").replaceAll("[ÉÈÊ]", "E").replaceAll("[ÍÌÎ]", "I").replaceAll("[ÓÒÔØÖ]", "O").replaceAll("[ÚÙÛ]", "U").trim();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -180,6 +200,43 @@ public class IsbnDataProcesor {
 							autores.add(autorBBDD);
 							idAutores.add(autorBBDD.getId());
 							break;
+						}
+					}
+				} else if (autor.getNombre() != null && autor.getApellidos() == null) {
+					autorQry.setNombreExacto(null);
+					autorQry.setApellidosExacto(autor.getNombre());
+					autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+					if (autoresBBDD.size() == 1) {
+						Autor autorBBDD = autoresBBDD.get(0);
+						if (!idAutores.contains(autorBBDD.getId())) {
+							autores.add(autorBBDD);
+							idAutores.add(autorBBDD.getId());
+						}
+					}
+				}
+			}
+			// Si no ha encontrado ningun autor, intentamos buscar quitando puntos y guiones
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					Autor autorQry = new Autor();
+					if (autor.getNombre() != null) {
+						autorQry.setNombreExacto(autor.getNombre().replaceAll("[.-]", " ").replaceAll(" +", " "));
+					}
+					autorQry.setApellidosExacto(autor.getApellidos().replaceAll("[.-]", " ").replaceAll(" +", " "));
+					List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+					if (autoresBBDD.size() == 1) {
+						Autor autorBBDD = autoresBBDD.get(0);
+						if (!idAutores.contains(autorBBDD.getId())) {
+							autores.add(autorBBDD);
+							idAutores.add(autorBBDD.getId());
+						}
+					} else if (autoresBBDD.size() > 1) {
+						for (Autor autorBBDD : autoresBBDD) {
+							if (Objects.equals(autorBBDD.getAnnoNacimiento(), autor.getAnnoNacimiento())) {
+								autores.add(autorBBDD);
+								idAutores.add(autorBBDD.getId());
+								break;
+							}
 						}
 					}
 				}
@@ -218,7 +275,7 @@ public class IsbnDataProcesor {
 				for (Autor autor : libro.getAutores()) {
 					if (StringUtils.isNotBlank(autor.getApellidos()) && StringUtils.isBlank(autor.getNombre())) {
 						Autor autorQry = new Autor();
-						bucleSeparador : for (Autor separados : separaNombreApellidos(autor.getApellidos().replaceAll("\\.", ""))) {
+						bucleSeparador : for (Autor separados : separaNombreApellidos(autor.getApellidos().replaceAll("\\.([^ ])", " $1").replaceAll("\\.", ""))) {
 							autorQry.setNombreExacto(separados.getNombre());
 							autorQry.setApellidosExacto(separados.getApellidos());
 							List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
@@ -304,8 +361,94 @@ public class IsbnDataProcesor {
 					}
 				}
 			}
+			
+			// Si no ha encontrado ningun autor, intentamos buscar autores por el inicio del apellido
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					Autor autorQry = new Autor();
+					autorQry.setNombreExacto(autor.getNombre());
+					autorQry.setApellidos(autor.getApellidos());
+					List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+					if (autoresBBDD.size() == 1) {
+						Autor autorBBDD = autoresBBDD.get(0);
+						if (!idAutores.contains(autorBBDD.getId())) {
+							autores.add(autorBBDD);
+							idAutores.add(autorBBDD.getId());
+						}
+					} else if (autoresBBDD.size() > 1) {
+						for (Autor autorBBDD : autoresBBDD) {
+							if (autorBBDD.getApellidos().startsWith(autor.getApellidos())) {
+								autores.add(autorBBDD);
+								idAutores.add(autorBBDD.getId());
+								break;
+							}
+						}
+					}
+				}
+			}
+			// Si no ha encontrado ningun autor, intentamos buscar autores quitando nombres
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					if (StringUtils.isNotBlank(autor.getApellidos()) && StringUtils.isNotBlank(autor.getNombre())) {
+						Autor autorQry = new Autor();
+						bucleSeparador : for (String separados : quitarApellidos(autor.getNombre().replaceAll("\\.", ""))) {
+							autorQry.setNombreExacto(separados);
+							autorQry.setApellidosExacto(autor.getApellidos());
+							List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+							if (autoresBBDD.size() == 1) {
+								Autor autorBBDD = autoresBBDD.get(0);
+								if (!idAutores.contains(autorBBDD.getId())) {
+									autores.add(autorBBDD);
+									idAutores.add(autorBBDD.getId());
+									break;
+								}
+							} else if (autoresBBDD.size() > 1) {
+								for (Autor autorBBDD : autoresBBDD) {
+									if (Objects.equals(autorBBDD.getAnnoNacimiento(), autor.getAnnoNacimiento())) {
+										autores.add(autorBBDD);
+										idAutores.add(autorBBDD.getId());
+										break bucleSeparador;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			// Si no ha encontrado ningun autor, intentamos mover articulos (de, del, van,...) del nombre a los apellidos
+			if (autores.isEmpty()) {
+				for (Autor autor : libro.getAutores()) {
+					if (StringUtils.isNotBlank(autor.getApellidos()) && StringUtils.isNotBlank(autor.getNombre())) {
+						bucleSeparador: for (String articulo : Arrays.asList("VAN", "DEL", "DE")) {
+							if (autor.getNombre().endsWith(" "+articulo)) {
+								Autor autorQry = new Autor();
+								autorQry.setNombreExacto(autor.getNombre().substring(0, autor.getNombre().length()-articulo.length()).trim());
+								autorQry.setApellidosExacto(articulo + " " + autor.getApellidos());
+								List<Autor> autoresBBDD = dao.getWithPag(autorQry, 0, 3);
+								if (autoresBBDD.size() == 1) {
+									Autor autorBBDD = autoresBBDD.get(0);
+									if (!idAutores.contains(autorBBDD.getId())) {
+										autores.add(autorBBDD);
+										idAutores.add(autorBBDD.getId());
+										break;
+									}
+								} else if (autoresBBDD.size() > 1) {
+									for (Autor autorBBDD : autoresBBDD) {
+										if (Objects.equals(autorBBDD.getAnnoNacimiento(), autor.getAnnoNacimiento())) {
+											autores.add(autorBBDD);
+											idAutores.add(autorBBDD.getId());
+											break bucleSeparador;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			libro.setAutores(autores);
 		}
+		
 		// Traductor
 		if (libro.getTraductores() != null) {
 			Set<Traductor> traductores = new HashSet<>();
@@ -339,18 +482,78 @@ public class IsbnDataProcesor {
 		}
 	}
 	
-	private static final List<String> TXTS_REPLACE = Arrays.asList("", ".", "EDITORIALES","EDITORIAL","GRUPO EDITORIAL", "EDICIONES", "EDITORES", "LIBROS", "S.L", "S.L.");
+	private static final List<String> TXTS_REPLACE = Arrays.asList("", ".", ",", "EDITORIALES","EDITORIAL", "EDICIONES", "EDITORES", "EDITORES S.A.", "EDITORAS", "ED.", "EDICIONES DE",
+			"GRUPO EDITORIAL", "GRUPO EDITORIAL,", "GRUPO EDITORIAL, S.A.U.,", "GRUPO EDITORIAL, S.A.U.", "ESPAÑA", "PAIS", "MULTIMEDIA", "AUDIOBOOKS.", "MAXI-",
+			"BOOKS", "LIBROS", "COMICS", "CLASICOS", "S.L", "D.L", "S.L.", "S.L.U.", ", S.L.", "SL", "TOURING", ": TRUE CRIME", "GRAPHIC", " DEAGOSTINI", " DE AGOSTINI", " MONDADORI.COLECCION:TRUE CRIME",
+			"\\d{4}. ED. ED.", "(EDICIONES)|(S\\.L\\.)", "(EDICIONES)|(,? ?S\\.?[AL]\\.?)", "(MAXI)|(\\.)", "(EDITORIAL)|(,? ?S\\.[AL]\\.)", "& INTERACTIVA S.L.U.",
+			"COLECCIONABLES", "EDUCACION", "E.L.E.", "BOLSILLO", "LIBROS, S.L.", "PUBLICACIONES", "(EDICIONES)|(IBERICA)", ", MARKETING DIRECTO, S.L.", "MONDADORI, S.A. - JUNIOR",
+			": GRANDES PASIONES DE LA LITERATURA", " DE EDICIONES Y PUBLICACIONES S.L.", "COMUNICACION, S.A.", "(DIARIO)|(, S.A.)", "EDICIONES DE LIBRERIA", "FUNDACION SANTA MARIA-EDICIONES",
+			"EDICIONES DE HISTORIA, S.A.", "EDICIONES VOC, S.L.", "DE EDICIONES", "DE EDICIONES. REVISTA GALICIA HISTORICA, S.L.", "EDITORIALEDICIONES DEL PRADO D.L.", "EDICIONES DEL PRADO D.L.",
+			"(GRANDEL OBRAS)|\\.", ". HISTORIA VIVA", "FABRI", "EDITORA, S.L.", "(EDICIONES GENERALES)|(, S\\.A\\.)", "EDITORES, S.A.", "-DARGAUD, S.A. EDITORES", "- ",
+			"INTERNACIONAL, S.A.", "DE ESPAÑA EDITORES, S.A.", "(EDICIONES DEL)|(, S\\.A\\.)", ". SUBDIRECCION GENERAL DE PUBLICACIONES Y PATRIMONIO CULTURAL.", "(\\.)|(, S\\.L\\.)",
+			"(FUNDACION DEL MUSEO)|(BILBAO)");
+	private IberDataMiner iberDataMiner;
 	@SuppressWarnings("unchecked")
 	private Editorial buscaEditorial(String nombreEd, Editorial editorialQry, EditorialDao dao) throws Exception {
 		for (String txt : TXTS_REPLACE) {
-			if (txt.isEmpty() || nombreEd.contains(txt)) {
+			if (txt.isEmpty() || nombreEd.contains(txt) || txt.contains("|")) {
 				editorialQry.setNombreExacto(nombreEd.replaceAll(txt, "").trim());
 				List<Editorial> editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
 				if (editorialesBBDD.size() == 1) {
 					return editorialesBBDD.get(0);
+				} else if (nombreEd.contains(".")) {
+					editorialQry.setNombreExacto(nombreEd.replaceAll(txt, "").replace(".", "").trim());
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				}
+				if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("PENGUIN RANDOM")) {
+					editorialQry.setNombreExacto("PENGUIN RANDOM HOUSE");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("ECC")) {
+					editorialQry.setNombreExacto("ECC EDICIONES");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("LIBROS DE ASTEROIDE")) {
+					editorialQry.setNombreExacto("LIBROS DEL ASTEROIDE");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("ESPASA")) {
+					editorialQry.setNombreExacto("ESPASA CALPE");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("MAGISTERIO")) {
+					editorialQry.setNombreExacto("MAGISTERIO ESPAÑOL");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.replaceAll(txt, "").trim().toUpperCase().equals("ME EDITORES")) {
+					editorialQry.setNombreExacto("M E EDITORES");
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
+				} else if (nombreEd.contains(" & ")) {
+					editorialQry.setNombreExacto(nombreEd.replaceAll(txt, "").replaceAll(" & ", " Y ").trim().toUpperCase());
+					editorialesBBDD = dao.getWithPag(editorialQry, 0, 3);
+					if (editorialesBBDD.size() == 1) {
+						return editorialesBBDD.get(0);
+					}
 				}
 			}
 		}
+		
 		return null;
 	}
 	

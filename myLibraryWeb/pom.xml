@@ -233,6 +233,12 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.15.3</version>
 		</dependency>
+		<!-- Validadores -->
+		<dependency>
+		    <groupId>commons-validator</groupId>
+		    <artifactId>commons-validator</artifactId>
+		    <version>1.8.0</version>
+		</dependency>
 	</dependencies>
 
 </project>
