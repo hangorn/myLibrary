@@ -350,7 +350,7 @@ body {
 }
 
 .searchContainerOpen {
-	width: 400px;
+	width: 420px;
 	height: 440px;
 	padding: 20px;
 	padding-right: 0;
@@ -398,7 +398,7 @@ body {
 
 .searchField label, .searchField span {
 	float: left;
-	width: 130px;
+	width: 150px;
 	text-align: right;
 	margin-right: 15px;
 }

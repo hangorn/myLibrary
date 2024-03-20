@@ -75,6 +75,10 @@
 					th:errorclass="fieldError" />
 			</div>
 			<div class="searchField">
+				<label for="annoPublicacion" th:text="#{books.field.publicationYear}"></label> <input type="number" th:field="*{annoPublicacion}"
+					th:errorclass="fieldError" />
+			</div>
+			<div class="searchField">
 				<label for="numPaginas" th:text="#{books.field.pagNumber}"></label> <input type="number" th:field="*{numPaginas}"
 					th:errorclass="fieldError" />
 			</div>

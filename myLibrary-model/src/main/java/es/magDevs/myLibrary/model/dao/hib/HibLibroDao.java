@@ -231,6 +231,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		if (filter.getAnnoCompra() != null) {
 			c.add(Restrictions.eq("annoCompra", filter.getAnnoCompra()));
 		}
+		// Año de publicacion
+		if (filter.getAnnoPublicacion() != null) {
+			c.add(Restrictions.eq("annoPublicacion", filter.getAnnoPublicacion()));
+		}
 		// Nº paginas
 		if (filter.getNumPaginas() != null) {
 			c.add(Restrictions.eq("numPaginas", filter.getNumPaginas()));
