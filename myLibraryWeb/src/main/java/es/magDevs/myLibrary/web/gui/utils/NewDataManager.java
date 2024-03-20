@@ -90,6 +90,10 @@ public class NewDataManager {
 		if (StringUtils.isBlank(libro.getTitulo())) {
 			return false;
 		}
+		int isbnMaxLenght = Integer.parseInt(messageSource.getMessage("ISBN_MAX_LENGHT", null, null));
+		if (libro.getCb() != null && libro.getCb().length() > isbnMaxLenght) {
+			return false;
+		}
 
 		// Convertimos todos los textos a mayusculas
 		libro.setTitulo(StringUtils.trim(StringUtils.upperCase(libro.getTitulo())));
@@ -109,12 +113,8 @@ public class NewDataManager {
 					.parseInt(messageSource.getMessage("NOTES_MAX_LENGHT",
 							null, null))));
 		}
-		if (libro.getIsbn() != null
-				&& libro.getIsbn().length() > Integer.parseInt(messageSource
-						.getMessage("ISBN_MAX_LENGHT", null, null))) {
-			libro.setIsbn(StringUtils.substring(libro.getIsbn(), 0, Integer
-					.parseInt(messageSource.getMessage("ISBN_MAX_LENGHT", null,
-							null))));
+		if (libro.getIsbn() != null && libro.getIsbn().length() > isbnMaxLenght) {
+			libro.setIsbn(StringUtils.substring(libro.getIsbn(), 0, isbnMaxLenght));
 		}
 		
 		// Convertimos datos vacios a null
