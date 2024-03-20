@@ -150,6 +150,17 @@ body {
 	clear: right;
 }
 
+.numCartBooks {
+	position: relative;
+	top: -3px;
+	left: -4px;
+	background-color: red;
+	color: white;
+	border-radius: 100%;
+	padding: 2px 5px;
+	font-size: 10px;
+}
+
 /************************************
  Personalizacion del pie
  ************************************/
