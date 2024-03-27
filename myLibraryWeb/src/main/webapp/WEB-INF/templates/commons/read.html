@@ -37,7 +37,23 @@
 							th:text="#{close}"></span>
 					</button>
 				</form>
+				<button th:title="#{like}" th:if="${userData} != null AND ${section} == 'books'" id="likeBookButton" th:class="(${elementData.meGustaUsr} != null AND ${elementData.meGustaUsr})?'selected':''">
+					<div th:replace="commons/icons :: thumbsUp(color='#7aa834', iconSize='32px')"></div>
+					<span th:text="#{like}"></span>
+				</button>
+				<button  th:if="${userData} != null AND ${section} == 'books'" th:title="#{dislike}" id="dislikeBookButton" th:class="(${elementData.meGustaUsr} != null AND !${elementData.meGustaUsr})?'selected':''">
+					<div th:replace="commons/icons :: thumbsDown(color='#c83c3c', iconSize='32px')"></div>
+					<span th:text="#{dislike}"></span>
+				</button>
+				<button th:if="${userData} != null AND ${section} == 'books'" id="likesBookButton" th:title="#{like} + ': '+ ${elementData.megustas}+' - '+#{dislike} + ': '+ ${elementData.nomegustas}"
+						th:style="${elementData.megustas} == 0 AND ${elementData.nomegustas} == 0 ? 'display:none;'">
+					<div th:replace="commons/icons :: thumbsUp(color='#7aa834', iconSize='32px')"></div>
+					<span th:text="${elementData.megustas}" id="likesTxt" style="float: none; display: inline-block; vertical-align: top; margin: 0px 6px;"></span>
+					<div th:replace="commons/icons :: thumbsDown(color='#c83c3c', iconSize='32px')"></div>
+					<span th:text="${elementData.nomegustas}" id="dislikesTxt" style="float: none; display: inline-block; vertical-align: top; margin: 0px 6px;"></span>
+				</button>
 			</div>
+			<script th:if="${userData} != null AND ${section} == 'books'" th:src="@{#{js.likesScripts}}" type="text/javascript"></script>
 		</div>
 	</div>
 </div>

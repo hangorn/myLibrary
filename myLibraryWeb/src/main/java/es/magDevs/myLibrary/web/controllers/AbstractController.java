@@ -513,6 +513,7 @@ public abstract class AbstractController implements Controller {
 					+ ".menu.read.noIndexMsg", null,
 					LocaleContextHolder.getLocale());
 		}
+		modifiedElementId = elementData.getId();
 		// Enlazamos fragmentos de plantillas
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
 				getSection()));
@@ -531,6 +532,7 @@ public abstract class AbstractController implements Controller {
 			elementData = getNewFilter();
 			msg = manageException("read", e);
 		}
+		modifiedElementId = elementData.getId();
 		// Enlazamos fragmentos de plantillas
 		model.addAllAttributes(FragmentManager.get(msg, ACTION.READ,
 				getSection()));

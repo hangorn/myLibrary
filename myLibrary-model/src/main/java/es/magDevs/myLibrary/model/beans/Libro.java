@@ -55,6 +55,10 @@ public class Libro extends Bean {
 	private Usuario usuarioRegistrado;
 	private List<String> leido;
 	private List<Leido> leidos;
+	private Integer megustas;
+	private Integer nomegustas;
+	private Boolean meGustaUsr;
+	private String meGustaUsrTxt;
 
 	public Libro() {
 		super();
@@ -104,6 +108,10 @@ public class Libro extends Bean {
 		this.autores = bean.getAutores();
 		this.traductores = bean.getTraductores();
 		this.prestamo = bean.getPrestamo();
+		this.megustas = bean.getMegustas();
+		this.nomegustas = bean.getNomegustas();
+		this.meGustaUsr = bean.getMeGustaUsr();
+		this.meGustaUsrTxt = bean.getMeGustaUsrTxt();
 	}
 	
 	public Libro(Integer id, String titulo, String editorial, String tipo, String ubicacion, Integer tomo) {
@@ -307,6 +315,37 @@ public class Libro extends Bean {
 
 	public void setLeidos(List<Leido> leidos) {
 		this.leidos = leidos;
+	}
+	public Integer getMegustas() {
+		return megustas;
+	}
+
+	public void setMegustas(Integer megustas) {
+		this.megustas = megustas;
+	}
+
+	public Integer getNomegustas() {
+		return nomegustas;
+	}
+
+	public void setNomegustas(Integer nomegustas) {
+		this.nomegustas = nomegustas;
+	}
+	
+	public Boolean getMeGustaUsr() {
+		return meGustaUsr;
+	}
+	
+	public void setMeGustaUsr(Boolean meGustaUsr) {
+		this.meGustaUsr = meGustaUsr;
+	}
+	
+	public String getMeGustaUsrTxt() {
+		return meGustaUsrTxt;
+	}
+	
+	public void setMeGustaUsrTxt(String meGustaUsrTxt) {
+		this.meGustaUsrTxt = meGustaUsrTxt;
 	}
 
 	public String toString() {

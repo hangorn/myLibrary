@@ -93,7 +93,8 @@ public class FilterManager {
 				&& StringUtils.isBlank(filter.getIsbn())
 				&& StringUtils.isBlank(filter.getCb())
 				&& filter.getAnnoCompra() == null
-				&& filter.getNumPaginas() == null) {
+				&& filter.getNumPaginas() == null
+				&& filter.getMeGustaUsr() == null) {
 			return null;
 		}
 		return filter;

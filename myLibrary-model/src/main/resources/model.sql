@@ -161,3 +161,14 @@ ALTER TABLE pendientes ADD CONSTRAINT fk_pendientes_usuarios FOREIGN KEY(usuario
 
 -- Nueva columna para historico de prestamos
 alter table leidos add column prestado INTEGER NULL;
+
+CREATE TABLE megusta (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	libro INTEGER NOT NULL,
+	usuario INTEGER NOT NULL,
+	megusta tinyint(4) NOT NULL,
+	CONSTRAINT pk_megusta PRIMARY KEY(id),
+	CONSTRAINT fk_megusta_libros FOREIGN KEY (libro) REFERENCES libros(id),
+	CONSTRAINT fk_megusta_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(id),
+	CONSTRAINT uk_megusta UNIQUE KEY(libro, usuario)
+);

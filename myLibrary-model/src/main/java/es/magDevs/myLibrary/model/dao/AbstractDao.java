@@ -114,6 +114,21 @@ public interface AbstractDao {
 	public List getAll() throws Exception;
 	
 	/**
+	 * Obtiene una lista de datos, filtrados por los criterios indicados y
+	 * paginada. Antes de usar este metodo tiene que haber una transaccion iniciada
+	 * 
+	 * @param filter
+	 *            criterios de busqueda
+	 * @param page
+	 *            numero de pagina
+	 * @param pageSize
+	 *            tamaño de pagina
+	 * @return
+	 * @throws Exception 
+	 */
+	public List getWithTransaction(Bean filter, int page, int pageSize) throws Exception;
+	
+	/**
 	 * Obtiene el numero total de datos
 	 * 
 	 * @return

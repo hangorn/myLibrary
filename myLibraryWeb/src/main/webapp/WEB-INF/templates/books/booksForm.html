@@ -534,6 +534,29 @@
 		</div>
 	</div>
 
+	<!-- dialogo para mostrar los megustas de un libro -->
+	<div th:if="${userData} != null" id="likesFormBackground" class="background" style="display: none;">
+		<div id="likesFormContainer" class="dataFormContainer">
+			<div id="likesForm" class="dataForm" style="height: 90%;">
+				<div class="closeButton" id="closeButtonLikes">
+					<img th:alt-title="#{cancel}" th:src="@{img/searchmenu/reset.png}" />
+				</div>
+				<div class="dataTable" style="overflow-y: auto; height: 85%;">
+					<table>
+						<thead>
+							<tr>
+								<th th:text="#{user}"></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="likesDataTable">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- scripts varios (textos, gestion de los distintos datos con AJAX -->
 	<script th:inline="javascript">
 	/*<![CDATA[*/

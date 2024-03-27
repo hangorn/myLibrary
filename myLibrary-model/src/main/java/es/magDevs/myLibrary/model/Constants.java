@@ -36,6 +36,7 @@ public class Constants {
     public static final String PRESTAMOS_TABLE = "Prestamo";
     public static final String PENDIENTE_TABLE = "Pendiente";
     public static final String LEIDO_TABLE = "Leido";
+    public static final String MEGUSTA_TABLE = "Megusta";
     
     //Roles
     public static final String ROLE_USER = "USER";

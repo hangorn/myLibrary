@@ -703,6 +703,12 @@ button:ACTIVE {
 	top: 0;
 	box-shadow: inset 0 0 #ababff;
 }
+
+button.selected {
+	background-color: #775ec6;
+	color: white;
+	box-shadow: unset;
+}
 /************************************
  Links
  ************************************/

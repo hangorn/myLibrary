@@ -48,6 +48,10 @@
 							<button th:if="${cartBooks.contains(bookData.id)}" th:title="#{cart.remove}" th:onclick="'removeBookFromCart(this, '+${bookData.id}+')'">
 								<img th:alt-title="#{cart.remove}" th:src="@{img/menu/cart_remove.png}" width="20px" height="20px" style="margin-bottom: -4px;"/>
 							</button>
+							<div th:if="${bookData.megustas} != null AND ${bookData.megustas} != 0" th:include="commons/icons :: thumbsUp(color='#7aa834', iconSize='22px', iconText=${bookData.megustas})"
+								th:title="#{like} + ': '+ ${bookData.megustas}"></div>
+							<div th:if="${bookData.nomegustas} != null AND ${bookData.nomegustas} != 0" th:include="commons/icons :: thumbsDown(color='#c83c3c', iconSize='22px', iconText=${bookData.nomegustas})"
+								th:title="#{dislike} + ': '+ ${bookData.nomegustas}"></div>
 						</div>
 					</td>
 					<td th:text="((${bookData.tomo}==null OR ${bookData.tomo}==0)?'':(${bookData.tomo}+'.-'))+${bookData.titulo}"

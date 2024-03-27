@@ -181,6 +181,30 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 	public List getAll() throws Exception {
 		return getWithPag(0, 0);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getWithTransaction(Bean filter, int page, int pageSize) throws Exception {
+		// Obtenemos el filtro
+		Criteria query = getFilters(getSession(), filter);
+		// Fijamos las opciones de paginacion
+		if(pageSize > 0)  {
+			query.setMaxResults(pageSize);
+		}
+		query.setFirstResult(page * pageSize);
+		// Ordenamos por los ordenes indicados
+		if (filter != null && StringUtils.isNotEmpty(filter.getSortedColumn())) {
+			query.addOrder(new SqlOrder(filter.getSortedColumn(), filter.getSortedDirection()));
+		} else  {
+			for (Entry<String, Boolean>  orderData : getOrders().entrySet()) {
+				Property field = Property.forName(orderData.getKey());
+				Order order = orderData.getValue() ? field.asc() : field.desc();
+				query.addOrder(order);
+			}
+		}
+		return query.list();
+	}
 	
 	/**
 	 * {@inheritDoc}

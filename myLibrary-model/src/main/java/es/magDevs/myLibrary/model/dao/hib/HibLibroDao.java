@@ -126,7 +126,9 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 				projection.add(Projections.sqlProjection("(SELECT p.fecha FROM pendientes p WHERE p.libro=this_.id AND p.usuario='"
 							+ libro.getUsuarioRegistrado().getId()+"') AS fecha_pendiente", new String[]{"fecha_pendiente"}, new Type[]{StandardBasicTypes.STRING}))
 					.add(Projections.sqlProjection("(SELECT GROUP_CONCAT(l.fecha SEPARATOR '|') FROM leidos l WHERE l.libro=this_.id AND l.usuario='"
-							+ libro.getUsuarioRegistrado().getId()+"') AS fechas_leido", new String[]{"fechas_leido"}, new Type[]{StandardBasicTypes.STRING}));
+							+ libro.getUsuarioRegistrado().getId()+"') AS fechas_leido", new String[]{"fechas_leido"}, new Type[]{StandardBasicTypes.STRING}))
+					.add(Projections.sqlProjection("(SELECT count(1) FROM megusta mg WHERE mg.libro=this_.id AND mg.megusta=1) AS megustas", new String[]{"megustas"}, new Type[]{StandardBasicTypes.INTEGER}))
+					.add(Projections.sqlProjection("(SELECT count(1) FROM megusta mg WHERE mg.libro=this_.id AND mg.megusta=0) AS nomegustas", new String[]{"nomegustas"}, new Type[]{StandardBasicTypes.INTEGER}));
 			}
 			query.setProjection(projection);
 			List<Object[]> l = query.list();
@@ -153,6 +155,8 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 					if (StringUtils.isNotEmpty(fechasLeido)) {
 						book.setLeido(Arrays.asList(fechasLeido.split("\\|")).stream().map(f->int2Presentation(f)).collect(Collectors.toList()));
 					}
+					book.setMegustas((Integer) objects[10]);
+					book.setNomegustas((Integer) objects[11]);
 				}
 				books.add(book);
 			}
@@ -238,6 +242,10 @@ public class HibLibroDao extends HibAbstractDao implements LibroDao {
 		// Nº paginas
 		if (filter.getNumPaginas() != null) {
 			c.add(Restrictions.eq("numPaginas", filter.getNumPaginas()));
+		}
+		// Me gusta
+		if (filter.getMeGustaUsr() != null && filter.getUsuarioRegistrado() != null) {
+			c.add(Restrictions.sqlRestriction("{alias}.id IN (SELECT libro FROM megusta WHERE megusta="+(filter.getMeGustaUsr()?"1":"0")+" AND usuario="+filter.getUsuarioRegistrado().getId()+")"));
 		}
 
 		// Datos del autor

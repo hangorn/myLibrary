@@ -26,5 +26,6 @@
   <mapping resource="hibernate/mappings/Prestamo.hbm.xml"/>
   <mapping resource="hibernate/mappings/Pendiente.hbm.xml"/>
   <mapping resource="hibernate/mappings/Leido.hbm.xml"/>
+  <mapping resource="hibernate/mappings/Megusta.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>

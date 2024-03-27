@@ -41,6 +41,7 @@ import es.magDevs.myLibrary.model.beans.Coleccion;
 import es.magDevs.myLibrary.model.beans.Editorial;
 import es.magDevs.myLibrary.model.beans.Leido;
 import es.magDevs.myLibrary.model.beans.Libro;
+import es.magDevs.myLibrary.model.beans.MeGusta;
 import es.magDevs.myLibrary.model.beans.Pendiente;
 import es.magDevs.myLibrary.model.beans.Prestamo;
 import es.magDevs.myLibrary.model.beans.Traductor;
@@ -50,6 +51,7 @@ import es.magDevs.myLibrary.model.dao.AutorDao;
 import es.magDevs.myLibrary.model.dao.ColeccionDao;
 import es.magDevs.myLibrary.model.dao.EditorialDao;
 import es.magDevs.myLibrary.model.dao.LibroDao;
+import es.magDevs.myLibrary.model.dao.MeGustaDao;
 import es.magDevs.myLibrary.model.dao.PrestamoDao;
 import es.magDevs.myLibrary.model.dao.TraductorDao;
 import es.magDevs.myLibrary.model.dao.UsuarioDao;
@@ -599,10 +601,16 @@ public class BooksController extends AbstractController {
 			} else if(RELATED_ACTION.DELETE.equals(action)) {
 				result = quitTranslator(data);
 			}
+		} else if("like".equals(dataType)) {
+			if(RELATED_ACTION.NEW.equals(action)) {
+				// Aprovechamos esta accion para devolver los megustas de un libro
+				result = getLikes(data);
+			} else if(RELATED_ACTION.ADD.equals(action)) {
+				result = likeBook(data);
+			}
 		}
 		return result;
 	}
-	
 
 	/**
 	 * Metodo que registra la creacion de una editorial, cada vez que se cree
@@ -762,6 +770,67 @@ public class BooksController extends AbstractController {
 		return "OK";
 	}
 
+	private String getLikes(String data) {
+		String username = MainController.getUsername();
+		Integer bookId = null;
+		try {
+			bookId = Integer.valueOf(data);
+		} catch (Exception e) {
+		}
+		if (username != null && bookId != null) {
+			MeGusta filterMegusta = new MeGusta();
+			filterMegusta.setLibro(new Libro());
+			filterMegusta.getLibro().setId(bookId);
+			try {
+				@SuppressWarnings("unchecked")
+				List<MeGusta> megustas = DaoFactory.getMegustaDao().getWithPag(filterMegusta, 0, 0);
+				megustas.forEach(mg->mg.getLibro().setMeGustaUsrTxt(messageSource.getMessage(mg.getMegusta()?"like":"dislike", null, LocaleContextHolder.getLocale())));
+				return new ObjectMapper().writeValueAsString(megustas);
+			} catch (Exception e) {
+				manageException("error al obtener los (no)me gustas de un libro", e);
+			}
+		}
+		return "FAIL";
+	}
+
+	private String likeBook(String data) {
+		String username = MainController.getUsername();
+		if (username != null && ("1".equals(data) || "0".equals(data))) {
+			MeGusta filterMegusta = new MeGusta();
+			filterMegusta.setLibro(new Libro());
+			filterMegusta.getLibro().setId(modifiedElementId);
+			MeGustaDao megustaDao = DaoFactory.getMegustaDao();
+			try {
+				megustaDao.beginTransaction();
+				filterMegusta.setUsuario(DaoFactory.getUsuarioDao().getUser(username));
+				@SuppressWarnings("unchecked")
+				List<MeGusta> megustas = megustaDao.getWithTransaction(filterMegusta, 0, 0);
+				
+				String operacion = "+";
+				if (megustas.isEmpty()) {
+					// Si no habia lo creamos (me gusta / no me gusta)
+					filterMegusta.setMegusta("1".equals(data));
+					megustaDao.insert(filterMegusta);
+				} else if (!data.equals(megustas.get(0).getMegusta() ? "1" : "0")) {
+					// Si ya habia y no era igual lo actualizamos (me gusta / no me gusta)
+					megustas.get(0).setMegusta("1".equals(data));
+					megustaDao.update(megustas.get(0));
+					operacion = "*";
+				} else {
+					// Si ya habia y era igual lo borramos (me gusta / no me gusta)
+					megustaDao.delete(megustas.get(0));
+					operacion = "-";
+				}
+				megustaDao.commitTransaction();
+				return "OK"+operacion;
+			} catch (Exception e) {
+				megustaDao.rollbackTransaction();
+				manageException("error al marcar como (no)me gusta un libro", e);
+			}
+		}
+		return "FAIL";
+	}
+
 	public Class<BooksFilter> getBeanClass() {
 		return BooksFilter.class;
 	}
@@ -818,6 +887,26 @@ public class BooksController extends AbstractController {
 			List<Leido> leido = (List<Leido>) DaoFactory.getLeidoDao().getWithPag(filterLeido, 0, 0);
 			leido.stream().forEach(l->l.setFechaTxt(DatesManager.int2Presentation(l.getFecha())));
 			book.setLeidos(leido);
+			
+			// Cargamos datos de me gusta
+			MeGusta filterMegusta = new MeGusta();
+			filterMegusta.setLibro(new Libro());
+			filterMegusta.getLibro().setId(book.getId());
+			@SuppressWarnings("unchecked")
+			List<MeGusta> megustas = DaoFactory.getMegustaDao().getWithPag(filterMegusta, 0, 0);
+			int mg = 0, nmg = 0;
+			for (MeGusta meGusta : megustas) {
+				if (user.getId().equals(meGusta.getUsuario().getId())) {
+					book.setMeGustaUsr(meGusta.getMegusta());
+				}
+				if (meGusta.getMegusta()) {
+					mg++;
+				} else {
+					nmg++;
+				}
+			}
+			book.setMegustas(mg);
+			book.setNomegustas(nmg);
 		}
 		return book;
 	}
