@@ -19,10 +19,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="list">
 	<div th:replace="/commons/crudMenu :: crudMenu"></div>
-	<div th:if="${multiselect}" style="margin-top: 73px; min-width: max-content;">
+	<div th:if="${multiselect}" style="margin-top: 73px;">
 		<div th:replace="${section}+'/'+${section}+'List' :: ${section}+'List'"></div>
 	</div>
-	<div th:if="!${multiselect}" style="min-width: max-content;">
+	<div th:if="!${multiselect}">
 		<div th:replace="${section}+'/'+${section}+'List' :: ${section}+'List'"></div>
 	</div>
 	<div th:if="!${multiselect}" th:replace="/commons/crudMenu :: crudMenu"></div>
