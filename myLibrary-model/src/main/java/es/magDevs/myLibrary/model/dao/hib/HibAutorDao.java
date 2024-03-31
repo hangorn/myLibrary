@@ -172,8 +172,7 @@ public class HibAutorDao extends HibAbstractDao implements AutorDao {
 			s.beginTransaction();
 			List<Autor> l = s
 					.createQuery(
-							"FROM Autor WHERE nombre LIKE :nombre OR apellidos LIKE :apellidos ORDER BY apellidos,nombre")
-					.setParameter("nombre", "%"+start+"%")
+							"FROM Autor WHERE concat(nombre,' ', apellidos) LIKE :apellidos ORDER BY apellidos,nombre")
 					.setParameter("apellidos", "%"+start+"%").list();
 			s.getTransaction().commit();
 			return l;
