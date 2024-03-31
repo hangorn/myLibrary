@@ -77,6 +77,15 @@ public interface AbstractDao {
 	 * @throws Exception 
 	 */
 	public Bean get(int id) throws Exception;
+	/**
+	 * Obtiene el dato referenciado por el ID suministrado
+	 * 
+	 * @param id
+	 *            del dato a obtener
+	 * @return dato
+	 * @throws Exception 
+	 */
+	public Bean getWithTransaction(int id) throws Exception;
 	
 
 	/**

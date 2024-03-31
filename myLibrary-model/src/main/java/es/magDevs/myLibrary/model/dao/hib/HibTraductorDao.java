@@ -125,4 +125,16 @@ public class HibTraductorDao extends HibAbstractDao implements TraductorDao {
 		}
 		return cambios;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void delete2(Traductor data) {
+		Session session = getSession();
+		if (!session.isOpen() || session.getTransaction() == null) {
+			return;
+		}
+		session.createQuery("delete from Traductor where id = :id").setParameter("id", data.getId()).executeUpdate();
+	}
 }

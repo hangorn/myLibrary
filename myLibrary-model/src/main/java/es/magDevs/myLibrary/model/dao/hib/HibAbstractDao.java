@@ -132,6 +132,13 @@ public abstract class HibAbstractDao extends HibBasicDao implements AbstractDao 
 			throw e;
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Bean getWithTransaction(int id) throws Exception {
+		return (Bean) getSession().createQuery("FROM " + table + " WHERE id=:id").setParameter("id", id).uniqueResult();
+	}
 
 	/**
 	 * {@inheritDoc}

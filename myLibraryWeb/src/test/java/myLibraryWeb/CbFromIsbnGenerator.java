@@ -74,11 +74,13 @@ public class CbFromIsbnGenerator {
 		Libro query = new Libro();
 		query.setSortedColumn("id");
 		query.setSortedColumn("anno_publicacion");
+		query.setSortedColumn("ubicacion");
 		query.setSortedDirection(false);
 		query.setCb("ERR_DATOS_2003");
 		query.setCb("ERR_ISBN_10");
 		query.setCb("ERR_DATOS_10");
 		query.setCb("ERR_DATOS");
+		query.setCb("NO_ENCONTRADO");
 		query.setCb("PROCESAR");
 		List<Libro> libros = dao.getWithPag(query ,0, 600);
 		IsbnDataProcesor miner = new IsbnDataProcesor(e->e.printStackTrace());

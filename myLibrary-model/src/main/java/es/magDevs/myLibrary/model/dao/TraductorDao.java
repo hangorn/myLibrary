@@ -45,4 +45,6 @@ public interface TraductorDao extends AbstractDao {
 	 * @throws Exception 
 	 */
 	public List<Libro> getLibrosTraductor(Integer id) throws Exception;
+
+	void delete2(Traductor data);
 }

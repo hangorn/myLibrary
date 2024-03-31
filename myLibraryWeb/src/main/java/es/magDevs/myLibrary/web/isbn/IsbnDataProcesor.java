@@ -491,7 +491,7 @@ public class IsbnDataProcesor {
 			"EDICIONES DE HISTORIA, S.A.", "EDICIONES VOC, S.L.", "DE EDICIONES", "DE EDICIONES. REVISTA GALICIA HISTORICA, S.L.", "EDITORIALEDICIONES DEL PRADO D.L.", "EDICIONES DEL PRADO D.L.",
 			"(GRANDEL OBRAS)|\\.", ". HISTORIA VIVA", "FABRI", "EDITORA, S.L.", "(EDICIONES GENERALES)|(, S\\.A\\.)", "EDITORES, S.A.", "-DARGAUD, S.A. EDITORES", "- ",
 			"INTERNACIONAL, S.A.", "DE ESPAÑA EDITORES, S.A.", "(EDICIONES DEL)|(, S\\.A\\.)", ". SUBDIRECCION GENERAL DE PUBLICACIONES Y PATRIMONIO CULTURAL.", "(\\.)|(, S\\.L\\.)",
-			"(FUNDACION DEL MUSEO)|(BILBAO)", "GUIAS");
+			"(FUNDACION DEL MUSEO)|(BILBAO)", "GUIAS", "EDITORA, S.A.");
 	private IberDataMiner iberDataMiner;
 	@SuppressWarnings("unchecked")
 	private Editorial buscaEditorial(String nombreEd, Editorial editorialQry, EditorialDao dao) throws Exception {
