@@ -41,6 +41,7 @@ public class IberDataMiner implements IsbnDataMiner {
 	private static final String NAME = "IBER";
 	private static final String SESSION_COOKIE = "session-id";
 
+	//(([a-zA-Zá-úÁ-ÚçÇà-ùÀ-Ùâ-ûÂ-Ûä-üÄ-Ü& ':.-]+), *)?([a-zA-Zá-úÁ-ÚçÇà-ùÀ-Ùâ-ûÂ-Ûä-üÄ-Ü& ':.-]+)( \(\d{4}-\d{4}\))?
 	private static final String REGEX_AUTOR = "(("+REGEX_LETRAS+"), *)?("+REGEX_LETRAS+")( \\(\\d{4}-\\d{4}\\))?";
 	private static final String REGEX_EDITORIAL = "\\[?("+REGEX_LETRAS+")(,+ "+REGEX_LETRAS+")?(,+ "+REGEX_LETRAS+")?(.?,* (\\d{2}/\\d{2}/)?(\\d{4}))?(, \\[?"+REGEX_LETRAS+"\\]?(, \\d{4})?)?";
 	private static final String REGEX_PAGINAS = ".* (\\d+) p\\..*";
@@ -148,11 +149,11 @@ public class IberDataMiner implements IsbnDataMiner {
 					autor.setNombre(m.group(3));
 				} else if (textoAutor.contains("|") || textoAutor.contains(";") || textoAutor.contains("/") || StringUtils.countMatches(textoAutor, ",") > 1) {
 					int i = 0;
-					String regex = "[\\|;/]+";
-					if (StringUtils.countMatches(textoAutor, ",") > 1) {
-						regex = "[\\|;,/]+";
+					String[] split = textoAutor.split("[\\|;/]+");
+					if (split.length < 2) {
+						split = textoAutor.split("[\\|;,/]+");
 					}
-					for (String splitted : textoAutor.split(regex)) {
+					for (String splitted : split) {
 						if (StringUtils.isNotBlank(splitted)) {
 							m = patAutor.matcher(splitted);
 							if (m.matches()) {

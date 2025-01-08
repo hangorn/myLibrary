@@ -57,6 +57,7 @@ public class CbFromIsbnGenerator {
 //		libros.add(new IsbnDataProcesor().getData("978-84-08-25049-4"));
 //		libros.add(new IsbnDataProcesor().getData("978-84-02-44433-2"));
 //		libros.add(new IsbnDataProcesor().getData("84-08-23449-4"));
+//		libros.add(new IsbnDataProcesor(e->e.printStackTrace()).getData("9788490245279"));
 		
 		for (Libro libro : libros) {
 			if (libro != null) {
